@@ -1,0 +1,84 @@
+{
+  "body": [
+    {
+      "id": 1,
+      "slug": "media-sosial",
+      "name": "Penggunaan Media Sosial Berlebihan",
+      "icon": "📱",
+      "color": "sky",
+      "description": "Penggunaan media sosial yang berlebihan dapat mengikis kesehatan mental dan menurunkan produktivitas generasi muda."
+    },
+    {
+      "id": 2,
+      "slug": "sampah-plastik",
+      "name": "Sampah Plastik di Lingkungan",
+      "icon": "🌿",
+      "color": "jungle",
+      "description": "Pencemaran plastik mengancam kelestarian ekosistem laut dan darat yang menjadi tempat bergantung makhluk hidup."
+    },
+    {
+      "id": 3,
+      "slug": "perundungan",
+      "name": "Perundungan di Sekolah",
+      "icon": "🚫",
+      "color": "coral",
+      "description": "Perundungan di lingkungan sekolah berdampak buruk pada kesehatan mental dan prestasi belajar para siswa."
+    },
+    {
+      "id": 4,
+      "slug": "gaya-hidup-sehat",
+      "name": "Gaya Hidup Sehat",
+      "icon": "💪",
+      "color": "jungle",
+      "description": "Olahraga teratur, pola makan bergizi, dan istirahat yang cukup merupakan kunci menuju hidup yang sehat dan produktif."
+    },
+    {
+      "id": 5,
+      "slug": "krisis-kepercayaan",
+      "name": "Krisis Kepercayaan Diri",
+      "icon": "⭐",
+      "color": "sunshine",
+      "description": "Kurangnya rasa percaya diri dapat menghambat potensi dan kreativitas yang dimiliki generasi muda."
+    },
+    {
+      "id": 6,
+      "slug": "pendidikan",
+      "name": "Pentingnya Pendidikan",
+      "icon": "📚",
+      "color": "sky",
+      "description": "Pendidikan adalah kunci untuk membuka pintu kesempatan seluas-luasnya dan membangun masa depan bangsa yang gemilang."
+    },
+    {
+      "id": 7,
+      "slug": "fomo",
+      "name": "Fenomena FOMO",
+      "icon": "😰",
+      "color": "coral",
+      "description": "Rasa takut ketinggalan atau Fear of Missing Out mendorong remaja untuk terus membandingkan diri hingga merasa tidak puas dengan kehidupannya."
+    },
+    {
+      "id": 8,
+      "slug": "lingkungan",
+      "name": "Kepedulian terhadap Lingkungan",
+      "icon": "🌍",
+      "color": "jungle",
+      "description": "Menjaga kelestarian lingkungan adalah tanggung jawab bersama demi mewariskan bumi yang layak huni bagi generasi mendatang."
+    },
+    {
+      "id": 9,
+      "slug": "budaya-instan",
+      "name": "Budaya Instan",
+      "icon": "⚡",
+      "color": "sunshine",
+      "description": "Kebiasaan serba instan membuat remaja cenderung kurang sabar dan mudah menyerah saat menghadapi tantangan hidup."
+    },
+    {
+      "id": 10,
+      "slug": "toleransi",
+      "name": "Toleransi dan Perbedaan",
+      "icon": "🤝",
+      "color": "sky",
+      "description": "Menghargai perbedaan suku, agama, ras, dan budaya merupakan fondasi kokoh bagi persatuan dan kesatuan Indonesia."
+    }
+  ]
+}

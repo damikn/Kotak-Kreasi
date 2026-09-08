@@ -1,0 +1,108 @@
+{
+  "body": [
+    {
+      "id": 1,
+      "nama": "Repetisi pada Awal Sampiran",
+      "deskripsi_sampiran": "Kata pertama baris 1 diulang sebagai kata pertama baris 2",
+      "deskripsi_isi": "Isi berupa nasihat atau motivasi",
+      "aturan": "Kata awal baris 1 = kata awal baris 2",
+      "contoh": [
+        "Bunga melati harum semerbak,",
+        "Bunga kenanga di tepi jalan,",
+        "Rajinlah belajar tanpa tergesa,",
+        "Agar cita-citamu mudah diraih."
+      ]
+    },
+    {
+      "id": 2,
+      "nama": "Repetisi pada Awal Isi",
+      "deskripsi_sampiran": "Sampiran bebas bertema alam",
+      "deskripsi_isi": "Kata pertama baris 3 diulang di baris 4",
+      "aturan": "Kata awal baris 3 = kata awal baris 4",
+      "contoh": [
+        "Padi menguning di sawah luas,",
+        "Petani bekerja tanpa henti,",
+        "Belajarlah tekun setiap hari,",
+        "Belajarlah giat raih prestasi."
+      ]
+    },
+    {
+      "id": 3,
+      "nama": "Repetisi pada Akhir dan Awal Sampiran",
+      "deskripsi_sampiran": "Kata akhir baris 1 menjadi kata awal baris 2",
+      "deskripsi_isi": "Isi berupa nasihat",
+      "aturan": "Kata akhir baris 1 = kata awal baris 2",
+      "contoh": [
+        "Pergi ke pasar membeli mangga,",
+        "Mangga manis dibawa pulang,",
+        "Rajin belajar sejak muda,",
+        "Agar cita-cita mudah gemilang."
+      ]
+    },
+    {
+      "id": 4,
+      "nama": "Isi Berupa Ajakan",
+      "deskripsi_sampiran": "Sampiran bertema kegiatan sehari-hari",
+      "deskripsi_isi": "Isi mengandung kata ajakan: mari, ayo, marilah",
+      "aturan": "Baris 3 atau 4 mengandung kata ajakan",
+      "contoh": [
+        "Pohon bambu di tepi sungai,",
+        "Airnya jernih mengalir deras,",
+        "Mari jaga lingkungan bersama,",
+        "Ayo hijaukan bumi kita semua."
+      ]
+    },
+    {
+      "id": 5,
+      "nama": "Sampiran Bertema Hewan",
+      "deskripsi_sampiran": "Baris 1 dan 2 menyebut nama hewan",
+      "deskripsi_isi": "Isi berupa pesan moral",
+      "aturan": "Ada nama hewan di baris sampiran",
+      "contoh": [
+        "Burung merpati terbang tinggi,",
+        "Hinggap sebentar di atas dahan,",
+        "Jaga hati dari amarah diri,",
+        "Agar hidup penuh kedamaian."
+      ]
+    },
+    {
+      "id": 6,
+      "nama": "Sampiran Bertema Makanan",
+      "deskripsi_sampiran": "Baris sampiran menyebut jenis makanan atau buah",
+      "deskripsi_isi": "Isi berupa motivasi belajar",
+      "aturan": "Ada nama makanan atau buah di baris sampiran",
+      "contoh": [
+        "Buah rambutan manis rasanya,",
+        "Dipetik siang di bawah pohon,",
+        "Tekun membaca setiap waktunya,",
+        "Ilmu bertambah jadi bekal hidon."
+      ]
+    },
+    {
+      "id": 7,
+      "nama": "Isi Berupa Pertanyaan Retoris",
+      "deskripsi_sampiran": "Sampiran bertema perjalanan atau alam",
+      "deskripsi_isi": "Baris isi diakhiri dengan tanda tanya retoris",
+      "aturan": "Baris 4 adalah kalimat tanya yang tidak membutuhkan jawaban",
+      "contoh": [
+        "Jalan setapak menuju desa,",
+        "Melewati ladang dan sawah hijau,",
+        "Jika bukan kita yang menjaga,",
+        "Siapa lagi pelindung bumi kita?"
+      ]
+    },
+    {
+      "id": 8,
+      "nama": "Sampiran Bertema Alam Bebas",
+      "deskripsi_sampiran": "Baris 1 dan 2 menggambarkan pemandangan alam",
+      "deskripsi_isi": "Isi berupa nasihat kehidupan sosial",
+      "aturan": "Sampiran harus mengandung unsur alam: gunung, laut, sungai, atau hutan",
+      "contoh": [
+        "Gunung tinggi diselimuti kabut,",
+        "Sungai mengalir bening ke laut,",
+        "Jauhi sikap sombong dan angkuh,",
+        "Agar sahabat selalu ada untukmu."
+      ]
+    }
+  ]
+}

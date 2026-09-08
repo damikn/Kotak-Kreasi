@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Styles ─────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: 'Nunito', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-cloud min-h-screen;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* ── Page Transitions ────────────────────────────────────── */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+/* ── Slide-Left Transition ───────────────────────────────── */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* ── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-cloud rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-jungle/40 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-jungle/70;
+}
+
+/* ── Utility Classes ─────────────────────────────────────── */
+@layer components {
+  /* Tombol primer */
+  .btn-primary {
+    @apply bg-jungle hover:bg-jungle/90 text-white font-bold font-fredoka
+           rounded-xl px-6 py-3 transition-all duration-200
+           hover:-translate-y-0.5 hover:shadow-lg hover:shadow-jungle/30
+           disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:translate-y-0
+           disabled:hover:shadow-none active:translate-y-0;
+  }
+
+  /* Tombol sekunder */
+  .btn-secondary {
+    @apply bg-sky hover:bg-sky/90 text-white font-bold font-fredoka
+           rounded-xl px-6 py-3 transition-all duration-200
+           hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky/30;
+  }
+
+  /* Kartu generik */
+  .card {
+    @apply bg-cream rounded-2xl border-2 border-gray-100 shadow-md p-4;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold;
+  }
+}
+
+/* ── Roda Putar ──────────────────────────────────────────── */
+.wheel-container {
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
+}
+
+/* ── Animasi Custom untuk textarea highlight ─────────────── */
+mark.rima-highlight {
+  @apply bg-jungle/20 text-jungle font-bold rounded px-0.5;
+  background-color: #27ae6033;
+}

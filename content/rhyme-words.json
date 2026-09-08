@@ -1,0 +1,266 @@
+{
+  "-a": {
+    "kata_benda": [
+      "cahaya",
+      "suara",
+      "dunia",
+      "bangsa",
+      "karya",
+      "warna",
+      "cerita",
+      "budaya"
+    ],
+    "kata_kerja": [
+      "menjaga",
+      "bekerja",
+      "berlaga",
+      "mencoba",
+      "berkata",
+      "berjaga",
+      "merasa"
+    ],
+    "kata_sifat": [
+      "mulia",
+      "bahagia",
+      "bersama",
+      "berdaya",
+      "percaya",
+      "sejahtera",
+      "setara"
+    ]
+  },
+  "-i": {
+    "kata_benda": [
+      "hati",
+      "pagi",
+      "diri",
+      "bumi",
+      "nasi",
+      "hari",
+      "mimpi",
+      "sapi"
+    ],
+    "kata_kerja": [
+      "berlari",
+      "bernyanyi",
+      "mencari",
+      "memahami",
+      "menari",
+      "bermimpi",
+      "berbagi"
+    ],
+    "kata_sifat": [
+      "murni",
+      "tinggi",
+      "sunyi",
+      "peduli",
+      "mandiri",
+      "sejati",
+      "abadi"
+    ]
+  },
+  "-an": {
+    "kata_benda": [
+      "jalan",
+      "teman",
+      "badan",
+      "harapan",
+      "kawan",
+      "kebaikan",
+      "pikiran"
+    ],
+    "kata_kerja": [
+      "bermain",
+      "berjalan",
+      "melawan",
+      "membangun",
+      "melanjutkan",
+      "merayakan"
+    ],
+    "kata_sifat": [
+      "ringan",
+      "senang",
+      "terang",
+      "nyaman",
+      "mudahan",
+      "lapangan",
+      "rawan"
+    ]
+  },
+  "-ar": {
+    "kata_benda": [
+      "pasar",
+      "kabar",
+      "dasar",
+      "lapar",
+      "bayar",
+      "tawar",
+      "bazar"
+    ],
+    "kata_kerja": [
+      "belajar",
+      "sadar",
+      "melamar",
+      "membakar",
+      "menawar",
+      "mengantar"
+    ],
+    "kata_sifat": [
+      "pintar",
+      "sabar",
+      "benar",
+      "mekar",
+      "segar",
+      "bersinar",
+      "pantas"
+    ]
+  },
+  "-ang": {
+    "kata_benda": [
+      "bintang",
+      "sarang",
+      "gelombang",
+      "datang",
+      "pulang",
+      "padang"
+    ],
+    "kata_kerja": [
+      "terbang",
+      "melayang",
+      "datang",
+      "pulang",
+      "berdatang",
+      "menerbangkan"
+    ],
+    "kata_sifat": [
+      "terang",
+      "senang",
+      "riang",
+      "lapang",
+      "panjang",
+      "garang",
+      "gemilang"
+    ]
+  },
+  "-ai": {
+    "kata_benda": [
+      "pantai",
+      "nilai",
+      "damai",
+      "ramai",
+      "santai",
+      "gulai",
+      "cukai"
+    ],
+    "kata_kerja": [
+      "menggapai",
+      "merajai",
+      "menyentuh",
+      "menamai",
+      "mencapai"
+    ],
+    "kata_sifat": [
+      "ramai",
+      "damai",
+      "santai",
+      "pandai",
+      "serasi",
+      "tunggai",
+      "langgai"
+    ]
+  },
+  "-at": {
+    "kata_benda": [
+      "sahabat",
+      "semangat",
+      "nikmat",
+      "amanat",
+      "masyarakat",
+      "martabat"
+    ],
+    "kata_kerja": [
+      "membuat",
+      "merawat",
+      "mengingat",
+      "menyebut",
+      "menurut",
+      "melibat"
+    ],
+    "kata_sifat": [
+      "kuat",
+      "hemat",
+      "hormat",
+      "selamat",
+      "cermat",
+      "mufakat",
+      "manfaat"
+    ]
+  },
+  "-en": {
+    "kata_benda": [
+      "panen",
+      "semen",
+      "lumen",
+      "tren",
+      "agen"
+    ],
+    "kata_kerja": [
+      "berpanen",
+      "bersambung",
+      "bergantian"
+    ],
+    "kata_sifat": [
+      "keren",
+      "seren",
+      "rapi",
+      "elegan",
+      "laten"
+    ]
+  },
+  "-in": {
+    "kata_benda": [
+      "mesin",
+      "angin",
+      "agin",
+      "batin",
+      "latin"
+    ],
+    "kata_kerja": [
+      "bermain",
+      "meyakin",
+      "menghirup",
+      "berlanjut",
+      "mengalir"
+    ],
+    "kata_sifat": [
+      "rajin",
+      "yakin",
+      "amin",
+      "temin",
+      "teratin"
+    ]
+  },
+  "-it": {
+    "kata_benda": [
+      "bukit",
+      "rakit",
+      "sakit",
+      "pelit",
+      "lakit"
+    ],
+    "kata_kerja": [
+      "merakit",
+      "mengait",
+      "berlomba",
+      "mengikut",
+      "menyulit"
+    ],
+    "kata_sifat": [
+      "pelit",
+      "sulit",
+      "rumit",
+      "mungil",
+      "bangkit"
+    ]
+  }
+}

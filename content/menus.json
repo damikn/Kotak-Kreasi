@@ -1,0 +1,56 @@
+{
+  "body": [
+    {
+      "id": 1,
+      "step": 1,
+      "label": "Eksplorasi Fenomena",
+      "icon": "🔍",
+      "desc": "Pilih topik fenomena",
+      "route": "/fenomena",
+      "bgClass": "bg-sky/10 hover:bg-sky/20",
+      "borderClass": "border-sky/30",
+      "textClass": "text-sky",
+      "focusClass": "focus:ring-sky/40",
+      "color": "#2980B9"
+    },
+    {
+      "id": 2,
+      "step": 2,
+      "label": "Tentukan Pola",
+      "icon": "🎡",
+      "desc": "Putar roda dapatkan pola",
+      "route": "/pola",
+      "bgClass": "bg-sunshine/10 hover:bg-sunshine/20",
+      "borderClass": "border-sunshine/30",
+      "textClass": "text-sunshine",
+      "focusClass": "focus:ring-sunshine/40",
+      "color": "#F39C12"
+    },
+    {
+      "id": 3,
+      "step": 3,
+      "label": "Pilih Rima",
+      "icon": "🌳",
+      "desc": "Ambil kata rima dari pohon",
+      "route": "/rima",
+      "bgClass": "bg-jungle/10 hover:bg-jungle/20",
+      "borderClass": "border-jungle/30",
+      "textClass": "text-jungle",
+      "focusClass": "focus:ring-jungle/40",
+      "color": "#27AE60"
+    },
+    {
+      "id": 4,
+      "step": 4,
+      "label": "Susun Pantun",
+      "icon": "📝",
+      "desc": "Tulis dan simpan karyamu",
+      "route": "/susun",
+      "bgClass": "bg-coral/10 hover:bg-coral/20",
+      "borderClass": "border-coral/30",
+      "textClass": "text-coral",
+      "focusClass": "focus:ring-coral/40",
+      "color": "#E74C3C"
+    }
+  ]
+}
