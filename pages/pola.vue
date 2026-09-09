@@ -44,6 +44,7 @@
             v-else
             :pola-list="polaList"
             :size="wheelSize"
+            @spin-start="handleSpinStart"
             @selected="handleSpinResult"
           />
 
@@ -194,12 +195,14 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
 
 definePageMeta({
   pageTransition: { name: 'page', mode: 'out-in' },
 })
 
 const store = useKotakStore()
+const audio = useAudio()
 
 // Guard
 onMounted(() => {
@@ -240,18 +243,55 @@ onMounted(() => {
   onUnmounted(() => window.removeEventListener('resize', updateSize))
 })
 
+// ── Audio: tick saat roda berputar ────────────────────────
+let tickInterval = null
+let tickDelay = 80   // ms antar tick, makin lama makin lambat
+
+function startSpinAudio() {
+  audio.play('spin-start')
+  tickDelay = 80
+  scheduleNextTick()
+}
+
+function scheduleNextTick() {
+  if (tickInterval) clearTimeout(tickInterval)
+  // Tick makin lambat simulasi roda melambat
+  tickInterval = setTimeout(() => {
+    audio.play('spin-tick')
+    tickDelay = Math.min(tickDelay * 1.18, 600)
+    if (tickDelay < 600) scheduleNextTick()
+  }, tickDelay)
+}
+
+function stopSpinAudio() {
+  if (tickInterval) { clearTimeout(tickInterval); tickInterval = null }
+  audio.play('spin-done')
+}
+
+onUnmounted(() => { if (tickInterval) clearTimeout(tickInterval) })
+
 function handleSpinResult(pola) {
   selectedPola.value = pola
   manualPolaId.value = pola.id
+  stopSpinAudio()
+}
+
+// SpinningWheel memanggil @spin-start saat tombol ditekan
+function handleSpinStart() {
+  startSpinAudio()
 }
 
 function handleManualSelect() {
   const pola = polaList.value.find((p) => p.id === Number(manualPolaId.value))
-  if (pola) selectedPola.value = pola
+  if (pola) {
+    selectedPola.value = pola
+    audio.play('card-select')
+  }
 }
 
 function handleNext() {
   if (!selectedPola.value) return
+  audio.play('next')
   store.setPola(selectedPola.value)
   navigateTo('/rima')
 }

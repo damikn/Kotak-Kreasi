@@ -243,10 +243,12 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
 
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
+const audio = useAudio()
 
 // Guard
 onMounted(() => {
@@ -292,14 +294,20 @@ const particles = Array.from({ length: 16 }, (_, i) => ({
 const isShaking = ref(false)
 
 function openBox() {
+  // Suara kotak terbuka
+  audio.play('box-open')
   // Goyang dulu
   isShaking.value = true
   setTimeout(() => {
     isShaking.value = false
     phase.value = 'explode'
+    // Suara ledak partikel
+    audio.play('box-explode')
     // Setelah animasi ledak, tampilkan menu
     setTimeout(() => {
       phase.value = 'menu'
+      // Suara kartu menu muncul (sedikit delay agar sync dengan animasi)
+      setTimeout(() => audio.play('card-appear'), 80)
     }, 650)
   }, 300)
 }
@@ -310,6 +318,7 @@ let toastTimer = null
 
 function showToast(msg) {
   toastMsg.value = msg
+  audio.play('toast-warn')
   clearTimeout(toastTimer)
   toastTimer = setTimeout(() => { toastMsg.value = '' }, 2500)
 }
@@ -324,6 +333,7 @@ function handleMenuClick(menu) {
 }
 
 function handleMulai() {
+  audio.play('next')
   if (!store.isStepDone(1))      navigateTo('/fenomena')
   else if (!store.isStepDone(2)) navigateTo('/pola')
   else if (!store.isStepDone(3)) navigateTo('/rima')

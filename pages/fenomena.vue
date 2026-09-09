@@ -86,8 +86,11 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
+
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
+const audio = useAudio()
 onMounted(() => { if (!store.studentName) navigateTo('/') })
 
 const { data: phenomenaData, pending, error } = await useAsyncData('phenomena', () => queryContent('/phenomena').findOne())
@@ -101,9 +104,15 @@ const phenomenaList = computed(() => {
 
 const selectedId = ref(store.phenomena?.id ?? null)
 const selectedFenomena = computed(() => phenomenaList.value.find((p) => p.id === selectedId.value) ?? null)
-function handleSelect(item) { selectedId.value = item.id }
+
+function handleSelect(item) {
+  selectedId.value = item.id
+  audio.play('card-select')
+}
+
 function handleNext() {
   if (!selectedFenomena.value) return
+  audio.play('next')
   store.setPhenomena(selectedFenomena.value)
   navigateTo('/pola')
 }

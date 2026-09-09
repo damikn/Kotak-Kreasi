@@ -151,9 +151,11 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store   = useKotakStore()
+const audio   = useAudio()
 const minWords = 3
 const maxWords = 8
 
@@ -193,18 +195,39 @@ const currentWords = computed(() => {
   return null
 })
 
+// Track jumlah kata sebelumnya untuk deteksi penambahan
+const prevWordCount = ref(selectedWords.value.length)
+
 function handleSuffixSelect(suffix) {
   selectedSuffix.value = suffix
   selectedWords.value  = []
+  prevWordCount.value  = 0
+  audio.play('apple-pluck')
 }
+
 function removeWord(word) {
   selectedWords.value = selectedWords.value.filter(w => w !== word)
+  audio.play('word-uncheck')
 }
+
+// Watch perubahan selectedWords untuk suara centang / "3 kata ready"
+watch(selectedWords, (newWords, oldWords) => {
+  if (newWords.length > oldWords.length) {
+    // Kata baru ditambahkan
+    if (newWords.length === minWords) {
+      // Tepat 3 kata — chime berhasil
+      audio.play('words-ready')
+    } else {
+      audio.play('word-check')
+    }
+  }
+}, { deep: true })
 
 const canProceed = computed(() => selectedSuffix.value && selectedWords.value.length >= minWords)
 
 function handleNext() {
   if (!canProceed.value) return
+  audio.play('next')
   store.setRima(selectedSuffix.value, [...selectedWords.value])
   navigateTo('/susun')
 }

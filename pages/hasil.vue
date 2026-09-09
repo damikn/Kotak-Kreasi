@@ -208,17 +208,25 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
 
 definePageMeta({
   pageTransition: { name: 'page', mode: 'out-in' },
 })
 
 const store = useKotakStore()
+const audio = useAudio()
 
 // ── Guard ─────────────────────────────────────────────────
 onMounted(async () => {
   if (!store.studentName) { navigateTo('/'); return }
   if (!store.pantunLines.some((b) => b.trim())) { navigateTo('/susun'); return }
+
+  // Fanfare konfetti langsung saat halaman terbuka
+  setTimeout(() => audio.play('fanfare'), 200)
+
+  // Ambient sukses setelah fanfare selesai (~1.5 detik)
+  setTimeout(() => audio.play('ambient-success'), 1800)
 
   // Auto-download setelah 800ms (beri waktu halaman render + konfetti muncul)
   setTimeout(() => autoDownload(), 800)
@@ -291,6 +299,7 @@ async function downloadJpg() {
 
     downloadFilename.value = fname
     downloadDone.value     = true
+    audio.play('download-done')
   } catch (err) {
     console.error('[hasil] download error:', err)
     downloadError.value = err?.message ?? 'Gagal membuat gambar.'

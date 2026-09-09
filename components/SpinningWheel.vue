@@ -138,7 +138,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['selected'])
+const emit = defineEmits(['selected', 'spin-start'])
 
 
 // ============================================================
@@ -381,6 +381,9 @@ function spin() {
 
   isSpinning.value = true
   result.value = null
+
+  // Emit ke parent agar audio bisa dimulai dari luar
+  emit('spin-start')
 
   const n =
     segCount.value

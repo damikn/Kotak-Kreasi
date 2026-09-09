@@ -190,6 +190,7 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useAudio }      from '~/composables/useAudio'
 
 // ── Komponen checklist inline (tidak perlu file terpisah) ──
 const ChecklistItem = defineComponent({
@@ -238,6 +239,7 @@ const ChecklistItem = defineComponent({
 
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
+const audio = useAudio()
 
 onMounted(() => {
   if (!store.studentName)       navigateTo('/')
@@ -263,8 +265,24 @@ const barisConfig = [
 
 const filledCount = computed(() => pantunLines.filter(b => b.trim().length > 0).length)
 
+// Track baris yang sebelumnya sudah terisi (untuk detect baris baru)
+const prevFilled = ref(filledCount.value)
+
 function syncStore() {
   store.setPantun({ baris1: pantunLines[0], baris2: pantunLines[1], baris3: pantunLines[2], baris4: pantunLines[3] })
+
+  // Mainkan nada naik saat baris baru terisi (do re mi fa)
+  const curr = filledCount.value
+  if (curr > prevFilled.value) {
+    if (curr === 4) {
+      audio.play('all-lines-done')
+    } else {
+      audio.play(`line-filled-${curr}`)
+    }
+    prevFilled.value = curr
+  } else if (curr < prevFilled.value) {
+    prevFilled.value = curr
+  }
 }
 function clearPantun() {
   if (confirm('Yakin ingin menghapus semua baris?')) {
@@ -305,6 +323,7 @@ async function handleSimpan() {
   isSaving.value  = true
   saveError.value = ''
   syncStore()
+  audio.play('save-start')
 
   try {
     const html2canvas = (await import('html2canvas')).default
@@ -328,6 +347,7 @@ async function handleSimpan() {
 
     store.setSavedResult(result.driveUrl ?? '', result.sessionId ?? '')
     store.setImageBase64(base64)
+    audio.play('save-success')
     navigateTo('/hasil')
   } catch (err) {
     console.error('Save error:', err)
