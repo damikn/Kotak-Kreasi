@@ -3,7 +3,7 @@
     {
       "id": 1,
       "step": 1,
-      "label": "Eksplorasi Fenomena",
+      "label": "Kembangkan Fenomena",
       "icon": "🔍",
       "desc": "Pilih topik fenomena",
       "route": "/fenomena",
@@ -16,7 +16,7 @@
     {
       "id": 2,
       "step": 2,
-      "label": "Tentukan Pola",
+      "label": "Rangkai Pola",
       "icon": "🎡",
       "desc": "Putar roda dapatkan pola",
       "route": "/pola",
@@ -29,7 +29,7 @@
     {
       "id": 3,
       "step": 3,
-      "label": "Pilih Rima",
+      "label": "Eksplorasi Rima",
       "icon": "🌳",
       "desc": "Ambil kata rima dari pohon",
       "route": "/rima",
@@ -42,7 +42,7 @@
     {
       "id": 4,
       "step": 4,
-      "label": "Susun Pantun",
+      "label": "Ciptakan Pantun",
       "icon": "📝",
       "desc": "Tulis dan simpan karyamu",
       "route": "/susun",
