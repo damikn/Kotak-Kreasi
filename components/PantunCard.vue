@@ -56,23 +56,23 @@
         <span class="text-bark/25 text-xs">✦</span>
         <span class="flex-1 h-px bg-gray-200 block"></span>
       </div>
-      <!-- Grid 2 kolom, teks di-wrap agar tidak terpotong -->
-      <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs font-nunito">
+      <!-- Grid informasi, teks di-wrap penuh agar tidak terpotong -->
+      <dl class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs font-nunito">
         <div v-if="studentName">
-          <dt class="text-gray-400">Nama</dt>
+          <dt class="text-gray-400 text-[11px]">Nama Siswa</dt>
           <dd class="font-semibold text-bark break-words">{{ studentName }}</dd>
         </div>
         <div v-if="phenomena">
-          <dt class="text-gray-400">Fenomena</dt>
+          <dt class="text-gray-400 text-[11px]">Fenomena</dt>
           <dd class="font-semibold text-bark break-words leading-tight">{{ phenomena }}</dd>
         </div>
-        <div v-if="pola">
-          <dt class="text-gray-400">Pola</dt>
+        <div v-if="pola" class="col-span-2 sm:col-span-1">
+          <dt class="text-gray-400 text-[11px]">Pola</dt>
           <dd class="font-semibold text-bark break-words leading-tight">{{ pola }}</dd>
         </div>
-        <div v-if="rimaWords.length">
-          <dt class="text-gray-400">Kata Rima</dt>
-          <dd class="font-semibold text-bark break-words">{{ rimaWords.join(', ') }}</dd>
+        <div v-if="displayRima" class="col-span-2">
+          <dt class="text-gray-400 text-[11px]">Rima A & B</dt>
+          <dd class="font-semibold text-bark break-words leading-snug">{{ displayRima }}</dd>
         </div>
       </dl>
       <p class="text-xs text-gray-400 font-nunito text-right mt-2">📅 {{ today }}</p>
@@ -95,6 +95,8 @@ const props = defineProps({
   pola:        { type: String, default: '' },
   rimaWords:   { type: Array,  default: () => [] },
   suffix:      { type: String, default: '' },
+  rimaA:       { type: Object, default: () => ({ suffix: '', words: [] }) },
+  rimaB:       { type: Object, default: () => ({ suffix: '', words: [] }) },
 })
 
 const motivasiList = [
@@ -110,6 +112,22 @@ const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'l
 
 const hasContent = computed(() => props.lines.some(b => b?.trim().length > 0))
 
+const displayRima = computed(() => {
+  if (props.rimaA?.suffix && props.rimaB?.suffix) {
+    return `A (${props.rimaA.suffix}): ${props.rimaA.words.join(', ')} | B (${props.rimaB.suffix}): ${props.rimaB.words.join(', ')}`
+  }
+  if (props.rimaWords?.length) {
+    return `${props.suffix}: ${props.rimaWords.join(', ')}`
+  }
+  return ''
+})
+
+const combinedWords = computed(() => [
+  ...(props.rimaA?.words || []),
+  ...(props.rimaB?.words || []),
+  ...(props.rimaWords || []),
+])
+
 function escapeHtml(str) {
   if (!str) return ''
   return str
@@ -117,12 +135,12 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
-// Highlight kata rima di baris isi (index 2 & 3)
+// Highlight kata rima di baris pantun
 function highlightRima(text, lineIndex) {
   const safe = escapeHtml(text ?? '')
-  if (lineIndex < 2 || !props.rimaWords.length) return safe
+  if (!combinedWords.value.length) return safe
   let result = safe
-  for (const word of props.rimaWords) {
+  for (const word of combinedWords.value) {
     if (!word) continue
     const esc = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     result = result.replace(

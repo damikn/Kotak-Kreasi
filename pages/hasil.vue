@@ -173,8 +173,8 @@
               :student-name="store.studentName"
               :phenomena="store.phenomena?.name ?? ''"
               :pola="`Pola ${store.pola?.id} — ${store.pola?.nama}`"
-              :rima-words="store.rima.words"
-              :suffix="store.rima.suffix"
+              :rima-a="store.rima?.rimaA"
+              :rima-b="store.rima?.rimaB"
             />
           </div>
         </div>

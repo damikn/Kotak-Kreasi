@@ -1,0 +1,33 @@
+{
+  "syllableMin": 8,
+  "syllableMax": 12,
+  "rhymeScheme": "ab-ab",
+  "minWordsPerRhyme": 2,
+  "rules": [
+    {
+      "code": "BARIS_COUNT",
+      "name": "Jumlah Baris",
+      "description": "Pantun harus terdiri tepat 4 baris (2 baris sampiran & 2 baris isi)."
+    },
+    {
+      "code": "SUKU_KATA",
+      "name": "Jumlah Suku Kata (8–12 Suku Kata)",
+      "description": "Setiap baris pantun idealnya terdiri atas 8 sampai 12 suku kata."
+    },
+    {
+      "code": "RIMA_AB_AB",
+      "name": "Sajak Rima A-B-A-B",
+      "description": "Akhiran bunyi baris 1 dan 3 harus sama (Rima A), serta baris 2 dan 4 harus sama (Rima B)."
+    },
+    {
+      "code": "KATA_RIMA_PILIHAN",
+      "name": "Penggunaan Kata Rima dari Pohon",
+      "description": "Menggunakan kata rima pilihan dari Pohon Rima pada baris yang sesuai."
+    },
+    {
+      "code": "POLA_PANTUN",
+      "name": "Aturan Pola Pantun",
+      "description": "Sesuai dengan aturan pola pantun yang didapatkan di roda putar."
+    }
+  ]
+}

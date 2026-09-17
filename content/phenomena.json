@@ -2,83 +2,75 @@
   "body": [
     {
       "id": 1,
-      "slug": "media-sosial",
-      "name": "Penggunaan Media Sosial Berlebihan",
+      "slug": "terlalu-lama-gawai",
+      "name": "Terlalu Lama Bermain Gawai?",
       "icon": "📱",
       "color": "sky",
-      "description": "Penggunaan media sosial yang berlebihan dapat mengikis kesehatan mental dan menurunkan produktivitas generasi muda."
+      "description": "Gawai dapat digunakan untuk belajar, berkomunikasi, dan mencari informasi. Namun, penggunaan gawai yang terlalu lama dapat membuat seseorang lupa belajar, lupa beristirahat, atau kurang memperhatikan orang di sekitarnya.",
+      "contoh": "Rani berniat menggunakan gawai selama 30 menit. Namun, ia terus menonton video hingga berjam-jam dan akhirnya lupa mengerjakan tugas sekolah."
     },
     {
       "id": 2,
-      "slug": "sampah-plastik",
-      "name": "Sampah Plastik di Lingkungan",
-      "icon": "🌿",
-      "color": "jungle",
-      "description": "Pencemaran plastik mengancam kelestarian ekosistem laut dan darat yang menjadi tempat bergantung makhluk hidup."
+      "slug": "bermain-gim",
+      "name": "Bermain Gim Sampai Lupa Waktu?",
+      "icon": "🎮",
+      "color": "sunshine",
+      "description": "Bermain gim dapat menjadi kegiatan yang menyenangkan. Namun, bermain terlalu lama dapat membuat seseorang lupa waktu dan mengabaikan kewajibannya sebagai pelajar.",
+      "contoh": "Dimas bermain gim setelah pulang sekolah. Karena terlalu asyik, ia lupa belajar dan baru mengerjakan tugas ketika sudah malam."
     },
     {
       "id": 3,
-      "slug": "perundungan",
-      "name": "Perundungan di Sekolah",
-      "icon": "🚫",
+      "slug": "menunda-tugas",
+      "name": "Mengapa Tugas Ditunda?",
+      "icon": "📚",
       "color": "coral",
-      "description": "Perundungan di lingkungan sekolah berdampak buruk pada kesehatan mental dan prestasi belajar para siswa."
+      "description": "Tugas sekolah sebaiknya dikerjakan sesuai waktu yang telah ditentukan. Kebiasaan menunda tugas dapat membuat pekerjaan menumpuk dan menyebabkan seseorang terburu-buru ketika waktu pengumpulan sudah dekat.",
+      "contoh": "Sinta mendapat tugas yang harus dikumpulkan tiga hari lagi. Karena merasa masih memiliki banyak waktu, ia terus menundanya hingga akhirnya harus mengerjakannya pada malam sebelum dikumpulkan."
     },
     {
       "id": 4,
-      "slug": "gaya-hidup-sehat",
-      "name": "Gaya Hidup Sehat",
-      "icon": "💪",
+      "slug": "sampah-sembarangan",
+      "name": "Ke Mana Sampah Harus Dibuang?",
+      "icon": "🗑️",
       "color": "jungle",
-      "description": "Olahraga teratur, pola makan bergizi, dan istirahat yang cukup merupakan kunci menuju hidup yang sehat dan produktif."
+      "description": "Sampah yang dibuang sembarangan dapat membuat lingkungan menjadi kotor dan tidak nyaman. Menjaga kebersihan merupakan tanggung jawab setiap orang.",
+      "contoh": "Setelah membeli makanan, beberapa siswa meninggalkan bungkus makanan di bawah meja. Akibatnya, kelas menjadi kotor dan banyak sampah berserakan."
     },
     {
       "id": 5,
-      "slug": "krisis-kepercayaan",
-      "name": "Krisis Kepercayaan Diri",
-      "icon": "⭐",
-      "color": "sunshine",
-      "description": "Kurangnya rasa percaya diri dapat menghambat potensi dan kreativitas yang dimiliki generasi muda."
+      "slug": "membantu-teman",
+      "name": "Sudahkah Kita Membantu Teman?",
+      "icon": "🤝",
+      "color": "sky",
+      "description": "Setiap siswa dapat mengalami kesulitan, baik dalam belajar maupun dalam kegiatan sehari-hari. Membantu teman yang membutuhkan merupakan salah satu bentuk kepedulian dan kerja sama.",
+      "contoh": "Andi kesulitan memahami pelajaran. Ia sudah mencoba mengerjakan tugas sendiri, tetapi masih belum mengerti. Temannya kemudian membantu menjelaskan bagian yang belum dipahami."
     },
     {
       "id": 6,
-      "slug": "pendidikan",
-      "name": "Pentingnya Pendidikan",
-      "icon": "📚",
-      "color": "sky",
-      "description": "Pendidikan adalah kunci untuk membuka pintu kesempatan seluas-luasnya dan membangun masa depan bangsa yang gemilang."
+      "slug": "bercanda-menyakiti",
+      "name": "Bercanda atau Menyakiti?",
+      "icon": "🗣️",
+      "color": "coral",
+      "description": "Bercanda bersama teman dapat membuat suasana menjadi menyenangkan. Namun, candaan yang berlebihan atau membicarakan kekurangan seseorang dapat membuat teman merasa sedih atau tersinggung.",
+      "contoh": "Beberapa siswa menertawakan temannya karena salah menjawab pertanyaan. Mereka menganggapnya sebagai candaan, tetapi temannya merasa malu dan sedih."
     },
     {
       "id": 7,
-      "slug": "fomo",
-      "name": "Fenomena FOMO",
-      "icon": "😰",
-      "color": "coral",
-      "description": "Rasa takut ketinggalan atau Fear of Missing Out mendorong remaja untuk terus membandingkan diri hingga merasa tidak puas dengan kehidupannya."
+      "slug": "datang-terlambat",
+      "name": "Mengapa Datang Terlambat?",
+      "icon": "⏰",
+      "color": "sunshine",
+      "description": "Datang tepat waktu merupakan salah satu bentuk kedisiplinan. Kebiasaan bangun kesiangan atau tidak mempersiapkan keperluan sejak awal dapat menyebabkan seseorang terlambat ke sekolah.",
+      "contoh": "Beni tidur terlalu larut malam sehingga bangun kesiangan. Ia terburu-buru bersiap dan akhirnya tiba di sekolah setelah bel masuk berbunyi."
     },
     {
       "id": 8,
-      "slug": "lingkungan",
-      "name": "Kepedulian terhadap Lingkungan",
-      "icon": "🌍",
+      "slug": "kebersihan-kelas",
+      "name": "Siapa yang Menjaga Kebersihan Kelas?",
+      "icon": "🧹",
       "color": "jungle",
-      "description": "Menjaga kelestarian lingkungan adalah tanggung jawab bersama demi mewariskan bumi yang layak huni bagi generasi mendatang."
-    },
-    {
-      "id": 9,
-      "slug": "budaya-instan",
-      "name": "Budaya Instan",
-      "icon": "⚡",
-      "color": "sunshine",
-      "description": "Kebiasaan serba instan membuat remaja cenderung kurang sabar dan mudah menyerah saat menghadapi tantangan hidup."
-    },
-    {
-      "id": 10,
-      "slug": "toleransi",
-      "name": "Toleransi dan Perbedaan",
-      "icon": "🤝",
-      "color": "sky",
-      "description": "Menghargai perbedaan suku, agama, ras, dan budaya merupakan fondasi kokoh bagi persatuan dan kesatuan Indonesia."
+      "description": "Kebersihan kelas merupakan tanggung jawab seluruh siswa, bukan hanya siswa yang mendapat jadwal piket. Jika setiap siswa tidak peduli terhadap kebersihan, kelas dapat menjadi kotor dan tidak nyaman untuk belajar.",
+      "contoh": "Hari itu beberapa siswa mendapat jadwal piket, tetapi mereka tidak melaksanakan tugasnya. Sampah masih berserakan dan papan tulis belum dibersihkan. Akibatnya, kelas menjadi kurang nyaman digunakan untuk belajar."
     }
   ]
 }

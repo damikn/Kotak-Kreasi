@@ -171,24 +171,28 @@
                   Halo, {{ store.studentName }}!
                 </h2>
               </div>
-              <p class="font-nunito text-sm text-bark/70">Pilih menu untuk mulai berkreasi!</p>
+              <p class="font-nunito text-sm text-bark/70">Pilih menu untuk mulai berkreasi secara berurutan!</p>
               <p class="font-nunito text-xs text-bark/50 italic mt-0.5">
                 "Dari fenomena, lahir makna. Dari kata, tercipta karya."
               </p>
             </div>
 
-            <!-- Grid 2×2 Menu Cards (animasi stagger per kartu) -->
+            <!-- Grid 2×2 Menu Cards -->
             <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
               <button
                 v-for="(menu, idx) in menuList"
                 :key="menu.id"
                 @click="handleMenuClick(menu)"
                 class="relative rounded-2xl border-2 p-4 sm:p-5 text-left
-                       transition-all duration-200 hover:scale-105 hover:shadow-lg
-                       active:scale-100 focus:outline-none focus:ring-2 card-enter"
-                :class="[menu.bgClass, menu.borderClass, menu.focusClass]"
+                       transition-all duration-200 card-enter focus:outline-none focus:ring-2"
+                :class="[
+                  menu.bgClass,
+                  menu.borderClass,
+                  menu.focusClass,
+                  isMenuUnlocked(menu.step) ? 'hover:scale-105 hover:shadow-lg active:scale-100' : 'opacity-70 grayscale-[0.3]'
+                ]"
                 :style="{ animationDelay: (idx * 80) + 'ms' }"
-                :title="menu.label"
+                :title="isMenuUnlocked(menu.step) ? menu.label : `Selesaikan step ${menu.step - 1} terlebih dahulu`"
               >
                 <!-- Badge selesai -->
                 <span
@@ -197,6 +201,14 @@
                          text-white text-xs flex items-center justify-center font-bold shadow"
                   aria-label="Sudah selesai"
                 >✓</span>
+
+                <!-- Badge terkunci -->
+                <span
+                  v-else-if="!isMenuUnlocked(menu.step)"
+                  class="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-400/80
+                         text-white text-xs flex items-center justify-center font-bold shadow"
+                  aria-label="Terkunci"
+                >🔒</span>
 
                 <div class="text-3xl sm:text-4xl mb-2 sm:mb-3" aria-hidden="true">{{ menu.icon }}</div>
                 <div class="font-fredoka font-bold text-sm sm:text-base leading-tight" :class="menu.textClass">
@@ -214,11 +226,11 @@
                      hover:shadow-jungle/50 hover:-translate-y-0.5 active:translate-y-0
                      flex items-center justify-center gap-2"
             >
-              <span>▶</span><span>Mulai</span>
+              <span>▶</span><span>Mulai Berkelanjutan</span>
             </button>
 
             <p class="text-center font-nunito text-xs text-bark/50 mt-3 italic">
-              Ikuti 4 langkah: Fenomena → Pola → Rima → Susun Pantun
+              Ikuti 4 langkah berurutan: Fenomena → Pola → Rima → Susun Pantun
             </p>
           </div>
         </Transition>
@@ -226,16 +238,16 @@
       </div>
     </main>
 
-    <!-- Toast -->
+    <!-- Toast / Modal Peringatan -->
     <Transition name="toast">
       <div
         v-if="toastMsg"
         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50
-               bg-bark text-white font-nunito text-sm px-5 py-3
-               rounded-2xl shadow-xl flex items-center gap-2"
+               bg-bark text-white font-nunito text-sm px-6 py-3.5
+               rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm text-center border border-white/20"
         role="alert"
       >
-        <span>⚠️</span><span>{{ toastMsg }}</span>
+        <span class="text-xl">🔒</span><span>{{ toastMsg }}</span>
       </div>
     </Transition>
   </div>
@@ -268,13 +280,15 @@ const menuList = computed(() => {
   return []
 })
 
+// ── Cek apakah menu terbuka (sequential) ─────────────────
+function isMenuUnlocked(step) {
+  if (step === 1) return true
+  return store.isStepDone(step - 1)
+}
+
 // ── State fase animasi ────────────────────────────────────
-// 'box'     = tampilkan kotak ajaib
-// 'explode' = animasi meledak singkat
-// 'menu'    = tampilkan grid menu
 const phase = ref('box')
 
-// Bintang partikel dekorasi sekeliling kotak
 const starChars = ['✦', '★', '✨', '◆', '●', '✦', '★']
 const stars = Array.from({ length: 7 }, (_, i) => ({
   char:  starChars[i % starChars.length],
@@ -285,7 +299,6 @@ const stars = Array.from({ length: 7 }, (_, i) => ({
   dur:   2 + (i % 3) * 0.8,
 }))
 
-// Partikel ledak
 const particleColors = ['#27AE60', '#2980B9', '#F39C12', '#E74C3C', '#9B59B6', '#1ABC9C', '#E67E22', '#E91E63']
 const particles = Array.from({ length: 16 }, (_, i) => ({
   color: particleColors[i % particleColors.length],
@@ -294,19 +307,14 @@ const particles = Array.from({ length: 16 }, (_, i) => ({
 const isShaking = ref(false)
 
 function openBox() {
-  // Suara kotak terbuka
   audio.play('box-open')
-  // Goyang dulu
   isShaking.value = true
   setTimeout(() => {
     isShaking.value = false
     phase.value = 'explode'
-    // Suara ledak partikel
     audio.play('box-explode')
-    // Setelah animasi ledak, tampilkan menu
     setTimeout(() => {
       phase.value = 'menu'
-      // Suara kartu menu muncul (sedikit delay agar sync dengan animasi)
       setTimeout(() => audio.play('card-appear'), 80)
     }, 650)
   }, 300)
@@ -320,15 +328,26 @@ function showToast(msg) {
   toastMsg.value = msg
   audio.play('toast-warn')
   clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => { toastMsg.value = '' }, 2500)
+  toastTimer = setTimeout(() => { toastMsg.value = '' }, 3000)
 }
 
 function handleMenuClick(menu) {
-  if (menu.step === 1) { navigateTo(menu.route); return }
-  if (!store.isStepDone(menu.step - 1)) {
-    showToast('Selesaikan step sebelumnya dulu! 😊')
+  if (menu.step === 1) {
+    navigateTo(menu.route)
     return
   }
+
+  // Cek apakah step sebelumnya sudah selesai
+  if (!store.isStepDone(menu.step - 1)) {
+    const stepNames = {
+      2: 'Step 1 (Eksplorasi Fenomena)',
+      3: 'Step 2 (Rangkai Pola)',
+      4: 'Step 3 (Eksplorasi Rima)',
+    }
+    showToast(`Eits! Selesaikan ${stepNames[menu.step] || 'step sebelumnya'} dulu ya! 😊`)
+    return
+  }
+
   navigateTo(menu.route)
 }
 
@@ -344,7 +363,6 @@ onUnmounted(() => clearTimeout(toastTimer))
 </script>
 
 <style scoped>
-/* ── Transisi kotak hilang ──────────────────────────────── */
 .box-hide-leave-active {
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -353,7 +371,6 @@ onUnmounted(() => clearTimeout(toastTimer))
   transform: scale(0.5);
 }
 
-/* ── Transisi menu muncul ───────────────────────────────── */
 .menu-appear-enter-active {
   transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -362,7 +379,6 @@ onUnmounted(() => clearTimeout(toastTimer))
   transform: scale(0.85) translateY(20px);
 }
 
-/* ── Kartu menu stagger (animasi masuk satu-satu) ─────────  */
 .card-enter {
   animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
@@ -371,7 +387,6 @@ onUnmounted(() => clearTimeout(toastTimer))
   to   { opacity: 1; transform: scale(1)   translateY(0); }
 }
 
-/* ── Partikel ledak ─────────────────────────────────────── */
 @keyframes explode-0 { to { transform: translate(-120%, -120%) scale(0); opacity: 0; } }
 @keyframes explode-1 { to { transform: translate(0,     -160%) scale(0); opacity: 0; } }
 @keyframes explode-2 { to { transform: translate(120%,  -120%) scale(0); opacity: 0; } }
@@ -381,7 +396,6 @@ onUnmounted(() => clearTimeout(toastTimer))
 @keyframes explode-6 { to { transform: translate(-120%, 120%)  scale(0); opacity: 0; } }
 @keyframes explode-7 { to { transform: translate(-160%, 0)     scale(0); opacity: 0; } }
 
-/* ── Toast ──────────────────────────────────────────────── */
 .toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
 .toast-enter-from, .toast-leave-to {
   opacity: 0;

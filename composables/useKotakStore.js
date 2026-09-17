@@ -15,13 +15,20 @@ export const useKotakStore = defineStore('kotak', {
     phenomena: null,
 
     // Step 2: Pola pantun dari roda putar
-    // Struktur: { id, nama, deskripsi_sampiran, deskripsi_isi, aturan, contoh[] }
+    // Struktur: { id, nama, deskripsi_sampiran, deskripsi_isi, aturan, ruleType, contoh[] }
     pola: null,
 
-    // Step 3: Rima yang dipilih
+    // Step 3: Rima yang dipilih (2 Rima untuk sajak AB-AB)
+    // Rima A = Baris 1 & 3, Rima B = Baris 2 & 4
     rima: {
-      suffix: '',   // misal: '-an', '-i', '-a'
-      words: [],    // minimal 3 kata terpilih
+      rimaA: {
+        suffix: '', // misal '-i'
+        words: [],  // minimal 2 kata
+      },
+      rimaB: {
+        suffix: '', // misal '-an'
+        words: [],  // minimal 2 kata
+      },
     },
 
     // Step 4: Isi pantun 4 baris
@@ -39,12 +46,22 @@ export const useKotakStore = defineStore('kotak', {
   }),
 
   getters: {
+    // Getter gabungan rima (untuk backward compatibility)
+    allRimaWords: (state) => [
+      ...(state.rima.rimaA?.words || []),
+      ...(state.rima.rimaB?.words || []),
+    ],
+
     // Cek apakah semua data lengkap
     isComplete: (state) =>
       !!state.studentName &&
       !!state.phenomena &&
       !!state.pola &&
-      state.rima.words.length >= 3 &&
+      !!state.rima.rimaA?.suffix &&
+      state.rima.rimaA.words.length >= 2 &&
+      !!state.rima.rimaB?.suffix &&
+      state.rima.rimaB.words.length >= 2 &&
+      state.rima.rimaA.suffix !== state.rima.rimaB.suffix &&
       !!state.pantun.baris1 &&
       !!state.pantun.baris2 &&
       !!state.pantun.baris3 &&
@@ -67,20 +84,38 @@ export const useKotakStore = defineStore('kotak', {
         state.pantun.baris4,
       ].filter((b) => b.trim().length > 0).length,
 
-    // Auto-check: apakah kata rima muncul di baris isi (3 atau 4)
+    // Auto-check: apakah kata Rima A muncul di baris 1/3 dan kata Rima B di baris 2/4
     rimaCheck: (state) => {
-      if (!state.rima.words.length) return false
-      const words = state.rima.words.map((w) => w.toLowerCase())
+      const wordsA = (state.rima.rimaA?.words || []).map((w) => w.toLowerCase())
+      const wordsB = (state.rima.rimaB?.words || []).map((w) => w.toLowerCase())
+      if (!wordsA.length && !wordsB.length) return false
+
+      const b1 = state.pantun.baris1.toLowerCase()
+      const b2 = state.pantun.baris2.toLowerCase()
       const b3 = state.pantun.baris3.toLowerCase()
       const b4 = state.pantun.baris4.toLowerCase()
-      return words.some((w) => b3.includes(w) || b4.includes(w))
+
+      const hasA = wordsA.some((w) => b1.includes(w) || b3.includes(w))
+      const hasB = wordsB.some((w) => b2.includes(w) || b4.includes(w))
+
+      return hasA || hasB
     },
 
     // Check apakah step tertentu sudah selesai
     isStepDone: (state) => (step) => {
       if (step === 1) return !!state.phenomena
       if (step === 2) return !!state.pola
-      if (step === 3) return state.rima.words.length >= 3
+      if (step === 3) {
+        const rA = state.rima?.rimaA
+        const rB = state.rima?.rimaB
+        return (
+          !!rA?.suffix &&
+          (rA?.words?.length || 0) >= 2 &&
+          !!rB?.suffix &&
+          (rB?.words?.length || 0) >= 2 &&
+          rA?.suffix !== rB?.suffix
+        )
+      }
       if (step === 4) return state.filledLines === 4
       return false
     },
@@ -101,8 +136,17 @@ export const useKotakStore = defineStore('kotak', {
       this.step = Math.max(this.step, 2)
     },
 
-    setRima(suffix, words) {
-      this.rima = { suffix, words }
+    setRima(rimaA, rimaB) {
+      this.rima = {
+        rimaA: {
+          suffix: rimaA?.suffix || '',
+          words: [...(rimaA?.words || [])],
+        },
+        rimaB: {
+          suffix: rimaB?.suffix || '',
+          words: [...(rimaB?.words || [])],
+        },
+      }
       this.step = Math.max(this.step, 3)
     },
 
@@ -129,7 +173,10 @@ export const useKotakStore = defineStore('kotak', {
     resetPantun() {
       this.phenomena = null
       this.pola = null
-      this.rima = { suffix: '', words: [] }
+      this.rima = {
+        rimaA: { suffix: '', words: [] },
+        rimaB: { suffix: '', words: [] },
+      }
       this.pantun = { baris1: '', baris2: '', baris3: '', baris4: '' }
       this.savedImageUrl = ''
       this.savedImageBase64 = ''

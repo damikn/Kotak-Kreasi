@@ -131,7 +131,6 @@
 
         leading-[1.3]
 
-        line-clamp-3
         break-words
       " :class="selected ? 'text-jungle' : 'text-gray-700'">
       {{ phenomena.name }}
@@ -139,7 +138,7 @@
 
 
     <!-- ================================================
-         DESKRIPSI — cukup tampil 2 baris, hidden di layar xs jika terlalu padat
+         DESKRIPSI — tampil penuh tanpa terpotong
          ================================================ -->
     <span v-if="phenomena.description" class="
         mt-1.5
@@ -157,9 +156,8 @@
 
         leading-[1.35]
 
-        text-gray-400
+        text-gray-500
 
-        line-clamp-2
         break-words
       ">
       {{ phenomena.description }}

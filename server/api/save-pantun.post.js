@@ -106,17 +106,23 @@ export default defineEventHandler(async (event) => {
     ? '(Drive: perlu Shared Drive)'
     : '(foto tidak tersimpan)')
 
-  // Kolom L: simpan base64 asli jika muat di sel Sheets (<= 45.000 karakter)
-  // Jika terlalu besar, simpan keterangan ukurannya
   let base64Cell = ''
   if (imageBase64) {
-    // base64 string panjangnya ~1.37× ukuran binary
     if (imageBase64.length <= 45000) {
       base64Cell = imageBase64
     } else {
       const sizeKb = Math.round(imageBase64.length * 0.75 / 1024)
       base64Cell = `[gambar JPG ~${sizeKb}KB — unduh dari aplikasi]`
     }
+  }
+
+  // Format rima A dan B
+  let rimaSuffixCell = rima?.suffix ?? ''
+  let rimaWordsCell   = (rima?.words ?? []).join(', ')
+
+  if (rima?.rimaA?.suffix && rima?.rimaB?.suffix) {
+    rimaSuffixCell = `A:${rima.rimaA.suffix}, B:${rima.rimaB.suffix}`
+    rimaWordsCell  = `A: ${(rima.rimaA.words || []).join(', ')} | B: ${(rima.rimaB.words || []).join(', ')}`
   }
 
   await sheets.spreadsheets.values.append({
@@ -129,14 +135,14 @@ export default defineEventHandler(async (event) => {
         studentName,
         phenomena ?? '',
         pola ?? '',
-        rima?.suffix ?? '',
-        (rima?.words ?? []).join(', '),
+        rimaSuffixCell,
+        rimaWordsCell,
         pantunLines[0] ?? '',
         pantunLines[1] ?? '',
         pantunLines[2] ?? '',
         pantunLines[3] ?? '',
-        driveCell,        // K: Link Drive (atau status)
-        base64Cell,       // L: Base64 gambar (jika muat di sel)
+        driveCell,        // K: Link Drive
+        base64Cell,       // L: Base64 gambar
       ]],
     },
   })

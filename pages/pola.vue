@@ -83,7 +83,7 @@
         </div>
 
         <!-- Kolom kanan: Kartu hasil pola -->
-        <div class="lg:w-80 xl:w-96 w-full shrink-0 overflow-hidden">
+        <div class="lg:w-80 xl:w-96 w-full shrink-0">
 
           <!-- Belum spin -->
           <div
@@ -124,11 +124,11 @@
               <div class="space-y-2 mb-4">
                 <div class="bg-sky/10 rounded-xl p-3">
                   <p class="font-nunito text-xs font-bold text-sky mb-1">📋 Pola sampiran:</p>
-                  <p class="font-nunito text-xs text-gray-600">{{ selectedPola.deskripsi_sampiran }}</p>
+                  <p class="font-nunito text-xs text-gray-600 leading-relaxed">{{ selectedPola.deskripsi_sampiran }}</p>
                 </div>
                 <div class="bg-jungle/10 rounded-xl p-3">
                   <p class="font-nunito text-xs font-bold text-jungle mb-1">💡 Pola isi:</p>
-                  <p class="font-nunito text-xs text-gray-600">{{ selectedPola.deskripsi_isi }}</p>
+                  <p class="font-nunito text-xs text-gray-600 leading-relaxed">{{ selectedPola.deskripsi_isi }}</p>
                 </div>
               </div>
 
@@ -147,7 +147,7 @@
 
               <!-- Aturan -->
               <div class="bg-sky/5 border border-sky/20 rounded-lg p-2">
-                <p class="font-nunito text-xs text-sky/80">
+                <p class="font-nunito text-xs text-sky/80 leading-relaxed">
                   📌 <strong>Aturan:</strong> {{ selectedPola.aturan }}
                 </p>
               </div>
@@ -157,8 +157,8 @@
           <!-- Panel "pola yang kamu dapatkan" di bawah -->
           <div class="mt-4 bg-white/60 border border-sunshine/20 rounded-xl px-4 py-3">
             <p class="font-nunito text-xs text-gray-400 mb-1">Pola yang kamu dapatkan:</p>
-            <p class="font-nunito text-sm font-semibold" :class="selectedPola ? 'text-bark' : 'text-gray-300'">
-              {{ selectedPola ? `${selectedPola.nama}` : '...' }}
+            <p class="font-nunito text-sm font-semibold break-words" :class="selectedPola ? 'text-bark' : 'text-gray-400'">
+              {{ selectedPola ? `${selectedPola.nama}` : 'Belum ada pola dipilih' }}
             </p>
           </div>
         </div>
