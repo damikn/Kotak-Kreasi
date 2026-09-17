@@ -271,19 +271,30 @@
                  INPUT
                  ============================================= -->
 
-            <input id="nama-input" ref="namaInputElement" v-model="namaInput" type="text" placeholder="Nama Siswa"
-              autocomplete="given-name" maxlength="50" class="flex-1
-                     border-2 rounded-xl
-                     px-4 py-3
-                     font-fredoka text-lg
-                     text-center
-                     focus:outline-none
-                     transition-all duration-200
-                     bg-white/80" :class="[
-                      inputError
-                        ? 'border-coral animate-shake focus:border-coral'
-                        : 'border-jungle/30 focus:border-jungle focus:ring-2 focus:ring-jungle/20'
-                    ]" @input="handleNameInput" @keydown.enter.prevent="handleSubmit" aria-describedby="nama-error" />
+            <div class="flex-1 relative">
+              <input id="nama-input" ref="namaInputElement" v-model="namaInput" type="text" placeholder="Nama Siswa"
+                autocomplete="given-name" maxlength="20" class="w-full
+                       border-2 rounded-xl
+                       px-4 py-3
+                       font-fredoka text-lg
+                       text-center
+                       focus:outline-none
+                       transition-all duration-200
+                       bg-white/80" :class="[
+                        inputError
+                          ? 'border-coral animate-shake focus:border-coral'
+                          : namaInput.length >= 18
+                            ? 'border-sunshine focus:border-sunshine focus:ring-2 focus:ring-sunshine/20'
+                            : 'border-jungle/30 focus:border-jungle focus:ring-2 focus:ring-jungle/20'
+                      ]" @input="handleNameInput" @keydown.enter.prevent="handleSubmit" aria-describedby="nama-error nama-counter" />
+              <!-- Counter karakter -->
+              <span
+                id="nama-counter"
+                class="absolute right-2 bottom-1 text-[10px] font-nunito font-semibold leading-none pointer-events-none select-none transition-colors"
+                :class="namaInput.length >= 20 ? 'text-coral' : namaInput.length >= 18 ? 'text-sunshine' : 'text-gray-300'"
+                aria-live="polite"
+              >{{ namaInput.length }}/20</span>
+            </div>
 
 
             <!-- =============================================
@@ -333,9 +344,7 @@
 
             <span>⚠️</span>
 
-            <span>
-              Nama minimal 2 karakter ya!
-            </span>
+            <span>{{ errorMessage }}</span>
 
           </p>
 
@@ -359,9 +368,9 @@
                   ">
           "Satu ide kecil, bisa jadi pantun luar biasa!"
         </p>
-        <button @click="mulai">
+        <!-- <button @click="mulai">
           🌳 Mulai Bermain
-        </button>
+        </button> -->
 
       </div>
 
@@ -516,6 +525,13 @@ const namaInput = ref(
 
 const inputError = ref(false)
 
+const errorMessage = computed(() => {
+  const len = namaInput.value.trim().length
+  if (len < 2) return 'Nama minimal 2 karakter ya!'
+  if (len > 20) return 'Nama maksimal 20 karakter ya!'
+  return ''
+})
+
 const showHint = ref(false)
 
 const namaInputElement = ref(null)
@@ -585,7 +601,7 @@ function handleSubmit() {
 
   const nama = namaInput.value.trim()
 
-  if (nama.length < 2) {
+  if (nama.length < 2 || nama.length > 20) {
 
     inputError.value = true
     audio.play('toast-warn')

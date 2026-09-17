@@ -18,12 +18,12 @@
       <!-- Nama siswa (hanya muncul jika sudah login) -->
       <div
         v-if="store.studentName"
-        class="flex items-center gap-2 text-sm text-bark font-nunito font-semibold bg-emerald-50/80 px-3 py-1 rounded-full border border-emerald-200/50"
+        class="flex items-center gap-2 text-sm text-bark font-nunito font-semibold bg-emerald-50/80 px-3 py-1 rounded-full border border-emerald-200/50 min-w-0 overflow-hidden"
       >
-        <span class="text-base">👤</span>
-        <span class="hidden sm:inline text-gray-500">Halo,</span>
-        <span class="text-jungle font-bold">{{ store.studentName }}</span>
-        <span class="hidden sm:inline">👋</span>
+        <span class="text-base shrink-0">👤</span>
+        <span class="hidden sm:inline text-gray-500 shrink-0">Halo,</span>
+        <span class="text-jungle font-bold truncate max-w-[120px] sm:max-w-[160px]" :title="store.studentName">{{ store.studentName }}</span>
+        <span class="hidden sm:inline shrink-0">👋</span>
       </div>
 
       <!-- Tombol kanan: Mute + Keluar -->
