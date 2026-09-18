@@ -297,7 +297,7 @@ const { data: rhymeData, pending: pendingRhymes } = await useAsyncData(
 const suffixColorMap = {
   '-a': '#E53935', '-i': '#FB8C00', '-an': '#43A047',
   '-ar': '#8E24AA', '-ang': '#1E88E5', '-ai': '#D81B60',
-  '-at': '#F9A825', '-en': '#00897B', '-in': '#F44336', '-it': '#795548',
+  '-at': '#F9A825', '-ah': '#00ACC1', '-in': '#F44336', '-it': '#795548',
 }
 
 const wordCategories = [

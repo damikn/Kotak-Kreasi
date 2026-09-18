@@ -98,7 +98,7 @@ export const useKotakStore = defineStore('kotak', {
       const hasA = wordsA.some((w) => b1.includes(w) || b3.includes(w))
       const hasB = wordsB.some((w) => b2.includes(w) || b4.includes(w))
 
-      return hasA || hasB
+      return hasA && hasB
     },
 
     // Check apakah step tertentu sudah selesai

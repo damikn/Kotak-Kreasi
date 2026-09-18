@@ -16,8 +16,8 @@ export default defineEventHandler(async (event) => {
   // Baca data dari file JSON content
   // Gunakan $fetch internal agar tidak ada dependency ke googleapis
   try {
-    const { queryContent } = await import('#content/server')
-    const data = await queryContent('/rhyme-words').findOne()
+    const { serverQueryContent } = await import('#content/server')
+    const data = await serverQueryContent(event, '/rhyme-words').findOne()
 
     if (!data || !data[suffix]) {
       throw createError({
