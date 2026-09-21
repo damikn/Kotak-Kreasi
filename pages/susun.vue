@@ -857,7 +857,7 @@ async function handleSimpan() {
       },
     })
 
-    store.setSavedResult(result.driveUrl ?? '', result.sessionId ?? '')
+    store.setSavedResult(result.driveUrl ?? '', result.sessionId ?? '', result.kodeKarya ?? '', result.autoScore ?? null)
     store.setImageBase64(base64)
     audio.play('save-success')
     navigateTo('/hasil')

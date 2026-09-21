@@ -13,6 +13,12 @@ node_modules
 logs
 *.log
 
+# Environment / secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
 # Misc
 .DS_Store
 .fleet

@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     googlePrivateKey: process.env.GOOGLE_PRIVATE_KEY,
     googleDriveFolderId: process.env.GOOGLE_DRIVE_FOLDER_ID,
     googleSheetsId: process.env.GOOGLE_SHEETS_ID,
+    guruPin: process.env.GURU_PIN || '',
   },
 
   app: {

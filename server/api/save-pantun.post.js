@@ -1,9 +1,19 @@
 // server/api/save-pantun.post.js
-// Menyimpan pantun ke Google Sheets.
-// Gambar di-upload ke Google Drive jika folder Drive adalah Shared Drive.
-// Jika tidak (akun Gmail biasa), data tetap tersimpan di Sheets tanpa gambar.
+// Menyimpan pantun ke Google Sheets + upload gambar ke Google Drive (Shared Drive).
+// Kolom:
+//   A Tanggal, B Nama Siswa, C Fenomena, D Pola, E Suffix Rima, F Kata Rima,
+//   G-J Baris 1-4, K Link Drive, L Gambar (Base64), M Kode Karya,
+//   N Skor Auto, O Nilai Guru, P Komentar, Q Status
 import { google } from 'googleapis'
 import { Readable } from 'stream'
+import { validatePantun } from '../utils/validate-pantun'
+import { getGoogleAuth } from '../utils/google-auth'
+import { RANGE_FULL, SHEET_HEADERS, ensureHeaderRow } from '../utils/sheets'
+
+// Kode unik per karya siswa (dipakai sebagai primary key di penilaian)
+export function generateKodeKarya() {
+  return `KK-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 5).toUpperCase()}`
+}
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -17,29 +27,32 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  if (!config.googleClientEmail || !config.googlePrivateKey) {
+  const keyLooksReal = config.googlePrivateKey
+    ? config.googlePrivateKey.includes('-----BEGIN') && !config.googlePrivateKey.includes('REDACTED')
+    : false
+  if (!config.googleClientEmail || !keyLooksReal) {
     throw createError({
       statusCode: 500,
-      statusMessage: 'Konfigurasi Google API belum diisi.',
+      statusMessage: 'Konfigurasi Google API belum diisi dengan kunci service account yang valid.',
     })
   }
 
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: config.googleClientEmail,
-      private_key: config.googlePrivateKey?.replace(/\\n/g, '\n'),
-    },
-    scopes: [
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/spreadsheets',
-    ],
-  })
+  // Normalisasi nilai yang bisa object (defensif dari client)
+  const polaCell = typeof pola === 'string'
+    ? pola
+    : (pola?.nama ?? JSON.stringify(pola ?? ''))
+  const phenomenaCell = typeof phenomena === 'string'
+    ? phenomena
+    : (phenomena?.name ?? JSON.stringify(phenomena ?? ''))
+
+  const auth = getGoogleAuth(config)
   const authClient = await auth.getClient()
 
   const timestamp = Date.now()
   const safeName = (studentName ?? 'siswa')
     .replace(/[^a-zA-Z0-9_\- ]/g, '').trim().replace(/\s+/g, '_')
   const filename = `pantun_${safeName}_${timestamp}.jpg`
+  const kodeKarya = generateKodeKarya()
 
   // ── 1. Coba upload ke Google Drive ───────────────────────
   let driveUrl = ''
@@ -50,7 +63,6 @@ export default defineEventHandler(async (event) => {
     try {
       const drive = google.drive({ version: 'v3', auth: authClient })
 
-      // Cek apakah folder Shared Drive
       const folderInfo = await drive.files.get({
         fileId: config.googleDriveFolderId,
         fields: 'id,name,driveId',
@@ -60,10 +72,8 @@ export default defineEventHandler(async (event) => {
       const isSharedDrive = !!folderInfo.data?.driveId
 
       if (!isSharedDrive) {
-        // My Drive — service account tidak bisa upload, skip
         driveStatus = 'unavailable_my_drive'
       } else {
-        // Shared Drive — bisa upload
         const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '')
         const stream = Readable.from(Buffer.from(base64Data, 'base64'))
 
@@ -94,8 +104,12 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // ── 2. Simpan ke Google Sheets ────────────────────────────
+  // ── 2. Auto-score dengan shared validation engine ─────────
+  const validation = validatePantun({ lines: pantunLines, rima, pola })
+
+  // ── 3. Simpan ke Google Sheets ────────────────────────────
   const sheets = google.sheets({ version: 'v4', auth: authClient })
+  await ensureHeaderRow(sheets, config.googleSheetsId)
 
   const tanggal = new Date().toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric',
@@ -116,39 +130,45 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Format rima A dan B
   let rimaSuffixCell = rima?.suffix ?? ''
-  let rimaWordsCell   = (rima?.words ?? []).join(', ')
+  let rimaWordsCell = (rima?.words ?? []).join(', ')
 
   if (rima?.rimaA?.suffix && rima?.rimaB?.suffix) {
     rimaSuffixCell = `A:${rima.rimaA.suffix}, B:${rima.rimaB.suffix}`
-    rimaWordsCell  = `A: ${(rima.rimaA.words || []).join(', ')} | B: ${(rima.rimaB.words || []).join(', ')}`
+    rimaWordsCell = `A: ${(rima.rimaA.words || []).join(', ')} | B: ${(rima.rimaB.words || []).join(', ')}`
   }
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: config.googleSheetsId,
-    range: 'Sheet1!A:L',
+    range: RANGE_FULL,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
       values: [[
         tanggal,
         studentName,
-        phenomena ?? '',
-        pola ?? '',
+        phenomenaCell,
+        polaCell,
         rimaSuffixCell,
         rimaWordsCell,
         pantunLines[0] ?? '',
         pantunLines[1] ?? '',
         pantunLines[2] ?? '',
         pantunLines[3] ?? '',
-        driveCell,        // K: Link Drive
-        base64Cell,       // L: Base64 gambar
+        driveCell,        // K
+        base64Cell,       // L
+        kodeKarya,        // M
+        validation.score, // N
+        '',               // O — nilai guru (belum)
+        '',               // P — komentar guru
+        'BELUM DINILAI',  // Q — status
       ]],
     },
   })
 
   return {
     success: true,
+    kodeKarya,
+    autoScore: validation.score,
     sessionId: fileId,
     driveUrl,
     driveStatus,

@@ -43,6 +43,8 @@ export const useKotakStore = defineStore('kotak', {
     savedImageUrl: '',     // URL Google Drive (jika berhasil upload)
     savedImageBase64: '',  // base64 JPG untuk download lokal di browser
     sessionId: '',         // session / file ID
+    kodeKarya: '',         // kode unik karya (dari server)
+    autoScore: null,       // skor otomatis dari server
   }),
 
   getters: {
@@ -159,9 +161,11 @@ export const useKotakStore = defineStore('kotak', {
       }
     },
 
-    setSavedResult(driveUrl, sessionId) {
+    setSavedResult(driveUrl, sessionId, kodeKarya, autoScore) {
       this.savedImageUrl = driveUrl
       this.sessionId = sessionId
+      if (kodeKarya) this.kodeKarya = kodeKarya
+      if (typeof autoScore === 'number') this.autoScore = autoScore
     },
 
     // Simpan base64 gambar untuk download lokal
