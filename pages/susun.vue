@@ -162,7 +162,7 @@
             <p class="font-nunito text-xs text-gray-400">
               <span class="font-bold" :class="filledCount >= 4 ? 'text-jungle' : 'text-coral'">{{ filledCount }}/4</span> baris terisi
             </p>
-            <button @click="clearPantun" class="text-xs text-gray-300 hover:text-coral font-nunito transition-colors">🗑 Kosongkan</button>
+            <button @click="showClearConfirm = true" class="text-xs text-gray-300 hover:text-coral font-nunito transition-colors">🗑 Kosongkan</button>
           </div>
         </div>
 
@@ -327,6 +327,16 @@
         </div>
       </div>
     </Transition>
+
+    <ConfirmDialog
+      v-model="showClearConfirm"
+      title="Kosongkan Semua Baris?"
+      message="Yakin ingin menghapus semua baris pantun?"
+      confirm-text="Ya, Kosongkan"
+      cancel-text="Batal"
+      danger
+      @confirm="clearPantun"
+    />
   </div>
 </template>
 
@@ -466,10 +476,8 @@ function syncStore() {
 }
 
 function clearPantun() {
-  if (confirm('Yakin ingin menghapus semua baris pantun?')) {
-    pantunLines[0] = pantunLines[1] = pantunLines[2] = pantunLines[3] = ''
-    syncStore()
-  }
+  pantunLines[0] = pantunLines[1] = pantunLines[2] = pantunLines[3] = ''
+  syncStore()
 }
 
 // ── Validation Engine ─────────────────────────────────────
@@ -817,6 +825,7 @@ const progressArc = computed(() => Math.round((doneCount.value / totalChecks) * 
 
 // ── Modal Feedback state ──────────────────────────────────
 const showFeedbackModal = ref(false)
+const showClearConfirm = ref(false)
 
 // ── Simpan karya ─────────────────────────────────────────
 const isSaving  = ref(false)

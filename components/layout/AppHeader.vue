@@ -61,10 +61,10 @@
         <!-- Tombol Keluar -->
         <button
           v-if="store.studentName"
-          @click="handleKeluar"
+          @click="showKeluarConfirm = true"
           class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 hover:text-coral
-                 border border-gray-200 hover:border-coral/40 rounded-lg px-2.5 py-1.5
-                 transition-colors font-nunito font-semibold"
+                border border-gray-200 hover:border-coral/40 rounded-lg px-2.5 py-1.5
+                transition-colors font-nunito font-semibold"
           title="Keluar dan mulai ulang"
           aria-label="Keluar"
         >
@@ -74,6 +74,15 @@
       </div>
     </div>
   </header>
+
+  <ConfirmDialog
+    v-model="showKeluarConfirm"
+    title="Keluar dari Kotak Kreasi?"
+    message="Yakin ingin keluar? Progress pantunmu akan disimpan."
+    confirm-text="Ya, Keluar"
+    cancel-text="Tetap di Sini"
+    @confirm="handleKeluar"
+  />
 </template>
 
 <script setup>
@@ -83,13 +92,13 @@ import { useAudio }      from '~/composables/useAudio'
 const store = useKotakStore()
 const audio = useAudio()
 
+const showKeluarConfirm = ref(false)
+
 function handleToggleMute() {
   audio.toggleMute()
 }
 
 function handleKeluar() {
-  if (confirm('Yakin ingin keluar? Progress pantunmu akan disimpan.')) {
-    navigateTo('/')
-  }
+  navigateTo('/')
 }
 </script>

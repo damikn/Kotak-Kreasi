@@ -109,6 +109,27 @@
             </button>
           </div>
 
+          <!-- Search by student name -->
+          <div class="mb-4">
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none" aria-hidden="true">🔍</span>
+              <input
+                v-model="searchQuery"
+                type="search"
+                placeholder="Cari nama siswa..."
+                class="w-full font-nunito text-sm border border-gray-200 rounded-xl pl-10 pr-9 py-2.5
+                       bg-white/85 focus:outline-none focus:ring-2 focus:ring-sky/40 focus:border-sky
+                       transition-all shadow-sm"
+              />
+              <button
+                v-if="searchQuery"
+                @click="searchQuery = ''"
+                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-coral text-xl leading-none"
+                aria-label="Bersihkan pencarian"
+              >×</button>
+            </div>
+          </div>
+
           <!-- Loading -->
           <div v-if="loading" class="bg-white/80 rounded-2xl p-10 text-center">
             <div class="w-10 h-10 mx-auto border-4 border-sky/30 border-t-sky rounded-full animate-spin mb-3"></div>
@@ -116,9 +137,9 @@
           </div>
 
           <!-- Daftar karya -->
-          <div v-else-if="filteredWorks.length" class="space-y-3">
+          <div v-else-if="pagedWorks.length" class="space-y-3">
             <div
-              v-for="w in filteredWorks" :key="w.kode"
+              v-for="(w, i) in pagedWorks" :key="`${w.kode}-${i}`"
               class="bg-white/85 backdrop-blur rounded-2xl border border-white/60 shadow-sm
                      p-4 hover:shadow-md transition-all cursor-pointer"
               @click="selectWork(w)"
@@ -162,6 +183,39 @@
             <p class="text-4xl mb-3">📭</p>
             <p class="font-nunito text-gray-500">Belum ada karya siswa.</p>
             <p class="font-nunito text-xs text-gray-400 mt-1">Karya yang disimpan dari halaman /hasil akan muncul di sini.</p>
+          </div>
+
+          <!-- Pagination -->
+          <div v-if="totalPages > 1" class="mt-6 flex flex-wrap items-center justify-center gap-1.5">
+            <button
+              @click="changePage(currentPage - 1)"
+              :disabled="currentPage <= 1"
+              class="w-9 h-9 rounded-xl border font-nunito text-sm font-bold transition-all
+                     disabled:opacity-40 disabled:cursor-not-allowed
+                     border-gray-200 text-gray-500 hover:border-sky/40 hover:text-sky"
+              aria-label="Halaman sebelumnya"
+            >‹</button>
+
+            <template v-for="p in pageNumbers" :key="p">
+              <button
+                v-if="p !== '…'"
+                @click="changePage(p)"
+                class="min-w-[2.25rem] h-9 px-2 rounded-xl border font-nunito text-sm font-bold transition-all"
+                :class="p === currentPage
+                  ? 'bg-jungle text-white border-jungle shadow-sm'
+                  : 'border-gray-200 text-gray-500 hover:border-jungle/40 hover:text-jungle'"
+              >{{ p }}</button>
+              <span v-else class="px-1 text-gray-400 font-nunito">…</span>
+            </template>
+
+            <button
+              @click="changePage(currentPage + 1)"
+              :disabled="currentPage >= totalPages"
+              class="w-9 h-9 rounded-xl border font-nunito text-sm font-bold transition-all
+                     disabled:opacity-40 disabled:cursor-not-allowed
+                     border-gray-200 text-gray-500 hover:border-sky/40 hover:text-sky"
+              aria-label="Halaman berikutnya"
+            >›</button>
           </div>
         </div>
       </div>
@@ -312,6 +366,9 @@ const loading = ref(false)
 const error = ref('')
 const works = ref([])
 const filter = ref('semua')
+const searchQuery = ref('')
+const currentPage = ref(1)
+const PAGE_SIZE = 10
 const selected = ref(null)
 const detailValidation = ref(null)
 const grading = ref(false)
@@ -329,9 +386,46 @@ const filters = [
 ]
 
 const filteredWorks = computed(() => {
-  if (filter.value === 'belum') return works.value.filter(w => w.status !== 'SUDAH DINILAI')
-  if (filter.value === 'sudah') return works.value.filter(w => w.status === 'SUDAH DINILAI')
-  return works.value
+  let list = works.value
+  if (filter.value === 'belum') list = list.filter(w => w.status !== 'SUDAH DINILAI')
+  if (filter.value === 'sudah') list = list.filter(w => w.status === 'SUDAH DINILAI')
+  const q = searchQuery.value.trim().toLowerCase()
+  if (q) list = list.filter(w => (w.nama || '').toLowerCase().includes(q))
+  return list
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredWorks.value.length / PAGE_SIZE)))
+
+const pagedWorks = computed(() => {
+  const start = (currentPage.value - 1) * PAGE_SIZE
+  return filteredWorks.value.slice(start, start + PAGE_SIZE)
+})
+
+// Window of page numbers around the current page, with '…' for gaps
+const pageNumbers = computed(() => {
+  const total = totalPages.value
+  const cur = currentPage.value
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+  const pages = new Set([1, total, cur - 1, cur, cur + 1])
+  const sorted = [...pages].filter(p => p >= 1 && p <= total).sort((a, b) => a - b)
+  const out = []
+  let prev = 0
+  for (const p of sorted) {
+    if (p - prev > 1) out.push('…')
+    out.push(p)
+    prev = p
+  }
+  return out
+})
+
+function changePage(p) {
+  const next = Math.min(Math.max(1, p), totalPages.value)
+  currentPage.value = next
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+watch(filteredWorks, () => {
+  currentPage.value = 1
 })
 
 const belumDini = computed(() => works.value.filter(w => w.status !== 'SUDAH DINILAI').length)
