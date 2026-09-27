@@ -9,12 +9,12 @@ Platform pembelajaran pantun interaktif untuk siswa SMP/SMA.
 | Komponen | Status |
 |----------|--------|
 | Build Nuxt 3 | ✅ Berhasil |
-| Google Auth (Service Account) | ✅ Terhubung |
-| Google Sheets API | ✅ Aktif & berfungsi |
-| Google Drive API | ✅ Aktif (folder terdeteksi) |
-| Upload foto ke Drive | ⚠️ Butuh Shared Drive (lihat setup) |
+| Koneksi Supabase (Postgres) | ✅ Tabel `works` + RLS aktif |
+| Supabase Storage | ✅ Bucket privat `works-images` |
+| Upload gambar kartu | ✅ Berfungsi (signed URL 5 menit) |
+| Dashboard guru (/guru) | ✅ Baca/tulis nilai + flag galeri |
 
-**Aplikasi berfungsi penuh.** Data pantun siswa tersimpan di Google Sheets. Upload foto otomatis ke Drive aktif jika folder diubah ke Shared Drive.
+**Aplikasi berfungsi penuh.** Data pantun siswa tersimpan di tabel `works` pada Supabase Postgres, gambar kartu di bucket privat Supabase Storage. Schema dibuat oleh `supabase/provision.sql`.
 
 ---
 

@@ -30,11 +30,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    // Server-only (private)
-    googleClientEmail: process.env.GOOGLE_CLIENT_EMAIL,
-    googlePrivateKey: process.env.GOOGLE_PRIVATE_KEY,
-    googleDriveFolderId: process.env.GOOGLE_DRIVE_FOLDER_ID,
-    googleSheetsId: process.env.GOOGLE_SHEETS_ID,
+    // Server-only (private): Supabase Postgres + Storage, teacher PIN
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    supabaseBucket: process.env.SUPABASE_BUCKET || 'works-images',
     guruPin: process.env.GURU_PIN || '',
   },
 
@@ -56,7 +55,7 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  piniaPluginPersistedstate: {
+  piniaPersistedstate: {
     storage: 'localStorage',
   },
 

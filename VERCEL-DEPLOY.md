@@ -16,13 +16,14 @@ Sebelum mulai, pastikan hal ini udah siap:
 
 | Variable | Dari mana | Contoh |
 |----------|-----------|--------|
-| `GOOGLE_CLIENT_EMAIL` | file JSON service account → `client_email` | `kotak-kreasi@leafy-flash-469016-i7.iam.gserviceaccount.com` |
-| `GOOGLE_PRIVATE_KEY` | file JSON service account → `private_key` | `-----BEGIN PRIVATE KEY-----\n...` |
-| `GOOGLE_SHEETS_ID` | URL spreadsheet → bagian `d/.../` | `1RJDEVpbSNHcs5N04xnj6F5wyIBS4jhIB20wdibVu4jA` |
-| `GOOGLE_DRIVE_FOLDER_ID` | ID folder Shared Drive (opsional) | `0ABC...` |
-| `GURU_PIN` | bebas (PIN dashboard guru) | `856462` |
+| `NUXT_SUPABASE_URL` | Supabase → Settings → API Keys → **Project URL** | `https://<ref>.supabase.co` |
+| `NUXT_SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API Keys → tab **Publishable and secret API keys** → **secret key** | `sb_secret_...` |
+| `NUXT_SUPABASE_BUCKET` | nama bucket gambar | `works-images` |
+| `NUXT_GURU_PIN` | PIN dashboard guru | `856462` |
 
-> ⚠️ File JSON service account **tidak ikut di-commit** — hanya nilainya yang dipakai (client_email + private_key). Simpan file JSON di tempat aman (password manager / lokal).
+> ⚠️ Secret key Supabase (dan key lama `service_role`) **jangan pernah** masuk repo, bundle browser,
+> atau log. Di lokal simpan di `.env` (sudah ter-gitignore), di Vercel cukup sebagai Environment
+> Variable. Key publishable (`sb_publishable_...`) bukan penggantinya — key itu untuk kode client.
 
 ---
 
@@ -67,29 +68,23 @@ Ini bagian **paling penting** — Vercel ga baca `.env` lokal, semua harus di-se
 
 | Key | Value |
 |-----|-------|
-| `GOOGLE_CLIENT_EMAIL` | isi client_email service account |
-| `GOOGLE_PRIVATE_KEY` | isi private_key **apa adanya** — termasuk `\n` literal di dalamnya |
-| `GOOGLE_SHEETS_ID` | isi ID spreadsheet |
-| `GOOGLE_DRIVE_FOLDER_ID` | isi ID folder (atau kosongkan kalau ga pake Drive) |
-| `GURU_PIN` | isi PIN dashboard guru |
+| `NUXT_SUPABASE_URL` | Project URL dari Supabase → Settings → API Keys |
+| `NUXT_SUPABASE_SERVICE_ROLE_KEY` | **secret key** (`sb_secret_...`) — bukan publishable |
+| `NUXT_SUPABASE_BUCKET` | `works-images` |
+| `NUXT_GURU_PIN` | isi PIN dashboard guru |
 
-### Cara aman isi `GOOGLE_PRIVATE_KEY` di Vercel
+### Nama env di Vercel wajib pakai prefix `NUXT_`
 
-Private key multiline bisa nyusahin. Ikuti ini:
+`nuxt.config.ts` membaca `SUPABASE_*` saat build, tapi server hasil build (dan Vercel) mengambil
+nilai runtime dari `NUXT_SUPABASE_URL` / `NUXT_SUPABASE_SERVICE_ROLE_KEY` / `NUXT_SUPABASE_BUCKET` /
+`NUXT_GURU_PIN`. Set yang ber-prefix `NUXT_` supaya tidak bergantung pada momen build:
 
-1. Buka file `.env` lokal
-2. Cari baris `GOOGLE_PRIVATE_KEY="..."` — di dalam tanda kutip itu **sudah ada literal `\n`** (backslash-n)
-3. **Copy isi di antara tanda kutip** itu (termasuk `-----BEGIN PRIVATE KEY-----` dan `-----END PRIVATE KEY-----`, plus semua `\n`)
-4. Paste ke Vercel apa adanya
+1. Vercel → Project → **Settings → Environment Variables**
+2. Tambahkan empat variabel di atas untuk environment **Production** (dan Preview kalau mau ikut tes)
+3. Simpan → **Redeploy** supaya nilai terbaca proses yang baru
 
-**Jangan** paste private key yang sudah jadi baris-baris terpisah (multiline asli) — Vercel bakal salah parse.
-
-> Opsi alternatif (lebih mudah & aman): di Vercel pakai **file service account JSON** → generate sendiri nilai `GOOGLE_PRIVATE_KEY` dari situ:
-> ```bash
-> # Di lokal, ambil nilai private_key + ubah newline jadi \n literal
-> python3 -c "import json; k=json.load(open('kotak-kreasi-service-account.json'))['private_key']; print(k.replace(chr(10), '\\\\n'))"
-> ```
-> Pakai output itu sebagai value `GOOGLE_PRIVATE_KEY` di Vercel.
+> Alternatif lokal: `.env` di VPS memakai nama tanpa prefix (`SUPABASE_URL`, dst) karena dibaca saat
+> `npm run dev` / build. Kalau menjalankan hasil build manual, jalankan dengan prefix `NUXT_`.
 
 ### Scope env
 
@@ -117,17 +112,19 @@ Buka URL produksi, tes alur lengkap:
 
 1. **Halaman depan** → isi nama → masuk menu
 2. **Alur 4 langkah** (fenomena → pola → rima → susun) → tulis pantun → **Simpan Karya**
-3. **Cek Google Sheets** → baris baru muncul (dengan `Kode Karya` + `Skor Auto`)
-4. **Dashboard guru** → buka `https://<url>.vercel.app/guru` → login PIN → karya muncul → nilai → cek tab **Penilaian** di Sheets
+3. **Cek Supabase** → Table Editor → tabel `works` → baris baru muncul dengan `kode` + `auto_score`;
+   Storage → bucket `works-images` → objek `works/<kode>.jpg`
+4. **Dashboard guru** → buka `https://<url>.vercel.app/guru` → login PIN → karya muncul → beri nilai +
+   tandai "tampil di galeri" → muncul di `/galeri` dengan nama depan saja
 
 ### Troubleshooting cepat
 
 | Gejala | Kemungkinan | Fix |
 |--------|-------------|-----|
-| Simpan karya → error `Konfigurasi Google API belum diisi` | `GOOGLE_CLIENT_EMAIL`/`GOOGLE_PRIVATE_KEY` belum ke-set di Vercel | Cek Environment Variables |
-| Error `permission denied` akses Sheets | Spreadsheet belum di-share ke service account | Share `GOOGLE_CLIENT_EMAIL` sebagai Editor |
-| Dashboard `/guru` → `PIN guru salah` | `GURU_PIN` beda / belum ke-set | Cek env Vercel |
-| `valueInputOption` / 400 saat akses | Versi build lama | Redeploy (pull latest) |
+| Simpan karya → error `Konfigurasi Supabase belum diisi` | env belum ke-set, atau di-set **tanpa** prefix `NUXT_` di runtime | Cek Environment Variables Vercel |
+| Error saat baca tabel: `Could not find the table 'public.works'` | `supabase/provision.sql` belum dijalankan di SQL Editor | Jalankan SQL-nya |
+| Gambar 404 / `Bucket not found` | bucket `works-images` belum ada | Jalankan `provision.sql`, atau `node scripts/test-supabase.mjs` untuk cek |
+| Dashboard `/guru` → `PIN guru salah` | `NUXT_GURU_PIN` beda / belum ke-set | Cek env Vercel |
 
 ---
 
@@ -143,9 +140,12 @@ Kalau nambah env var baru: set di Vercel dashboard → **Redeploy** biar ke-bake
 
 Beberapa hal yang aku sarankan **sebelum production dipakai beneran**, tapi masih butuh koordinasi:
 
-1. **Drive permission `type: 'anyone'`** — saat ini file gambar pantun siswa di-set publik (`server/api/save-pantun.post.js` baris 94). Sebaiknya diganti: set permission khusus ke akun guru (atau pakai folder private + `webViewLink` yang di-share per-guru). **Jangan sampai gambar siswa ke-expose publik.**
+1. **Drive permission `type: 'anyone'`** — **sudah beres**: gambar karya kini disimpan di bucket privat
+   `works-images` dan dibaca lewat signed URL berumur 5 menit dari route `/api/karya/gambar/<kode>`.
+   Tidak ada lagi link gambar publik permanen.
 2. **PIN 6 digit bisa brute-force** — buat jangka panjang, ganti auth `/guru` ke token panjang (`GURU_TOKEN` 32+ char) atau login OTP Telegram. Minimal: rate-limit percobaan PIN.
-3. **Spreadsheet jangan di-share "anyone with link"** — cukup share ke akun guru + service account (Editor).
+3. **Akses database** — tabel `works` sudah RLS aktif tanpa policy, jadi key publishable/anon ditolak
+   total; hanya service key (server) yang bisa baca-tulis. Jangan pernah pakai service key di client.
 
 Kalau tim udah putuskan mau fix yang mana, bilang aja — siap dikerjakan sebelum push.
 

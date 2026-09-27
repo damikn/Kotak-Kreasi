@@ -250,6 +250,15 @@
               <p class="text-xs font-nunito font-bold text-coral mb-1">📋 Pola</p>
               <p class="text-sm font-nunito text-bark">{{ selected.pola }}</p>
             </div>
+            <div v-if="selected.gagasan || selected.pesan" class="bg-lagoon/5 rounded-xl p-3 border border-lagoon/15 col-span-1 sm:col-span-2">
+              <p class="text-xs font-nunito font-bold text-lagoon mb-1">💡 Gagasan dan Pesan</p>
+              <p v-if="selected.gagasan" class="text-sm font-nunito text-bark">
+                <span class="font-semibold">Gagasan:</span> {{ selected.gagasan }}
+              </p>
+              <p v-if="selected.pesan" class="text-sm font-nunito text-bark">
+                <span class="font-semibold">Pesan:</span> {{ selected.pesan }}
+              </p>
+            </div>
           </div>
 
           <!-- Pantun display -->
@@ -265,7 +274,7 @@
             <a v-if="selected.driveUrl && !selected.driveUrl.startsWith('(')"
                :href="selected.driveUrl" target="_blank" rel="noopener"
                class="inline-flex items-center gap-1 text-xs font-nunito font-semibold text-sky underline underline-offset-2 mt-3 hover:text-sky/70">
-              🖼️ Lihat gambar di Drive →
+              🖼️ Lihat gambar →
             </a>
           </div>
 
@@ -346,8 +355,27 @@
             >
               {{ grading ? 'Menyimpan...' : (selected.status === 'SUDAH DINILAI' ? 'Perbarui Nilai' : 'Simpan Nilai') }}
             </button>
+
+            <!-- Tampilkan karya di galeri siswa -->
+            <button
+              @click="toggleGallery"
+              :disabled="galeriSaving"
+              class="w-full font-fredoka font-bold text-sm rounded-xl px-4 py-2.5 border-2 transition-all duration-200
+                     disabled:opacity-60 disabled:cursor-not-allowed"
+              :class="selected.tampilGaleri
+                ? 'border-plum/50 text-plum bg-plum/10 hover:bg-plum/20'
+                : 'border-gray-200 text-gray-500 bg-white hover:bg-gray-50'"
+            >
+              {{ galeriSaving
+                ? 'Menyimpan...'
+                : selected.tampilGaleri ? '★ Tampil di galeri siswa (klik untuk hapus)' : '☆ Tampilkan karya ini di galeri siswa' }}
+            </button>
+
             <p v-if="gradeError" class="mt-2 text-xs text-coral font-nunito">⚠️ {{ gradeError }}</p>
             <p v-if="gradeOk" class="mt-2 text-xs text-jungle font-nunito">✓ Nilai tersimpan!</p>
+            <p v-if="galeriOk" class="mt-2 text-xs font-nunito" :class="selected.tampilGaleri ? 'text-plum' : 'text-gray-500'">
+              {{ selected.tampilGaleri ? '✓ Karya ini tampil di galeri siswa.' : '✓ Karya ini disembunyikan dari galeri.' }}
+            </p>
           </div>
         </div>
       </div>
@@ -374,6 +402,8 @@ const detailValidation = ref(null)
 const grading = ref(false)
 const gradeError = ref('')
 const gradeOk = ref(false)
+const galeriSaving = ref(false)
+const galeriOk = ref(false)
 
 // PIN session (localStorage)
 const SESSION_KEY = 'kotak-guru-session'
@@ -519,6 +549,7 @@ async function submitGrade() {
   grading.value = true
   gradeError.value = ''
   gradeOk.value = false
+  galeriOk.value = false
   try {
     await $fetch(`/api/guru/works/${selected.value.kode}/grade`, {
       method: 'POST',
@@ -536,6 +567,28 @@ async function submitGrade() {
     gradeError.value = err?.data?.statusMessage ?? 'Gagal menyimpan nilai.'
   } finally {
     grading.value = false
+  }
+}
+
+// Toggle column T — whether the work appears in the student gallery.
+async function toggleGallery() {
+  if (!selected.value?.kode) return
+  galeriSaving.value = true
+  gradeError.value = ''
+  galeriOk.value = false
+  try {
+    const next = !selected.value.tampilGaleri
+    await $fetch(`/api/guru/works/${selected.value.kode}/grade`, {
+      method: 'POST',
+      body: { pin: sessionPin.value, tampilGaleri: next },
+    })
+    selected.value.tampilGaleri = next
+    galeriOk.value = true
+    await loadWorks()
+  } catch (err) {
+    gradeError.value = err?.data?.statusMessage ?? 'Gagal mengubah status galeri.'
+  } finally {
+    galeriSaving.value = false
   }
 }
 </script>

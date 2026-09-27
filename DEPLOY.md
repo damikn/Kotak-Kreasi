@@ -41,10 +41,10 @@ git push -u origin main
 
 | Key | Value |
 |-----|-------|
-| `GOOGLE_CLIENT_EMAIL` | *(isi dengan client email dari service account)* |
-| `GOOGLE_PRIVATE_KEY` | *(isi dengan private key lengkap dari .env)* |
-| `GOOGLE_DRIVE_FOLDER_ID` | *(isi dengan folder ID Google Drive tujuan)* |
-| `GOOGLE_SHEETS_ID` | *(isi dengan spreadsheet ID Google Sheets)* |
+| `NUXT_SUPABASE_URL` | *(Project URL, mis. `https://<ref>.supabase.co`)* |
+| `NUXT_SUPABASE_SERVICE_ROLE_KEY` | *(secret key dari Supabase → Settings → API Keys)* |
+| `NUXT_SUPABASE_BUCKET` | `works-images` |
+| `NUXT_GURU_PIN` | *(PIN dashboard guru)* |
 
 5. Klik **"Deploy"** → Tunggu ±2 menit
 
@@ -142,10 +142,10 @@ server {
 nano /path/to/kotak-kreasi/.env
 
 # Atau export langsung
-export GOOGLE_CLIENT_EMAIL="..."
-export GOOGLE_PRIVATE_KEY="..."
-export GOOGLE_DRIVE_FOLDER_ID="..."
-export GOOGLE_SHEETS_ID="..."
+export NUXT_SUPABASE_URL="https://<ref>.supabase.co"
+export NUXT_SUPABASE_SERVICE_ROLE_KEY="sb_secret_..."
+export NUXT_SUPABASE_BUCKET="works-images"
+export NUXT_GURU_PIN="..."
 ```
 
 ---
@@ -173,32 +173,27 @@ CMD ["node", ".output/server/index.mjs"]
 ```bash
 docker build -t kotak-kreasi .
 docker run -p 3000:3000 \
-  -e GOOGLE_CLIENT_EMAIL="..." \
-  -e GOOGLE_PRIVATE_KEY="..." \
-  -e GOOGLE_DRIVE_FOLDER_ID="..." \
-  -e GOOGLE_SHEETS_ID="..." \
+  -e NUXT_SUPABASE_URL="https://<ref>.supabase.co" \
+  -e NUXT_SUPABASE_SERVICE_ROLE_KEY="sb_secret_..." \
+  -e NUXT_SUPABASE_BUCKET="works-images" \
+  -e NUXT_GURU_PIN="..." \
   kotak-kreasi
 ```
 
 ---
 
-## ⚠️ Catatan Penting untuk GOOGLE_PRIVATE_KEY
+## ⚠️ Catatan Penting untuk Kredensial Supabase
 
-Private key berisi newline (`\n`). Cara input yang benar per platform:
+**Nama variabel menentukan kapan dibaca**:
 
-**Vercel**: Paste nilai dari `.env` apa adanya (termasuk `\n` — Vercel handle otomatis).
+- `npm run dev` dan proses build membaca nama `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+  `SUPABASE_BUCKET`, `GURU_PIN` dari `.env` (lihat `nuxt.config.ts`).
+- Server hasil build (`node .output/server/index.mjs`) dan Vercel membaca override runtime dengan
+  prefix `NUXT_` (`NUXT_SUPABASE_URL`, dst). Kalau di produksi yang di-set hanya nama tanpa prefix,
+  semua route `/api/*` akan balas 500 "Konfigurasi Supabase belum diisi".
 
-**Railway/Render**: Sama, paste apa adanya.
-
-**VPS (.env file)**: Gunakan tanda kutip ganda dan `\n` literal:
-```env
-GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----\n"
-```
-
-**VPS (export langsung di bash)**: Gunakan `$'...'` syntax:
-```bash
-export GOOGLE_PRIVATE_KEY=$'-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----\n'
-```
+**Secret key** (`sb_secret_...`) dan key lama `service_role` dua-duanya didukung. Jangan pernah pakai
+key publishable (`sb_publishable_...`) di server — key itu hanya untuk kode yang jalan di browser.
 
 ---
 
@@ -206,17 +201,20 @@ export GOOGLE_PRIVATE_KEY=$'-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIV
 
 1. Buka URL aplikasi
 2. Masukkan nama siswa → klik centang
-3. Ikuti alur 4 step sampai klik **"Simpan ke Google Drive"**
-4. Cek Google Drive folder yang sudah dikonfigurasi di env vars
-5. Cek Google Sheets yang sudah dikonfigurasi di env vars
+3. Ikuti alur sampai klik **Simpan Karya**
+4. Cek tabel `works` (Supabase → Table Editor) → baris baru muncul dengan `kode` + `auto_score`
+5. Cek bucket `works-images` (Supabase → Storage) → ada objek `works/<kode>.jpg`
+6. Dashboard guru → `/guru` → masukkan PIN → karya muncul → beri nilai / tandai tampil di galeri
 
 ---
 
 ## 📊 Melihat Hasil Karya Siswa
 
 Data tersimpan otomatis di:
-- **Google Sheets** → rekap semua pantun siswa (tanggal, nama, fenomena, pola, baris pantun, link foto)
-- **Google Drive** → gambar JPG setiap karya pantun
+- **Supabase Postgres** → tabel `works`: rekap semua pantun siswa (tanggal, nama, fenomena, gagasan,
+  pesan, pola, baris pantun, skor auto, nilai + komentar guru, status, flag tampil di galeri)
+- **Supabase Storage** → bucket privat `works-images`, objek `works/<kode>.jpg`. Gambar dibaca lewat
+  signed URL berumur pendek melalui route `/api/karya/gambar/<kode>` — tidak ada link publik permanen
 
 ---
 

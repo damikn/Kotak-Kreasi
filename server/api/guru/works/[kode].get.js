@@ -1,18 +1,12 @@
 // server/api/guru/works/[kode].get.js
 // GET /api/guru/works/:kode?pin=XXXX
 // Returns one work by its kode karya, with full details + validation breakdown.
-import { findWorkByKode } from '../../../utils/sheets'
+import { findWorkByKode } from '../../../utils/works-repo'
 import { validGuruPin } from '../../../utils/teacher-auth'
 import { validatePantun } from '../../../utils/validate-pantun'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const keyLooksReal = config.googlePrivateKey
-    ? config.googlePrivateKey.includes('-----BEGIN') && !config.googlePrivateKey.includes('REDACTED')
-    : false
-  if (!config.googleClientEmail || !keyLooksReal) {
-    throw createError({ statusCode: 500, statusMessage: 'Konfigurasi Google API belum diisi dengan kunci service account yang valid.' })
-  }
 
   const query = getQuery(event)
   if (!validGuruPin(config, query.pin)) {
@@ -20,12 +14,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const kode = getRouterParam(event, 'kode')
-  const found = await findWorkByKode(config, kode)
-  if (!found) {
-    throw createError({ statusCode: 404, statusMessage: 'Karya tidak ditemukan.' })
+
+  let work
+  try {
+    work = await findWorkByKode(config, kode)
+  } catch (e) {
+    console.warn('[guru/works/:kode] gagal baca Supabase:', e.message)
+    throw createError({ statusCode: 500, statusMessage: 'Gagal memuat karya. Coba lagi sebentar lagi.' })
   }
 
-  const { work } = found
+  if (!work) {
+    throw createError({ statusCode: 404, statusMessage: 'Karya tidak ditemukan.' })
+  }
 
   // Re-run server validation for the detail panel breakdown
   const pola = { ruleType: parsePolaRule(work.pola) }

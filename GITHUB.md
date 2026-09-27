@@ -88,7 +88,7 @@ File berikut **dilarang** masuk ke GitHub dan sudah ada di `.gitignore`:
 
 | File | Alasan |
 |------|--------|
-| `.env` | Berisi credential Google (private key, client email, ID) |
+| `.env` | Berisi kredensial (service key Supabase, PIN guru, token Vercel) |
 | `*.json` service account | Berisi private key lengkap |
 
 Selalu verifikasi dengan `git status` sebelum commit — pastikan `.env` tidak muncul di daftar staged files.
