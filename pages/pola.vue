@@ -1,8 +1,9 @@
 <template>
-  <!-- Step 2: Tentukan Pola Pantun via Roda Putar -->
+  <!-- Step 4: Tentukan Pola Pantun via Roda Putar -->
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-yellow-50 to-orange-50">
     <AppHeader />
-    <StepBreadcrumb :current-step="2" />
+    <StageBadge route="/pola" />
+    <StepBreadcrumb :current-step="4" />
 
     <main class="flex-1 px-4 py-6 max-w-5xl mx-auto w-full">
 
@@ -168,7 +169,7 @@
       <div class="mt-8 flex items-center justify-between gap-4">
         <!-- Tombol kembali -->
         <button
-          @click="navigateTo('/fenomena')"
+          @click="navigateTo('/gagasan')"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400
                  hover:text-bark transition-colors duration-200"
         >
@@ -208,6 +209,7 @@ const audio = useAudio()
 onMounted(() => {
   if (!store.studentName) navigateTo('/')
   if (!store.phenomena) navigateTo('/fenomena')
+  if (!store.gagasan?.gagasan) navigateTo('/gagasan')
 })
 
 // Fetch pola data

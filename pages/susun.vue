@@ -1,7 +1,8 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-emerald-50 to-teal-50">
     <AppHeader />
-    <StepBreadcrumb :current-step="4" />
+    <StageBadge route="/susun" />
+    <StepBreadcrumb :current-step="6" />
 
     <main class="flex-1 px-3 sm:px-4 py-4 sm:py-6 max-w-6xl mx-auto w-full">
 
@@ -14,6 +15,15 @@
         </div>
       </div>
       <p class="font-nunito text-xs text-bark/50 italic mb-4 ml-1">"Rangkai kata menjadi karya, ciptakan pantun yang bermakna."</p>
+
+      <!-- Kamus Rima: kata lain dengan akhiran yang sama, klik untuk menyisipkan -->
+      <RimaDictionary
+        :rima-a="store.rima?.rimaA"
+        :rima-b="store.rima?.rimaB"
+        :dictionary="rhymeWords"
+        :active-line="activeLine"
+        @insert="handleInsertWord"
+      />
 
       <!-- Grid 3 kolom (mobile: 1 kolom) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -154,6 +164,7 @@
                        transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-jungle/20"
                 :class="getLineInputClass(idx)"
                 @input="syncStore"
+                @focus="activeLine = idx"
               />
             </div>
           </div>
@@ -230,44 +241,49 @@
         </div>
       </Transition>
 
-      <!-- Navigasi + Simpan -->
+      <!-- Navigasi + aksi -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <button @click="navigateTo('/rima')" class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors">
-          <span>←</span> Kembali ke Pohon Rima
+        <button @click="navigateTo('/gagasan')" class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors">
+          <span>←</span> Kembali ke Peta Ide
         </button>
 
-        <button
-          @click="handleSimpan"
-          :disabled="filledCount < 4 || isSaving"
-          class="flex items-center justify-center gap-2 font-fredoka font-bold text-base sm:text-lg rounded-2xl px-6 sm:px-8 py-3 transition-all duration-200 w-full sm:w-auto shadow-lg"
-          :class="filledCount >= 4 && !isSaving ? 'bg-jungle text-white hover:bg-jungle/90 shadow-jungle/30 hover:-translate-y-0.5' : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
-        >
-          <template v-if="isSaving">
-            <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-            </svg>
-            <span>Menyimpan...</span>
-          </template>
-          <template v-else>
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M6.28 3L1 12.49l3.5 6.07L9.78 9.07 6.28 3zM22 12.49L16.72 3H9.72l5.28 9.17H22v.01L22 12.49zm-7.78 3.07l-3.5 6.07h7l3.5-6.07h-7z"/>
-            </svg>
-            <span>Simpan Karya</span>
-          </template>
-        </button>
+        <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+          <button
+            @click="handleSimpanDraf"
+            :disabled="filledCount < 4"
+            class="flex items-center justify-center gap-2 font-fredoka font-bold text-base rounded-2xl px-5 py-3
+                   border-2 transition-all duration-200 w-full sm:w-auto"
+            :class="filledCount >= 4
+              ? 'border-jungle/40 text-jungle bg-white hover:bg-jungle/10'
+              : 'border-gray-200 text-gray-400 cursor-not-allowed'"
+          >
+            <span aria-hidden="true">💾</span><span>Simpan Draf</span>
+          </button>
+
+          <button
+            @click="handlePeriksaKarya"
+            :disabled="filledCount < 4"
+            class="flex items-center justify-center gap-2 font-fredoka font-bold text-base sm:text-lg rounded-2xl px-6 sm:px-8 py-3
+                   transition-all duration-200 w-full sm:w-auto shadow-lg"
+            :class="filledCount >= 4
+              ? 'bg-jungle text-white hover:bg-jungle/90 shadow-jungle/30 hover:-translate-y-0.5'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
+          >
+            <span>Periksa Karyamu</span><span aria-hidden="true">→</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Save Error Message -->
+      <!-- Status draf -->
       <Transition name="slide-up">
-        <div v-if="saveError" class="mt-3 bg-coral/10 border border-coral/30 text-coral rounded-xl px-4 py-3 font-nunito text-sm flex items-start gap-2" role="alert">
-          <span>⚠️</span>
-          <div>
-            <strong>Gagal menyimpan:</strong> {{ saveError }}
-            <br>
-            <button @click="handleSimpan" class="underline mt-1 text-coral hover:text-coral/70">Coba lagi</button>
-          </div>
-        </div>
+        <p
+          v-if="draftSaved"
+          class="mt-3 bg-jungle/10 border border-jungle/30 text-jungle rounded-xl px-4 py-2.5 font-nunito text-sm"
+          role="status"
+        >
+          Draf tersimpan di perangkat ini. Refresh halaman belum menyimpan draf (bug persistence yang diketahui) —
+          klik Periksa Karyamu untuk mengirim karyamu.
+        </p>
       </Transition>
     </main>
 
@@ -397,7 +413,7 @@ onMounted(() => {
   if (!store.studentName)       navigateTo('/')
   if (!store.phenomena)         navigateTo('/fenomena')
   if (!store.pola)              navigateTo('/pola')
-  if (!store.isStepDone(3))     navigateTo('/rima')
+  if (!store.isStepDone(5))     navigateTo('/rima')
 })
 
 const pantunLines = reactive([
@@ -827,55 +843,50 @@ const progressArc = computed(() => Math.round((doneCount.value / totalChecks) * 
 const showFeedbackModal = ref(false)
 const showClearConfirm = ref(false)
 
-// ── Simpan karya ─────────────────────────────────────────
-const isSaving  = ref(false)
-const saveError = ref('')
+// ── Kamus rima, draf, dan lanjut ke halaman periksa ──────
+const draftSaved = ref(false)
 
-async function handleSimpan() {
+const { data: rhymeData } = await useAsyncData('rhyme-words', () => queryContent('/rhyme-words').findOne())
+
+const rhymeWords = computed(() => {
+  const raw = rhymeData.value
+  if (!raw) return {}
+  return raw.body ?? raw
+})
+
+// Baris yang sedang diisi — tujuan penyisipan kata dari Kamus Rima
+const activeLine = ref(0)
+
+function handleInsertWord(word) {
+  const index = activeLine.value
+  const current = (pantunLines[index] ?? '').trim()
+  if (current.toLowerCase().includes(String(word).toLowerCase())) return
+  pantunLines[index] = current ? `${current} ${word}` : String(word)
+  syncStore()
+  audio.play('card-select')
+}
+
+function handleSimpanDraf() {
+  if (filledCount.value < 4) return
+  syncStore()
+  store.saveDraft()
+  draftSaved.value = true
+  audio.play('submit')
+}
+
+function handlePeriksaKarya() {
   if (filledCount.value < 4) return
   syncStore()
 
-  // Jalankan Validasi Strict
+  // Jalankan validasi kaidah pantun sebelum masuk halaman periksa
   if (validationErrors.value.length > 0) {
     audio.play('toast-warn')
     showFeedbackModal.value = true
-    return // Tidak bisa lanjut simpan!
+    return
   }
 
-  isSaving.value  = true
-  saveError.value = ''
-  audio.play('save-start')
-
-  try {
-    const html2canvas = (await import('html2canvas')).default
-    const el = document.getElementById('pantun-preview')
-    if (!el) throw new Error('Element preview tidak ditemukan')
-
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#FFFDE7', logging: false })
-    const base64 = canvas.toDataURL('image/jpeg', 0.95)
-
-    const result = await $fetch('/api/save-pantun', {
-      method: 'POST',
-      body: {
-        studentName: store.studentName,
-        phenomena:   store.phenomena?.name ?? '',
-        pola:        store.pola?.nama ?? '',
-        rima:        store.rima,
-        pantunLines: [...pantunLines],
-        imageBase64: base64,
-      },
-    })
-
-    store.setSavedResult(result.driveUrl ?? '', result.sessionId ?? '', result.kodeKarya ?? '', result.autoScore ?? null)
-    store.setImageBase64(base64)
-    audio.play('save-success')
-    navigateTo('/hasil')
-  } catch (err) {
-    console.error('Save error:', err)
-    saveError.value = err?.data?.message ?? err?.message ?? 'Terjadi kesalahan tidak terduga.'
-  } finally {
-    isSaving.value = false
-  }
+  audio.play('next')
+  navigateTo('/tinjau')
 }
 </script>
 

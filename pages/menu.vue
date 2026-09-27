@@ -177,44 +177,53 @@
               </p>
             </div>
 
-            <!-- Grid 2×2 Menu Cards -->
-            <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
+            <!-- Grid Menu Tahap -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-5">
               <button
-                v-for="(menu, idx) in menuList"
-                :key="menu.id"
-                @click="handleMenuClick(menu)"
+                v-for="(stage, idx) in stages"
+                :key="stage.id"
+                @click="handleStageClick(stage)"
                 class="relative rounded-2xl border-2 p-4 sm:p-5 text-left
                        transition-all duration-200 card-enter focus:outline-none focus:ring-2"
                 :class="[
-                  menu.bgClass,
-                  menu.borderClass,
-                  menu.focusClass,
-                  isMenuUnlocked(menu.step) ? 'hover:scale-105 hover:shadow-lg active:scale-100' : 'opacity-70 grayscale-[0.3]'
+                  stage.bgClass,
+                  stage.borderClass,
+                  stage.focusClass,
+                  stage.available ? 'hover:scale-105 hover:shadow-lg active:scale-100' : 'opacity-70',
                 ]"
                 :style="{ animationDelay: (idx * 80) + 'ms' }"
-                :title="isMenuUnlocked(menu.step) ? menu.label : `Selesaikan step ${menu.step - 1} terlebih dahulu`"
+                :title="stage.available ? stage.label : `${stage.label} — segera hadir`"
               >
-                <!-- Badge selesai -->
+                <!-- Badge selesai (semua kegiatan tahap ini tuntas) -->
                 <span
-                  v-if="store.isStepDone(menu.step)"
+                  v-if="stage.available && isStageDone(stage)"
                   class="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-jungle
                          text-white text-xs flex items-center justify-center font-bold shadow"
                   aria-label="Sudah selesai"
                 >✓</span>
 
-                <!-- Badge terkunci -->
+                <!-- Badge segera hadir -->
                 <span
-                  v-else-if="!isMenuUnlocked(menu.step)"
+                  v-else-if="!stage.available"
                   class="absolute top-2 right-2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-400/80
                          text-white text-xs flex items-center justify-center font-bold shadow"
-                  aria-label="Terkunci"
-                >🔒</span>
+                  aria-label="Segera hadir"
+                >🚧</span>
 
-                <div class="text-3xl sm:text-4xl mb-2 sm:mb-3" aria-hidden="true">{{ menu.icon }}</div>
-                <div class="font-fredoka font-bold text-sm sm:text-base leading-tight" :class="menu.textClass">
-                  {{ menu.label }}
+                <div class="flex items-start gap-2.5">
+                  <div class="text-3xl sm:text-4xl" aria-hidden="true">{{ stage.icon }}</div>
+                  <div class="min-w-0">
+                    <div class="font-fredoka font-bold text-sm sm:text-base leading-tight" :class="stage.textClass">
+                      {{ stage.label }}
+                    </div>
+                    <div class="font-nunito text-xs mt-1 text-gray-500 leading-tight">{{ stage.desc }}</div>
+                  </div>
                 </div>
-                <div class="font-nunito text-xs mt-1 text-gray-500 leading-tight">{{ menu.desc }}</div>
+
+                <!-- Progres dalam tahap -->
+                <p class="font-nunito text-[11px] font-semibold mt-2.5" :class="stage.textClass">
+                  {{ stage.available ? progressText(stage) : 'Segera hadir' }}
+                </p>
               </button>
             </div>
 
@@ -230,7 +239,7 @@
             </button>
 
             <p class="text-center font-nunito text-xs text-bark/50 mt-3 italic">
-              Ikuti 4 langkah berurutan: Fenomena → Pola → Rima → Susun Pantun
+              Lima tahap berurutan: Peta Ide Materi → Belajar Menulis Pantun → Eksplorasi Pantun → Karya Pantun → Galeri dan Refleksi
             </p>
           </div>
         </Transition>
@@ -242,7 +251,7 @@
     <Transition name="toast">
       <div
         v-if="toastMsg"
-        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50
+        class="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50
                bg-bark text-white font-nunito text-sm px-6 py-3.5
                rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm text-center border border-white/20"
         role="alert"
@@ -256,6 +265,7 @@
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
 import { useAudio }      from '~/composables/useAudio'
+import { useStages }     from '~/composables/useStages'
 
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
@@ -267,23 +277,18 @@ onMounted(() => {
   if (!store.studentName) navigateTo('/')
 })
 
-// ── Fetch menu dari content/menus.json ────────────────────
-const { data: menusData } = await useAsyncData('menus', () => queryContent('/menus').findOne())
+// ── Struktur tahap dari content/stages.json ───────────────
+const { stages, progressOf, resumeRoute } = useStages()
 
-const menuList = computed(() => {
-  if (!menusData.value) return []
-  const raw = menusData.value
-  if (Array.isArray(raw)) return raw
-  for (const key of Object.keys(raw)) {
-    if (Array.isArray(raw[key])) return raw[key]
-  }
-  return []
-})
+function progressText(stage) {
+  const { done, total } = progressOf(stage)
+  if (!total) return 'Belum ada kegiatan'
+  return `${done} dari ${total} kegiatan selesai`
+}
 
-// ── Cek apakah menu terbuka (sequential) ─────────────────
-function isMenuUnlocked(step) {
-  if (step === 1) return true
-  return store.isStepDone(step - 1)
+function isStageDone(stage) {
+  const { done, total } = progressOf(stage)
+  return total > 0 && done === total
 }
 
 // ── State fase animasi ────────────────────────────────────
@@ -331,32 +336,18 @@ function showToast(msg) {
   toastTimer = setTimeout(() => { toastMsg.value = '' }, 3000)
 }
 
-function handleMenuClick(menu) {
-  if (menu.step === 1) {
-    navigateTo(menu.route)
+function handleStageClick(stage) {
+  if (!stage.available) {
+    showToast(`Tahap "${stage.label}" segera hadir ya! 😊`)
     return
   }
-
-  // Cek apakah step sebelumnya sudah selesai
-  if (!store.isStepDone(menu.step - 1)) {
-    const stepNames = {
-      2: 'Step 1 (Eksplorasi Fenomena)',
-      3: 'Step 2 (Rangkai Pola)',
-      4: 'Step 3 (Eksplorasi Rima)',
-    }
-    showToast(`Eits! Selesaikan ${stepNames[menu.step] || 'step sebelumnya'} dulu ya! 😊`)
-    return
-  }
-
-  navigateTo(menu.route)
+  audio.play('card-select')
+  navigateTo(`/tahap/${stage.id}`)
 }
 
 function handleMulai() {
   audio.play('next')
-  if (!store.isStepDone(1))      navigateTo('/fenomena')
-  else if (!store.isStepDone(2)) navigateTo('/pola')
-  else if (!store.isStepDone(3)) navigateTo('/rima')
-  else                           navigateTo('/susun')
+  navigateTo(resumeRoute())
 }
 
 onUnmounted(() => clearTimeout(toastTimer))

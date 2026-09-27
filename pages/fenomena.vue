@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-sky-50 to-green-50">
     <AppHeader />
+    <StageBadge route="/fenomena" />
     <StepBreadcrumb :current-step="1" />
 
     <main class="flex-1 px-3 sm:px-4 py-4 sm:py-6 max-w-4xl mx-auto w-full">
@@ -129,7 +130,7 @@ function handleNext() {
   if (!selectedFenomena.value) return
   audio.play('next')
   store.setPhenomena(selectedFenomena.value)
-  navigateTo('/pola')
+  navigateTo('/cocokkan')
 }
 </script>
 

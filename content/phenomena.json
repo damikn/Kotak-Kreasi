@@ -7,7 +7,15 @@
       "icon": "📱",
       "color": "sky",
       "description": "Gawai dapat digunakan untuk belajar, berkomunikasi, dan mencari informasi. Namun, penggunaan gawai yang terlalu lama dapat membuat seseorang lupa belajar, lupa beristirahat, atau kurang memperhatikan orang di sekitarnya.",
-      "contoh": "Rani berniat menggunakan gawai selama 30 menit. Namun, ia terus menonton video hingga berjam-jam dan akhirnya lupa mengerjakan tugas sekolah."
+      "contoh": "Rani berniat menggunakan gawai selama 30 menit. Namun, ia terus menonton video hingga berjam-jam dan akhirnya lupa mengerjakan tugas sekolah.",
+      "gagasan": "Rani bermain gawai terlalu lama sehingga lupa mengerjakan tugas sekolah.",
+      "pesan": "Gunakan gawai dengan bijak agar waktu belajar dan istirahat tidak terlupa.",
+      "pantun": [
+        "Menanam bunga di pekarangan,",
+        "Bunga disiram setiap pagi,",
+        "Main gawai tanpa batasan,",
+        "Waktu belajar pun tak terbagi,"
+      ]
     },
     {
       "id": 2,
@@ -16,7 +24,15 @@
       "icon": "🎮",
       "color": "sunshine",
       "description": "Bermain gim dapat menjadi kegiatan yang menyenangkan. Namun, bermain terlalu lama dapat membuat seseorang lupa waktu dan mengabaikan kewajibannya sebagai pelajar.",
-      "contoh": "Dimas bermain gim setelah pulang sekolah. Karena terlalu asyik, ia lupa belajar dan baru mengerjakan tugas ketika sudah malam."
+      "contoh": "Dimas bermain gim setelah pulang sekolah. Karena terlalu asyik, ia lupa belajar dan baru mengerjakan tugas ketika sudah malam.",
+      "gagasan": "Dimas bermain gim terlalu lama sehingga lupa belajar dan mengerjakan tugas.",
+      "pesan": "Bermain gim boleh, tetapi ingat waktu dan kewajiban sebagai pelajar.",
+      "pantun": [
+        "Pagi hari pergi ke taman,",
+        "Taman indah penuh melati,",
+        "Bermain gim jangan berlebihan,",
+        "Agar waktu belajar terbagi,"
+      ]
     },
     {
       "id": 3,
@@ -25,7 +41,15 @@
       "icon": "📚",
       "color": "coral",
       "description": "Tugas sekolah sebaiknya dikerjakan sesuai waktu yang telah ditentukan. Kebiasaan menunda tugas dapat membuat pekerjaan menumpuk dan menyebabkan seseorang terburu-buru ketika waktu pengumpulan sudah dekat.",
-      "contoh": "Sinta mendapat tugas yang harus dikumpulkan tiga hari lagi. Karena merasa masih memiliki banyak waktu, ia terus menundanya hingga akhirnya harus mengerjakannya pada malam sebelum dikumpulkan."
+      "contoh": "Sinta mendapat tugas yang harus dikumpulkan tiga hari lagi. Karena merasa masih memiliki banyak waktu, ia terus menundanya hingga akhirnya harus mengerjakannya pada malam sebelum dikumpulkan.",
+      "gagasan": "Sinta menunda mengerjakan tugas sampai malam sebelum hari pengumpulan.",
+      "pesan": "Kerjakan tugas sesuai waktu yang ditentukan agar tidak terburu-buru.",
+      "pantun": [
+        "Memetik mangga di halaman,",
+        "Mangga disimpan di dalam peti,",
+        "Kerjakan tugas tanpa penundaan,",
+        "Agar hatimu tenang berseri,"
+      ]
     },
     {
       "id": 4,
@@ -34,7 +58,15 @@
       "icon": "🗑️",
       "color": "jungle",
       "description": "Sampah yang dibuang sembarangan dapat membuat lingkungan menjadi kotor dan tidak nyaman. Menjaga kebersihan merupakan tanggung jawab setiap orang.",
-      "contoh": "Setelah membeli makanan, beberapa siswa meninggalkan bungkus makanan di bawah meja. Akibatnya, kelas menjadi kotor dan banyak sampah berserakan."
+      "contoh": "Setelah membeli makanan, beberapa siswa meninggalkan bungkus makanan di bawah meja. Akibatnya, kelas menjadi kotor dan banyak sampah berserakan.",
+      "gagasan": "Beberapa siswa meninggalkan bungkus makanan di bawah meja sehingga kelas menjadi kotor.",
+      "pesan": "Buanglah sampah pada tempatnya agar lingkungan tetap bersih dan nyaman.",
+      "pantun": [
+        "Sungai jernih di tepi rumah,",
+        "Bunga tumbuh di halaman,",
+        "Buang sampah jangan di sawah,",
+        "Agar lingkungan tetap nyaman,"
+      ]
     },
     {
       "id": 5,
@@ -43,7 +75,15 @@
       "icon": "🤝",
       "color": "sky",
       "description": "Setiap siswa dapat mengalami kesulitan, baik dalam belajar maupun dalam kegiatan sehari-hari. Membantu teman yang membutuhkan merupakan salah satu bentuk kepedulian dan kerja sama.",
-      "contoh": "Andi kesulitan memahami pelajaran. Ia sudah mencoba mengerjakan tugas sendiri, tetapi masih belum mengerti. Temannya kemudian membantu menjelaskan bagian yang belum dipahami."
+      "contoh": "Andi kesulitan memahami pelajaran. Ia sudah mencoba mengerjakan tugas sendiri, tetapi masih belum mengerti. Temannya kemudian membantu menjelaskan bagian yang belum dipahami.",
+      "gagasan": "Seorang teman kesulitan membawa buku.",
+      "pesan": "Bantulah teman yang mengalami kesulitan dengan tulus.",
+      "pantun": [
+        "Teman sejati ibarat pelita,",
+        "Menerangi di saat gelap,",
+        "Bantulah dengan sepenuh hati,",
+        "Itu tanda persahabatan yang tulus,"
+      ]
     },
     {
       "id": 6,
@@ -52,7 +92,15 @@
       "icon": "🗣️",
       "color": "coral",
       "description": "Bercanda bersama teman dapat membuat suasana menjadi menyenangkan. Namun, candaan yang berlebihan atau membicarakan kekurangan seseorang dapat membuat teman merasa sedih atau tersinggung.",
-      "contoh": "Beberapa siswa menertawakan temannya karena salah menjawab pertanyaan. Mereka menganggapnya sebagai candaan, tetapi temannya merasa malu dan sedih."
+      "contoh": "Beberapa siswa menertawakan temannya karena salah menjawab pertanyaan. Mereka menganggapnya sebagai candaan, tetapi temannya merasa malu dan sedih.",
+      "gagasan": "Beberapa siswa menertawakan temannya yang salah menjawab pertanyaan.",
+      "pesan": "Bercanda boleh, tetapi jangan sampai menyakiti perasaan teman.",
+      "pantun": [
+        "Burung hinggap di dahan tinggi,",
+        "Terbang pulang saat petang,",
+        "Bercanda jangan sampai menyakiti,",
+        "Agar pertemanan tetap terang,"
+      ]
     },
     {
       "id": 7,
@@ -61,7 +109,15 @@
       "icon": "⏰",
       "color": "sunshine",
       "description": "Datang tepat waktu merupakan salah satu bentuk kedisiplinan. Kebiasaan bangun kesiangan atau tidak mempersiapkan keperluan sejak awal dapat menyebabkan seseorang terlambat ke sekolah.",
-      "contoh": "Beni tidur terlalu larut malam sehingga bangun kesiangan. Ia terburu-buru bersiap dan akhirnya tiba di sekolah setelah bel masuk berbunyi."
+      "contoh": "Beni tidur terlalu larut malam sehingga bangun kesiangan. Ia terburu-buru bersiap dan akhirnya tiba di sekolah setelah bel masuk berbunyi.",
+      "gagasan": "Beni tidur terlalu larut sehingga bangun kesiangan dan terlambat ke sekolah.",
+      "pesan": "Datang tepat waktu adalah bentuk disiplin; siapkan keperluan sejak malam.",
+      "pantun": [
+        "Ayam berkokok di pagi hari,",
+        "Bangunlah pagi jangan kesiangan,",
+        "Siapkan buku dan seragam rapi,",
+        "Disiplin waktu jadi kebiasaan,"
+      ]
     },
     {
       "id": 8,
@@ -70,7 +126,15 @@
       "icon": "🧹",
       "color": "jungle",
       "description": "Kebersihan kelas merupakan tanggung jawab seluruh siswa, bukan hanya siswa yang mendapat jadwal piket. Jika setiap siswa tidak peduli terhadap kebersihan, kelas dapat menjadi kotor dan tidak nyaman untuk belajar.",
-      "contoh": "Hari itu beberapa siswa mendapat jadwal piket, tetapi mereka tidak melaksanakan tugasnya. Sampah masih berserakan dan papan tulis belum dibersihkan. Akibatnya, kelas menjadi kurang nyaman digunakan untuk belajar."
+      "contoh": "Hari itu beberapa siswa mendapat jadwal piket, tetapi mereka tidak melaksanakan tugasnya. Sampah masih berserakan dan papan tulis belum dibersihkan. Akibatnya, kelas menjadi kurang nyaman digunakan untuk belajar.",
+      "gagasan": "Beberapa siswa tidak melaksanakan piket sehingga kelas menjadi kotor.",
+      "pesan": "Jagalah kebersihan kelas bersama-sama agar suasana belajar menjadi nyaman.",
+      "pantun": [
+        "Pergi ke taman memetik melati,",
+        "Singgah sebentar membeli jamu,",
+        "Jagalah kelas sepenuh hati,",
+        "Agar nyaman menuntut ilmu,"
+      ]
     }
   ]
 }

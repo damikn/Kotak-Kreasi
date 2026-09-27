@@ -1,0 +1,117 @@
+{
+  "body": [
+    {
+      "id": "tts-pantun",
+      "title": "TTS Pantun",
+      "icon": "🔤",
+      "instruction": "Lengkapi kotak teka-teki silang berdasarkan petunjuk yang tersedia.",
+      "grid": {
+        "rows": 4,
+        "cols": 10,
+        "entries": [
+          {
+            "id": "e1",
+            "number": 1,
+            "direction": "mendatar",
+            "row": 0,
+            "col": 0,
+            "answer": "SAMPIRAN",
+            "clue": "Bagian awal pantun yang mengantarkan isi."
+          },
+          {
+            "id": "e2",
+            "number": 2,
+            "direction": "menurun",
+            "row": 0,
+            "col": 4,
+            "answer": "ISI",
+            "clue": "Bagian pantun yang memuat pesan atau maksud."
+          },
+          {
+            "id": "e3",
+            "number": 3,
+            "direction": "menurun",
+            "row": 0,
+            "col": 5,
+            "answer": "RIMA",
+            "clue": "Kesamaan bunyi pada akhir baris pantun."
+          },
+          {
+            "id": "e4",
+            "number": 4,
+            "direction": "mendatar",
+            "row": 3,
+            "col": 4,
+            "answer": "PANTUN",
+            "clue": "Salah satu bentuk puisi rakyat."
+          }
+        ]
+      },
+      "explanation": "Sampiran membuka pantun, isi memuat maksudnya, dan rima menyatukan bunyi akhir baris. Semuanya dibingkai dalam bentuk pantun."
+    },
+    {
+      "id": "bongkar-susun",
+      "title": "Bongkar Susun Pantun",
+      "icon": "🧱",
+      "instruction": "Susun empat baris berikut menjadi pantun yang utuh.",
+      "answer": [
+        "Pergi ke taman memetik melati,",
+        "Singgah sebentar membeli jamu,",
+        "Jagalah kelas sepenuh hati,",
+        "Agar nyaman menuntut ilmu,"
+      ],
+      "explanation": "Baris 1–2 adalah sampiran yang menggambarkan suasana, baris 3–4 adalah isi yang menyampaikan pesan. Rima akhirnya melati–hati (−ati) dan jamu–ilmu (−u)."
+    },
+    {
+      "id": "orak-arik",
+      "title": "Orak-Arik Sampiran dan Isi",
+      "icon": "🧺",
+      "instruction": "Masukkan setiap baris pantun ke dalam keranjang sampiran atau isi yang tepat.",
+      "lines": [
+        { "text": "Pergi ke taman memetik melati,", "category": "sampiran" },
+        { "text": "Singgah sebentar membeli jamu,", "category": "sampiran" },
+        { "text": "Jagalah kelas sepenuh hati,", "category": "isi" },
+        { "text": "Agar nyaman menuntut ilmu,", "category": "isi" }
+      ],
+      "explanation": "Sampiran (baris 1–2) mengantarkan isi dan menggambarkan suasana, sedangkan isi (baris 3–4) menyampaikan maksud atau pesan pantun."
+    },
+    {
+      "id": "melengkapi-pantun",
+      "title": "Melengkapi Pantun",
+      "icon": "✏️",
+      "instruction": "Pilih kata yang sesuai untuk melengkapi pantun.",
+      "lines": [
+        "Pergi ke taman memetik melati,",
+        "Singgah sebentar membeli jamu,",
+        "Jagalah kelas sepenuh ____",
+        "Agar nyaman menuntut ____"
+      ],
+      "blanks": [
+        { "lineIndex": 2, "answer": "hati" },
+        { "lineIndex": 3, "answer": "ilmu" }
+      ],
+      "bank": ["pagi", "hati", "buku", "ilmu"],
+      "explanation": "Kata \"hati\" dan \"ilmu\" melengkapi rima akhir: melati–hati (−ati) pada baris 1 dan 3, serta jamu–ilmu (−u) pada baris 2 dan 4."
+    },
+    {
+      "id": "pohon-rima",
+      "title": "Pohon Rima",
+      "icon": "🌳",
+      "instruction": "Pilih semua kata pada pohon yang bunyi akhirnya sama dengan kata acuan.",
+      "rounds": [
+        {
+          "reference": "melati",
+          "words": ["hati", "buku", "pagi", "awan", "jamu"],
+          "answers": ["hati"],
+          "explanation": "Kata \"hati\" berakhir −ati, sama seperti \"melati\"."
+        },
+        {
+          "reference": "buku",
+          "words": ["jamu", "pagi", "ilmu", "sampah", "susu"],
+          "answers": ["jamu", "ilmu", "susu"],
+          "explanation": "\"jamu\", \"ilmu\", dan \"susu\" berakhir −u, sama seperti \"buku\"."
+        }
+      ]
+    }
+  ]
+}

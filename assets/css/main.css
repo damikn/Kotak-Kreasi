@@ -108,3 +108,81 @@ mark.rima-highlight {
   @apply bg-jungle/20 text-jungle font-bold rounded px-0.5;
   background-color: #27ae6033;
 }
+
+/* ── Safari / iOS compatibility ──────────────────────────────
+   Non-button controls (crossword boxes, orak-arik baskets, SVG groups) used to
+   trigger text selection, the iOS callout/magnifier and double-tap zoom instead
+   of acting as a click. `touch-action: manipulation` drops the double-tap zoom,
+   and the user-select rules make taps behave like clicks. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+button,
+[role="button"],
+a,
+label,
+summary,
+.crossword-cell,
+.basket-zone {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* SVG groups (pohon rima) behave like buttons */
+svg [role="button"] {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Text entry keeps normal selection behaviour */
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* Safari renders search inputs with a native inner shadow/decorations */
+input[type="search"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* iOS zooms the whole page when a focused field renders smaller than 16px,
+   which reads as "content suddenly blocked/zoomed". */
+@media (max-width: 640px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* iOS Safari: 100vh is taller than the visible area because of the address bar */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* iOS long-press on artwork shows the "Save Image / Copy" callout */
+img,
+svg {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+/* Chips and cards must not start a text selection while being tapped */
+[role="button"],
+button,
+.crossword-cell,
+.basket-zone {
+  -webkit-user-drag: none;
+}

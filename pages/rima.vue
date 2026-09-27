@@ -1,7 +1,8 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-green-50 via-emerald-50/50 to-teal-50">
     <AppHeader />
-    <StepBreadcrumb :current-step="3" />
+    <StageBadge route="/rima" />
+    <StepBreadcrumb :current-step="5" />
 
     <main class="flex-1 px-3 sm:px-6 py-4 max-w-5xl mx-auto w-full">
 
@@ -263,7 +264,7 @@
 
     <!-- Toast Peringatan -->
     <Transition name="toast">
-      <div v-if="toastMsg" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50
+      <div v-if="toastMsg" class="fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50
                bg-bark text-white font-nunito text-sm px-5 py-3
                rounded-2xl shadow-xl flex items-center gap-2" role="alert">
         <span>⚠️</span><span>{{ toastMsg }}</span>

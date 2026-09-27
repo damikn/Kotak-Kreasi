@@ -5,20 +5,24 @@ module.exports = {
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './composables/**/*.{js,ts}',
+    './content/**/*.json', // menu cards keep their colour classes in content/menus.json
     './app.vue',
     './error.vue',
   ],
   theme: {
     extend: {
-      // ── Warna Custom ────────────────────────────────────────
+      // ── Custom palette ──────────────────────────────────────
       colors: {
-        jungle: '#27AE60',   // hijau utama
-        sky: '#2980B9',      // biru
-        sunshine: '#F39C12', // kuning/oranye
-        cloud: '#ECF0F1',    // background netral
-        bark: '#795548',     // coklat
-        cream: '#FFFDE7',    // background kartu
-        coral: '#E74C3C',    // merah/warning
+        jungle: '#27AE60',   // primary green
+        sky: '#2980B9',      // blue
+        sunshine: '#F39C12', // yellow/orange
+        cloud: '#ECF0F1',    // neutral background
+        bark: '#795548',     // brown
+        cream: '#FFFDE7',    // card background
+        coral: '#E74C3C',    // red / warning
+        plum: '#9B59B6',     // purple — stage 5 (gallery & reflection)
+        lagoon: '#16A085',   // teal — idea & message step
+        blossom: '#E91E63',  // pink — stage 4 (pantun creation)
       },
 
       // ── Font Family ──────────────────────────────────────────

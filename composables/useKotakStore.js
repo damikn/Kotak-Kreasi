@@ -7,18 +7,41 @@ export const useKotakStore = defineStore('kotak', {
     // Identitas siswa
     studentName: '',
 
-    // Step saat ini: 0=welcome, 1=fenomena, 2=pola, 3=rima, 4=susun
+    // Step saat ini: 0=welcome, 1=fenomena, 2=cocokkan, 3=gagasan, 4=pola, 5=rima, 6=susun
     step: 0,
 
     // Step 1: Fenomena yang dipilih
-    // Struktur: { id, slug, name, icon, color, description }
+    // Struktur: { id, slug, name, icon, color, description, contoh, gagasan, pesan, pantun[] }
     phenomena: null,
 
-    // Step 2: Pola pantun dari roda putar
+    // Step 2: Hasil latihan mencocokkan (cocokkan.vue / CrosswordMatch)
+    // answers = { gambar, gagasan, pesan, pantun } berisi jawaban siswa
+    cocokkan: {
+      done: false,
+      answers: {},
+    },
+
+    // Step 3: Gagasan & pesan yang ditulis siswa
+    gagasan: {
+      gagasan: '',
+      pesan: '',
+    },
+
+    // Latihan tahap "Eksplorasi Pantun": route game → true setelah selesai
+    games: {},
+
+    // Waktu draf terakhir disimpan (tombol "Simpan Draf" di halaman tulis)
+    draftSavedAt: '',
+
+    // Tahap "Galeri dan Refleksi": ceklist penilaian diri & jawaban refleksi
+    ceklist: {},
+    refleksi: { q1: '', q2: '', q3: '' },
+
+    // Step 4: Pola pantun dari roda putar
     // Struktur: { id, nama, deskripsi_sampiran, deskripsi_isi, aturan, ruleType, contoh[] }
     pola: null,
 
-    // Step 3: Rima yang dipilih (2 Rima untuk sajak AB-AB)
+    // Step 5: Rima yang dipilih (2 Rima untuk sajak AB-AB)
     // Rima A = Baris 1 & 3, Rima B = Baris 2 & 4
     rima: {
       rimaA: {
@@ -31,7 +54,7 @@ export const useKotakStore = defineStore('kotak', {
       },
     },
 
-    // Step 4: Isi pantun 4 baris
+    // Step 6: Isi pantun 4 baris
     pantun: {
       baris1: '',
       baris2: '',
@@ -58,6 +81,8 @@ export const useKotakStore = defineStore('kotak', {
     isComplete: (state) =>
       !!state.studentName &&
       !!state.phenomena &&
+      !!state.gagasan?.gagasan &&
+      !!state.gagasan?.pesan &&
       !!state.pola &&
       !!state.rima.rimaA?.suffix &&
       state.rima.rimaA.words.length >= 2 &&
@@ -104,10 +129,13 @@ export const useKotakStore = defineStore('kotak', {
     },
 
     // Check apakah step tertentu sudah selesai
+    // 1=fenomena, 2=cocokkan, 3=gagasan, 4=pola, 5=rima, 6=susun
     isStepDone: (state) => (step) => {
       if (step === 1) return !!state.phenomena
-      if (step === 2) return !!state.pola
-      if (step === 3) {
+      if (step === 2) return !!state.cocokkan?.done
+      if (step === 3) return !!(state.gagasan?.gagasan && state.gagasan?.pesan)
+      if (step === 4) return !!state.pola
+      if (step === 5) {
         const rA = state.rima?.rimaA
         const rB = state.rima?.rimaB
         return (
@@ -118,9 +146,12 @@ export const useKotakStore = defineStore('kotak', {
           rA?.suffix !== rB?.suffix
         )
       }
-      if (step === 4) return state.filledLines === 4
+      if (step === 6) return state.filledLines === 4
       return false
     },
+
+    // Check apakah satu latihan (tahap Eksplorasi Pantun) sudah selesai
+    isGameDone: (state) => (route) => !!state.games?.[route],
   },
 
   actions: {
@@ -129,13 +160,44 @@ export const useKotakStore = defineStore('kotak', {
     },
 
     setPhenomena(phenomena) {
+      // Memilih fenomena lain membatalkan latihan mencocokkan & gagasan/pesan
+      // dari fenomena sebelumnya (keduanya terikat ke fenomena ini).
+      if (phenomena?.slug && this.phenomena?.slug && this.phenomena.slug !== phenomena.slug) {
+        this.cocokkan = { done: false, answers: {} }
+        this.gagasan = { gagasan: '', pesan: '' }
+        if (this.step > 3) this.step = 1
+      }
       this.phenomena = phenomena
       this.step = Math.max(this.step, 1)
     },
 
+    // Step 2: hasil latihan mencocokkan gambar + keterangan
+    setCocokkan(answers) {
+      this.cocokkan = {
+        done: true,
+        answers: { ...(answers || {}) },
+      }
+      this.step = Math.max(this.step, 2)
+    },
+
+    // Step 3: gagasan & pesan yang ditulis siswa
+    setGagasan({ gagasan, pesan } = {}) {
+      this.gagasan = {
+        gagasan: (gagasan || '').trim(),
+        pesan: (pesan || '').trim(),
+      }
+      this.step = Math.max(this.step, 3)
+    },
+
+    // Tandai satu latihan tahap "Eksplorasi Pantun" sudah dikerjakan
+    markGameDone(route) {
+      if (!route) return
+      this.games = { ...(this.games || {}), [route]: true }
+    },
+
     setPola(pola) {
       this.pola = pola
-      this.step = Math.max(this.step, 2)
+      this.step = Math.max(this.step, 4)
     },
 
     setRima(rimaA, rimaB) {
@@ -149,7 +211,7 @@ export const useKotakStore = defineStore('kotak', {
           words: [...(rimaB?.words || [])],
         },
       }
-      this.step = Math.max(this.step, 3)
+      this.step = Math.max(this.step, 5)
     },
 
     setPantun(lines) {
@@ -158,6 +220,25 @@ export const useKotakStore = defineStore('kotak', {
         baris2: lines.baris2 ?? this.pantun.baris2,
         baris3: lines.baris3 ?? this.pantun.baris3,
         baris4: lines.baris4 ?? this.pantun.baris4,
+      }
+    },
+
+    // Simpan draf di halaman tulis tanpa mengirim ke server
+    saveDraft() {
+      this.draftSavedAt = new Date().toISOString()
+    },
+
+    // Step evaluasi: ceklist penilaian diri
+    setCeklist(items) {
+      this.ceklist = { ...(items || {}) }
+    },
+
+    // Step evaluasi: refleksi belajar
+    setRefleksi(answers) {
+      this.refleksi = {
+        q1: (answers?.q1 ?? '').trim(),
+        q2: (answers?.q2 ?? '').trim(),
+        q3: (answers?.q3 ?? '').trim(),
       }
     },
 
@@ -176,6 +257,8 @@ export const useKotakStore = defineStore('kotak', {
     // Reset pantun saja (untuk buat pantun baru dengan nama sama)
     resetPantun() {
       this.phenomena = null
+      this.cocokkan = { done: false, answers: {} }
+      this.gagasan = { gagasan: '', pesan: '' }
       this.pola = null
       this.rima = {
         rimaA: { suffix: '', words: [] },
@@ -194,6 +277,12 @@ export const useKotakStore = defineStore('kotak', {
     },
   },
 
-  // Persist ke localStorage agar tidak hilang saat refresh
-  persist: true,
+  // Persist ke localStorage agar tidak hilang saat refresh.
+  // Catatan: kunci modul di nuxt.config adalah `piniaPersistedstate` (bukan
+  // `piniaPluginPersistedstate`) — kalau salah, modul memakai default 'cookies' dan
+  // state besar (mis. base64 gambar) gagal disimpan karena batas ukuran cookie.
+  // `savedImageBase64` di-omit karena bisa ratusan KB dan bukan data yang perlu bertahan.
+  persist: {
+    omit: ['savedImageBase64'],
+  },
 })

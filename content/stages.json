@@ -1,0 +1,231 @@
+{
+  "body": [
+    {
+      "id": "peta-ide-materi",
+      "stage": 1,
+      "label": "Peta Ide Materi",
+      "icon": "🗺️",
+      "desc": "Kenali fenomena, gagasan, pesan, dan contoh pantun",
+      "detail": "Di tahap ini kamu mengamati fenomena di sekitar, lalu mencocokkan gambar dengan gagasan, pesan, dan pantun yang sesuai.",
+      "color": "#F39C12",
+      "bgClass": "bg-sunshine/10 hover:bg-sunshine/20",
+      "borderClass": "border-sunshine/30",
+      "textClass": "text-sunshine",
+      "focusClass": "focus:ring-sunshine/40",
+      "available": true,
+      "pages": [
+        {
+          "step": null,
+          "route": "/amati",
+          "label": "Amati Fenomenanya",
+          "shortLabel": "Amati",
+          "icon": "👀",
+          "intro": true,
+          "desc": "Lihat contoh fenomena, gagasan, pesan, dan pantunnya"
+        },
+        {
+          "step": 1,
+          "route": "/fenomena",
+          "label": "Pilih Fenomena",
+          "shortLabel": "Fenomena",
+          "icon": "🔍",
+          "desc": "Pilih satu fenomena sebagai tema pantunmu"
+        },
+        {
+          "step": 2,
+          "route": "/cocokkan",
+          "label": "Cocokkan Gambar dan Keterangan",
+          "shortLabel": "Cocokkan",
+          "icon": "🧩",
+          "desc": "Pasangkan gambar fenomena dengan gagasan, pesan, dan pantunnya"
+        }
+      ]
+    },
+    {
+      "id": "belajar-menulis-pantun",
+      "stage": 2,
+      "label": "Belajar Menulis Pantun",
+      "icon": "✍️",
+      "desc": "Tentukan gagasan, pola, dan rima sebelum menulis",
+      "detail": "Setelah fenomena dipilih, tentukan gagasan dan pesan, lalu dapatkan pola pantun dari roda dan pilih kata rimamu.",
+      "color": "#27AE60",
+      "bgClass": "bg-jungle/10 hover:bg-jungle/20",
+      "borderClass": "border-jungle/30",
+      "textClass": "text-jungle",
+      "focusClass": "focus:ring-jungle/40",
+      "available": true,
+      "pages": [
+        {
+          "step": 3,
+          "route": "/gagasan",
+          "label": "Gagasan dan Pesan",
+          "shortLabel": "Gagasan",
+          "icon": "💡",
+          "desc": "Tuliskan gagasan utama dan pesan yang ingin disampaikan"
+        },
+        {
+          "step": 4,
+          "route": "/pola",
+          "label": "Rangkai Pola",
+          "shortLabel": "Pola",
+          "icon": "🎡",
+          "desc": "Putar roda dan dapatkan pola pantunmu secara acak"
+        },
+        {
+          "step": 5,
+          "route": "/rima",
+          "label": "Eksplorasi Rima",
+          "shortLabel": "Rima",
+          "icon": "🌳",
+          "desc": "Pilih 2 rima dari pohon rima untuk sajak A-B-A-B"
+        }
+      ]
+    },
+    {
+      "id": "eksplorasi-pantun",
+      "stage": 3,
+      "label": "Eksplorasi Pantun",
+      "icon": "🧠",
+      "desc": "Mainkan permainan seru tentang unsur dan rima pantun",
+      "detail": "Lima permainan latihan: teka-teki silang pantun, bongkar susun, orak-arik sampiran dan isi, melengkapi pantun, dan pohon rima.",
+      "color": "#2980B9",
+      "bgClass": "bg-sky/10 hover:bg-sky/20",
+      "borderClass": "border-sky/30",
+      "textClass": "text-sky",
+      "focusClass": "focus:ring-sky/40",
+      "available": true,
+      "progressKind": "games",
+      "pages": [
+        {
+          "step": null,
+          "route": "/game/tts-pantun",
+          "label": "TTS Pantun",
+          "shortLabel": "TTS Pantun",
+          "icon": "🔤",
+          "desc": "Lengkapi teka-teki silang tentang istilah dan unsur pantun"
+        },
+        {
+          "step": null,
+          "route": "/game/bongkar-susun",
+          "label": "Bongkar Susun Pantun",
+          "shortLabel": "Bongkar Susun",
+          "icon": "🧱",
+          "desc": "Susun baris pantun yang acak menjadi pantun utuh"
+        },
+        {
+          "step": null,
+          "route": "/game/orak-arik",
+          "label": "Orak-Arik Sampiran dan Isi",
+          "shortLabel": "Orak-Arik",
+          "icon": "🧺",
+          "desc": "Pisahkan baris sampiran dan baris isi ke keranjang yang tepat"
+        },
+        {
+          "step": null,
+          "route": "/game/melengkapi-pantun",
+          "label": "Melengkapi Pantun",
+          "shortLabel": "Melengkapi",
+          "icon": "✏️",
+          "desc": "Pilih kata yang sesuai untuk melengkapi pantun"
+        },
+        {
+          "step": null,
+          "route": "/game/pohon-rima",
+          "label": "Pohon Rima",
+          "shortLabel": "Pohon Rima",
+          "icon": "🌳",
+          "desc": "Temukan kata yang bunyi akhirnya sama dengan kata acuan"
+        }
+      ]
+    },
+    {
+      "id": "karya-pantun",
+      "stage": 4,
+      "label": "Karya Pantun",
+      "icon": "📝",
+      "desc": "Tulis, periksa, dan simpan karya pantunmu",
+      "detail": "Gunakan gagasan, pola, dan rima yang sudah kamu pilih untuk menyusun empat baris pantun, lalu simpan karyamu.",
+      "color": "#E91E63",
+      "bgClass": "bg-blossom/10 hover:bg-blossom/20",
+      "borderClass": "border-blossom/30",
+      "textClass": "text-blossom",
+      "focusClass": "focus:ring-blossom/40",
+      "available": true,
+      "pages": [
+        {
+          "step": 6,
+          "route": "/susun",
+          "label": "Tulis Pantun",
+          "shortLabel": "Susun Pantun",
+          "icon": "📝",
+          "desc": "Susun empat baris pantun, periksa, lalu simpan karyamu"
+        },
+        {
+          "step": null,
+          "route": "/tinjau",
+          "label": "Periksa dan Simpan Karya",
+          "shortLabel": "Periksa Karya",
+          "icon": "✅",
+          "desc": "Baca ulang pantunmu, lalu simpan karya ke rekap guru"
+        },
+        {
+          "step": null,
+          "route": "/hasil",
+          "label": "Lihat Hasil Karya",
+          "shortLabel": "Hasil",
+          "icon": "🖼️",
+          "desc": "Kartu pantunmu siap diunduh dan dikumpulkan"
+        }
+      ]
+    },
+    {
+      "id": "galeri-dan-refleksi",
+      "stage": 5,
+      "label": "Galeri dan Refleksi",
+      "icon": "🏆",
+      "desc": "Lihat karya teman, nilai karyamu, dan tulis refleksi",
+      "detail": "Bandingkan karyamu dengan ceklist penilaian, lihat karya pilihan teman-teman, lalu tulis refleksi belajar dan simpan buku karyamu.",
+      "color": "#9B59B6",
+      "bgClass": "bg-plum/10 hover:bg-plum/20",
+      "borderClass": "border-plum/30",
+      "textClass": "text-plum",
+      "focusClass": "focus:ring-plum/40",
+      "available": true,
+      "progressKind": "games",
+      "pages": [
+        {
+          "step": null,
+          "route": "/galeri",
+          "label": "Galeri Pantun",
+          "shortLabel": "Galeri",
+          "icon": "🖼️",
+          "desc": "Baca karya pilihan teman-teman yang dipilih guru"
+        },
+        {
+          "step": null,
+          "route": "/nilai",
+          "label": "Ceklist Penilaian",
+          "shortLabel": "Ceklist",
+          "icon": "📋",
+          "desc": "Periksa sendiri pantunmu dengan ceklist penilaian"
+        },
+        {
+          "step": null,
+          "route": "/refleksi",
+          "label": "Refleksi Belajar",
+          "shortLabel": "Refleksi",
+          "icon": "🪞",
+          "desc": "Tulis pengalaman dan rencana perbaikanmu"
+        },
+        {
+          "step": null,
+          "route": "/buku",
+          "label": "Buku Karyaku",
+          "shortLabel": "Buku Karya",
+          "icon": "📚",
+          "desc": "Kumpulan karyamu, siap disimpan sebagai PDF"
+        }
+      ]
+    }
+  ]
+}

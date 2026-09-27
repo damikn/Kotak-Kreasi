@@ -1,6 +1,6 @@
 <template>
-  <!-- Progress bar 4 step alur pantun -->
-  <nav class="w-full bg-white/60 backdrop-blur-sm border-b border-gray-100 py-3 px-4">
+  <!-- Progress bar alur pantun — urutannya dibaca dari content/stages.json -->
+  <nav class="w-full bg-white/60 backdrop-blur-sm border-b border-gray-100 py-3 px-2 sm:px-4">
     <div class="max-w-3xl mx-auto">
       <ol class="flex items-center justify-center gap-0">
         <li v-for="(step, index) in steps" :key="step.id" class="flex items-center">
@@ -8,8 +8,8 @@
           <div class="flex flex-col items-center gap-1 relative">
             <!-- Lingkaran step -->
             <button
-              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center
-                     font-fredoka font-bold text-sm transition-all duration-300 border-2"
+              class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center
+                     font-fredoka font-bold text-xs sm:text-sm transition-all duration-300 border-2"
               :class="getStepClass(step.id)"
               @click="handleStepClick(step.id)"
               :disabled="!canNavigate(step.id)"
@@ -37,7 +37,7 @@
           <!-- Garis penghubung (kecuali setelah step terakhir) -->
           <div
             v-if="index < steps.length - 1"
-            class="h-0.5 w-8 sm:w-16 mx-1 rounded-full transition-all duration-500"
+            class="h-0.5 w-4 sm:w-10 mx-0.5 sm:mx-1 rounded-full transition-all duration-500"
             :class="isDone(step.id) ? 'bg-jungle' : 'bg-gray-200'"
             aria-hidden="true"
           />
@@ -49,9 +49,10 @@
 
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
+import { useStages }    from '~/composables/useStages'
 
 const props = defineProps({
-  // Step yang sedang aktif (1–4)
+  // Step yang sedang aktif
   currentStep: {
     type: Number,
     required: true,
@@ -59,13 +60,7 @@ const props = defineProps({
 })
 
 const store = useKotakStore()
-
-const steps = [
-  { id: 1, label: 'Fenomena', route: '/fenomena' },
-  { id: 2, label: 'Pola', route: '/pola' },
-  { id: 3, label: 'Rima', route: '/rima' },
-  { id: 4, label: 'Susun Pantun', route: '/susun' },
-]
+const { steps } = useStages()
 
 // Cek apakah step sudah diselesaikan
 function isDone(stepId) {
@@ -106,7 +101,7 @@ function getStepClass(stepId) {
 
 function handleStepClick(stepId) {
   if (!canNavigate(stepId)) return
-  const step = steps.find((s) => s.id === stepId)
+  const step = steps.value.find((s) => s.id === stepId)
   if (step) navigateTo(step.route)
 }
 </script>

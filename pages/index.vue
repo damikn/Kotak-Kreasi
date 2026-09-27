@@ -149,7 +149,7 @@
 
 
           <!-- ===============================================
-               BURUNG MENGELILINGI KREASI
+               BIRD ORBITING THE KREASI LOGO
                =============================================== -->
 
           <div class="bird-orbit" aria-hidden="true">
@@ -158,7 +158,7 @@
 
 
           <!-- ===============================================
-               LOGO KREASI
+               KREASI LOGO
                =============================================== -->
 
           <h1 class="font-fredoka font-bold leading-tight select-none">
@@ -192,6 +192,39 @@
             </div>
 
           </h1>
+
+          <!-- ===============================================
+               ILLUSTRATION: KREASI CHEST (books + plant)
+               =============================================== -->
+          <svg
+            class="w-44 sm:w-56 mx-auto my-1 sm:my-2 animate-float"
+            viewBox="0 0 200 150"
+            role="img"
+            aria-label="Peti terbuka berisi buku dan tanaman"
+          >
+            <!-- lid opened behind -->
+            <rect x="34" y="18" width="132" height="22" rx="8" fill="#795548" />
+            <rect x="46" y="24" width="108" height="12" rx="5" fill="#8D6E63" />
+            <!-- books -->
+            <rect x="62" y="40" width="18" height="52" rx="3" fill="#2980B9" />
+            <rect x="82" y="34" width="20" height="58" rx="3" fill="#27AE60" />
+            <rect x="104" y="44" width="17" height="48" rx="3" fill="#F39C12" />
+            <rect x="63" y="46" width="16" height="3" rx="1.5" fill="#ECF0F1" />
+            <rect x="83" y="40" width="18" height="3" rx="1.5" fill="#ECF0F1" />
+            <rect x="105" y="50" width="15" height="3" rx="1.5" fill="#FFFDE7" />
+            <!-- plant -->
+            <path d="M134 92c0-16 8-26 16-30-2 14-6 24-16 30z" fill="#27AE60" />
+            <path d="M136 92c6-12 18-18 26-18-6 12-16 18-26 18z" fill="#2ECC71" />
+            <rect x="132" y="90" width="32" height="12" rx="4" fill="#E74C3C" />
+            <!-- chest body -->
+            <rect x="30" y="92" width="140" height="44" rx="10" fill="#8D6E63" />
+            <rect x="30" y="104" width="140" height="8" fill="#6D4C41" />
+            <rect x="92" y="100" width="16" height="22" rx="4" fill="#F39C12" />
+            <circle cx="100" cy="110" r="3" fill="#6D4C41" />
+            <!-- sparkles -->
+            <path d="M28 52l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#F39C12" />
+            <path d="M172 62l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#9B59B6" />
+          </svg>
 
 
           <!-- Tagline -->

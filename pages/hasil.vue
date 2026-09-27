@@ -193,6 +193,16 @@
           </button>
 
           <button
+            @click="navigateTo('/buku')"
+            class="flex items-center gap-2 font-fredoka font-bold text-base rounded-2xl
+                   px-6 py-3.5 border-2 border-plum/40 text-plum bg-white hover:bg-plum/10
+                   transition-all duration-200 w-full sm:w-auto justify-center"
+          >
+            <span aria-hidden="true">📚</span>
+            <span>Buka Buku Karyaku</span>
+          </button>
+
+          <button
             @click="handleBuatBaru"
             class="font-nunito text-sm font-semibold text-gray-400 hover:text-coral
                    underline underline-offset-2 transition-colors duration-200"
