@@ -40,6 +40,18 @@ A stage with `available: false` renders as "segera hadir" and cannot be opened.
 Step completion lives in the Pinia store: `isStepDone(n)` for steps 1..6. Learner content lives in
 `content/*.json`, never inline in a `.vue`.
 
+Navigation follows three rules — follow them for every new page:
+
+1. **Guards** go through `composables/usePageGuard.js`: `requireAll([[cond, '/fallback']])` inside
+   `onMounted`. It fires only the first failing check and redirects with `replace`, so a blocked page
+   never leaves a bounce in the browser history. Guard checks written as separate `navigateTo()` calls
+   (the old style) stack entries and make the browser back button loop until the tab closes.
+2. **Back affordances** go through `composables/useBackNav.js`: `goBack('/parent-route')` returns to
+   the real previous page via `router.back()` when `history.state.back` says an app page sits behind
+   it, and otherwise replaces to the named parent route. Never call `history.back()` directly — on a
+   reload or a deep link that walks straight out of the app (in an in-app browser: closes the tab).
+3. **Forward** navigation (next step, menu cards, breadcrumb) stays a plain `navigateTo(route)` push.
+
 ```js
 // content/stages.json — one entry drives menu card, hub page, badge and breadcrumb
 { "step": 2, "route": "/cocokkan", "label": "Cocokkan Gambar dan Keterangan",
@@ -103,18 +115,25 @@ throw — `server/utils/validate-pantun.js` returns feedback objects the UI rend
 4. **An SFC fails with `parsing .nuxt/tsconfig.app.json failed: ENOENT`** — this project's root
    `tsconfig.json` references `.nuxt/tsconfig.app.json`, which Nuxt 3.21 does not emit here. Write
    components as plain JS (`<script setup>`, runtime `defineProps`), matching the rest of the repo.
-5. **Wizard state is lost on refresh** — `persist: true` is set but nothing is written to
-   localStorage (verified on the deployed build too). A student who reloads restarts at step 1.
-   Open issue, not caused by store edits.
-6. **Page transitions freeze when driving the app headlessly** — `document.hidden` makes
+5. **A refresh drops the student on the entry form** — the store does persist (localStorage key
+   `kotak`, `piniaPersistedstate: { storage: 'localStorage' }` in `nuxt.config.ts`), so check the
+   content first: a state saved before kelas/nomor absen existed fails `store.hasIdentity` and every
+   guard sends the student to `/` by design. The entry page says so (`needsCompletion`) and only asks
+   for the missing fields. On a reload of `/` the student is forwarded back to the last page via
+   `kotak-last-route` (`utils/last-route.js` + `plugins/route-tracker.client.js`).
+6. **Back button does not return to the previous page, or closes the tab** — the page was reached by
+   a redirect or a deep link and the guard pushed instead of replacing. See Conventions: guards use
+   `usePageGuard`, back buttons use `useBackNav`. Reproduce with an empty localStorage: load `/menu`
+   directly, then `history.state.back` must be `null` (one entry, no bounce).
+7. **Page transitions freeze when driving the app headlessly** — `document.hidden` makes
    `requestAnimationFrame` never fire, so Vue's `out-in` transition keeps the old page mounted with
    `page-leave-active` and the next page never appears. Shim rAF (`setTimeout(cb, 16)`) or test in a
    real browser; it is not an app bug.
-7. **Chips/bank not rendering right after navigation** — `CrosswordMatch` builds its bank in
+8. **Chips/bank not rendering right after navigation** — `CrosswordMatch` builds its bank in
    `onMounted`; give it a tick before asserting on the DOM from a script.
-8. **A saved work is missing from the Sheet** — read the `/api/save-pantun` response in the network
-   tab, then confirm the service account can write to the Shared Drive folder; a folder it cannot
-   write to fails the image upload after the row was appended.
+9. **A saved work is missing from the table** — read the `/api/save-pantun` response in the network
+   tab, then confirm the service role key can write to the Storage bucket; a bucket the key cannot
+   write to fails the image upload after the row was inserted.
 
 ## Docs
 `README.md` (overview), `DEPLOY.md`, `VERCEL-DEPLOY.md` (env vars + go-live checklist),

@@ -5,6 +5,7 @@
 // consume (`nama`, `baris[]`, `skorAuto`, `nilai`, `status`, `tampilGaleri`, ...),
 // so the pages stay untouched when the storage layer changes.
 import { getSupabase, getBucket } from './supabase'
+import { initialsOf } from './name'
 
 export const STATUS_BELUM = 'BELUM DINILAI'
 export const STATUS_SUDAH = 'SUDAH DINILAI'
@@ -34,6 +35,9 @@ export function rowToWork(row) {
     tanggal: t(row.date_label) || formatTanggal(row.created_at),
     createdAt: row.created_at,
     nama: t(row.student_name),
+    displayName: initialsOf(row.student_name),
+    kelas: t(row.class_name),
+    absen: row.absen_no === null || row.absen_no === undefined ? null : Number(row.absen_no),
     fenomena: t(row.fenomena),
     gagasan: t(row.gagasan),
     pesan: t(row.pesan),

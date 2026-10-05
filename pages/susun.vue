@@ -17,13 +17,15 @@
       <p class="font-nunito text-xs text-bark/50 italic mb-4 ml-1">"Rangkai kata menjadi karya, ciptakan pantun yang bermakna."</p>
 
       <!-- Kamus Rima: kata lain dengan akhiran yang sama, klik untuk menyisipkan -->
-      <RimaDictionary
-        :rima-a="store.rima?.rimaA"
-        :rima-b="store.rima?.rimaB"
-        :dictionary="rhymeWords"
-        :active-line="activeLine"
-        @insert="handleInsertWord"
-      />
+      <div id="pohon-rima" ref="rhymeTreeEl">
+        <RimaDictionary
+          :rima-a="store.rima?.rimaA"
+          :rima-b="store.rima?.rimaB"
+          :dictionary="rhymeWords"
+          :active-line="activeLine"
+          @insert="handleInsertWord"
+        />
+      </div>
 
       <!-- Grid 3 kolom (mobile: 1 kolom) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -62,6 +64,12 @@
                     {{ store.phenomena?.name ?? '—' }}
                   </span>
                 </div>
+                <div class="flex items-start gap-1.5 text-xs">
+                  <span class="shrink-0">💬</span>
+                  <span class="font-nunito text-gray-500 min-w-0 truncate">
+                    {{ store.gagasan?.pesan || 'Pesan belum ditulis' }}
+                  </span>
+                </div>
                 <div class="flex items-center gap-1.5 text-xs">
                   <span class="shrink-0">📋</span>
                   <span class="font-nunito text-gray-500 min-w-0 truncate">
@@ -78,16 +86,21 @@
                 </div>
               </div>
               <p class="font-nunito text-[11px] italic text-bark/40 text-center">
-                Klik "Lihat Detail" untuk bahan lengkap
+                Klik "Lihat Detail" untuk bantuan pohon rima dan pilih rima sendiri
               </p>
             </div>
 
             <div v-else key="detail" id="bahan-detail" class="space-y-2">
-              <!-- Fenomena -->
+              <!-- Fenomena yang dipilih + pesan untuk pantun -->
               <div class="p-2.5 bg-sky/10 rounded-xl border border-sky/20">
-                <p class="font-nunito text-xs font-bold text-sky mb-0.5">🔍 Fenomena</p>
-                <p class="font-nunito text-sm font-semibold text-bark leading-tight">{{ store.phenomena?.name ?? '—' }}</p>
-                <p v-if="store.phenomena?.description" class="font-nunito text-[11px] text-gray-500 leading-relaxed mt-0.5">{{ store.phenomena?.description }}</p>
+                <p class="font-nunito text-xs font-bold text-sky mb-0.5">🔍 Fenomena yang Dipilih</p>
+                <p class="font-nunito text-sm font-semibold text-bark leading-tight">
+                  {{ store.phenomena?.icon }} {{ store.phenomena?.name ?? '—' }}
+                </p>
+                <p class="font-nunito text-xs font-bold text-jungle mt-1.5 mb-0.5">💬 Pesan untuk pantunmu</p>
+                <p class="font-nunito text-xs text-gray-600 leading-relaxed">
+                  {{ store.gagasan?.pesan || 'Belum ditulis. Isi dulu di halaman Gagasan dan Pesan.' }}
+                </p>
               </div>
 
               <!-- Pola -->
@@ -98,10 +111,10 @@
                 <p class="font-nunito text-xs text-gray-500 leading-tight">Isi: {{ store.pola?.deskripsi_isi }}</p>
               </div>
 
-              <!-- 2 Rima (A & B) -->
-              <div class="p-2.5 bg-jungle/10 rounded-xl border border-jungle/20 space-y-1.5">
+              <!-- Rima: bantuan pohon rima atau pilih rima sendiri -->
+              <div class="p-2.5 bg-jungle/10 rounded-xl border border-jungle/20 space-y-2">
                 <div>
-                  <p class="font-nunito text-xs font-bold text-coral">🔴 Rima A (Baris 1 & 3): <span class="text-bark font-extrabold">{{ store.rima?.rimaA?.suffix }}</span></p>
+                  <p class="font-nunito text-xs font-bold text-coral">🔴 Rima A (Baris 1 &amp; 3): <span class="text-bark font-extrabold">{{ store.rima?.rimaA?.suffix || '—' }}</span></p>
                   <div class="flex flex-wrap gap-1 mt-0.5">
                     <span v-for="word in (store.rima?.rimaA?.words || [])" :key="word"
                           class="px-2 py-0.5 rounded-full bg-coral/20 text-coral text-xs font-nunito font-semibold border border-coral/30">
@@ -110,13 +123,63 @@
                   </div>
                 </div>
                 <div>
-                  <p class="font-nunito text-xs font-bold text-sky">🔵 Rima B (Baris 2 & 4): <span class="text-bark font-extrabold">{{ store.rima?.rimaB?.suffix }}</span></p>
+                  <p class="font-nunito text-xs font-bold text-sky">🔵 Rima B (Baris 2 &amp; 4): <span class="text-bark font-extrabold">{{ store.rima?.rimaB?.suffix || '—' }}</span></p>
                   <div class="flex flex-wrap gap-1 mt-0.5">
                     <span v-for="word in (store.rima?.rimaB?.words || [])" :key="word"
                           class="px-2 py-0.5 rounded-full bg-sky/20 text-sky text-xs font-nunito font-semibold border border-sky/30">
                       {{ word }}
                     </span>
                   </div>
+                </div>
+
+                <!-- Dua jalan memilih rima: ikuti pohon rima, atau tentukan sendiri -->
+                <div class="flex flex-wrap gap-1.5 pt-0.5">
+                  <button
+                    type="button"
+                    @click="focusRhymeTree"
+                    class="rounded-xl px-2.5 py-1.5 font-nunito text-[11px] font-bold bg-white/80 text-jungle border border-jungle/30 hover:bg-jungle/10 transition-all duration-200"
+                  >
+                    🌳 Bantuan Pohon Rima
+                  </button>
+                  <button
+                    type="button"
+                    @click="manualRimaOpen = !manualRimaOpen"
+                    class="rounded-xl px-2.5 py-1.5 font-nunito text-[11px] font-bold bg-white/80 text-coral border border-coral/30 hover:bg-coral/10 transition-all duration-200"
+                  >
+                    {{ manualRimaOpen ? '✕ Tutup' : '✏️ Pilih Rima Sendiri' }}
+                  </button>
+                </div>
+
+                <!-- Editor rima manual -->
+                <div v-if="manualRimaOpen" class="space-y-2">
+                  <div v-for="row in manualRimaRows" :key="row.key" class="rounded-xl bg-white/70 border border-jungle/15 p-2">
+                    <p class="font-nunito text-[11px] font-bold" :class="row.key === 'A' ? 'text-coral' : 'text-sky'">
+                      Rima {{ row.key }} ({{ row.hint }})
+                    </p>
+                    <div class="flex items-center gap-1.5 mt-1">
+                      <input
+                        v-model="manualRima[row.key].suffix"
+                        maxlength="4"
+                        placeholder="-i"
+                        aria-label="Akhiran rima"
+                        class="w-16 border-2 rounded-lg px-2 py-1 font-nunito text-xs text-center bg-white focus:outline-none border-jungle/25 focus:border-jungle"
+                      />
+                      <input
+                        v-model="manualRima[row.key].words"
+                        placeholder="hati, melati"
+                        aria-label="Kata rima, pisahkan dengan koma"
+                        class="flex-1 min-w-0 border-2 rounded-lg px-2 py-1 font-nunito text-xs bg-white focus:outline-none border-jungle/25 focus:border-jungle"
+                      />
+                    </div>
+                  </div>
+                  <p v-if="manualRimaError" class="font-nunito text-[11px] font-semibold text-coral">{{ manualRimaError }}</p>
+                  <button
+                    type="button"
+                    @click="saveManualRima"
+                    class="w-full rounded-xl bg-jungle text-white font-fredoka font-bold text-xs py-2 hover:bg-jungle/90 transition-all duration-200"
+                  >
+                    Simpan Rima
+                  </button>
                 </div>
               </div>
 
@@ -231,7 +294,8 @@
           <div class="flex justify-center overflow-x-auto">
             <PantunCard
               :lines="pantunLines"
-              :student-name="store.studentName"
+              :student-name="store.displayName"
+              :student-id="store.identityLine"
               :phenomena="store.phenomena?.name ?? ''"
               :pola="`Pola ${store.pola?.id} — ${store.pola?.nama}`"
               :rima-a="store.rima?.rimaA"
@@ -243,7 +307,7 @@
 
       <!-- Navigasi + aksi -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <button @click="navigateTo('/gagasan')" class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors">
+        <button @click="goBack('/gagasan')" class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors">
           <span>←</span> Kembali ke Peta Ide
         </button>
 
@@ -359,6 +423,16 @@
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
 import { useAudio }      from '~/composables/useAudio'
+// Suku kata + rima helpers live in one composable so /susun and /nilai can never
+// disagree about the same pantun.
+import {
+  countLineSyllables,
+  collectPantunIssues,
+  hasRepeatedWord,
+  lineHasAny,
+  lineMatchesSuffix,
+  lineWords,
+} from '~/composables/usePantunRules'
 
 const ChecklistItem = defineComponent({
   props: {
@@ -408,12 +482,16 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
 onMounted(() => {
-  if (!store.studentName)       navigateTo('/')
-  if (!store.phenomena)         navigateTo('/fenomena')
-  if (!store.pola)              navigateTo('/pola')
-  if (!store.isStepDone(5))     navigateTo('/rima')
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.phenomena, '/fenomena'],
+    [store.pola, '/pola'],
+    [store.isStepDone(5), '/rima'],
+  ])
 })
 
 const pantunLines = reactive([
@@ -426,6 +504,76 @@ const pantunLines = reactive([
 // Kolom "Kumpulan Bahan": default minimize, klik header untuk maximize
 const bahanCollapsed = ref(true)
 
+// ── Rima: bantuan pohon rima atau pilih rima sendiri ─────
+// The revision replaced the read-only rima card with two ways forward: follow the
+// rhyme tree (word suggestions, already on this page) or set the rima by hand.
+const rhymeTreeEl = ref(null)
+const manualRimaOpen = ref(false)
+const manualRimaError = ref('')
+
+const manualRimaRows = [
+  { key: 'A', hint: 'baris 1 & 3' },
+  { key: 'B', hint: 'baris 2 & 4' },
+]
+
+function currentRimaFields(key) {
+  const source = key === 'A' ? store.rima?.rimaA : store.rima?.rimaB
+  return {
+    suffix: source?.suffix || '',
+    words: (source?.words || []).join(', '),
+  }
+}
+
+const manualRima = reactive({ A: currentRimaFields('A'), B: currentRimaFields('B') })
+
+function normalizeSuffix(value) {
+  const raw = String(value || '').trim().toLowerCase().replace(/\s+/g, '')
+  if (!raw) return ''
+  return raw.startsWith('-') ? raw : `-${raw}`
+}
+
+function parseWords(value) {
+  return String(value || '')
+    .split(',')
+    .map((word) => word.trim().toLowerCase())
+    .filter(Boolean)
+}
+
+function focusRhymeTree() {
+  audio.play('card-select')
+  rhymeTreeEl.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+function saveManualRima() {
+  const suffixA = normalizeSuffix(manualRima.A.suffix)
+  const suffixB = normalizeSuffix(manualRima.B.suffix)
+  const wordsA = parseWords(manualRima.A.words)
+  const wordsB = parseWords(manualRima.B.words)
+
+  if (!suffixA || !suffixB) {
+    manualRimaError.value = 'Isi akhiran rima A dan B dulu ya (contoh: -i dan -an).'
+    audio.play('toast-warn')
+    return
+  }
+  if (wordsA.length < 2 || wordsB.length < 2) {
+    manualRimaError.value = 'Setiap rima butuh minimal 2 kata, pisahkan dengan koma.'
+    audio.play('toast-warn')
+    return
+  }
+  if (suffixA === suffixB) {
+    manualRimaError.value = 'Rima A dan rima B harus berbeda bunyinya.'
+    audio.play('toast-warn')
+    return
+  }
+
+  store.setRima({ suffix: suffixA, words: wordsA }, { suffix: suffixB, words: wordsB })
+  manualRima.A = { suffix: suffixA, words: wordsA.join(', ') }
+  manualRima.B = { suffix: suffixB, words: wordsB.join(', ') }
+  manualRimaError.value = ''
+  manualRimaOpen.value = false
+  audio.play('submit')
+}
+
 const barisConfig = [
   { label: 'Baris 1', hint: '(sampiran — Rima A)', placeholder: 'Contoh: Pohon rimbun tempat berteduh...' },
   { label: 'Baris 2', hint: '(sampiran — Rima B)', placeholder: 'Contoh: Burung bernyanyi riang gembira...' },
@@ -434,26 +582,7 @@ const barisConfig = [
 ]
 
 // ── Suku kata counter logic ──────────────────────────────
-function countSyllablesInWord(word) {
-  let w = word.toLowerCase().replace(/[^a-z]/g, '')
-  if (!w) return 0
-  const matches = w.match(/[aiueo]/g)
-  if (!matches) return 1
-  let count = matches.length
-  const diphthongs = w.match(/(ai|au|oi)/g)
-  if (diphthongs) count -= diphthongs.length
-  return Math.max(1, count)
-}
-
-function countLineSyllables(line) {
-  if (!line.trim()) return 0
-  const words = line.trim().split(/\s+/)
-  let total = 0
-  for (const word of words) {
-    total += countSyllablesInWord(word)
-  }
-  return total
-}
+// (countSyllablesInWord / countLineSyllables live in composables/usePantunRules.js)
 
 const lineSyllables = computed(() => [
   countLineSyllables(pantunLines[0]),
@@ -497,39 +626,8 @@ function clearPantun() {
 }
 
 // ── Validation Engine ─────────────────────────────────────
-function lineMatchesSuffix(lineText, suffix) {
-  if (!lineText.trim() || !suffix) return false
-  const words = lineText.trim().toLowerCase().split(/\s+/)
-  const lastWord = words[words.length - 1].replace(/[^a-z]/g, '')
-  const s = suffix.replace('-', '').toLowerCase()
-
-  if (s === 'a') return lastWord.endsWith('a')
-  if (s === 'i') return lastWord.endsWith('i')
-  if (s === 'an') return lastWord.endsWith('an')
-  if (s === 'ar') return lastWord.endsWith('ar')
-  if (s === 'ang') return lastWord.endsWith('ang')
-  if (s === 'ai') return lastWord.endsWith('ai')
-  if (s === 'at') return lastWord.endsWith('at')
-  if (s === 'en') return lastWord.endsWith('en')
-  if (s === 'in') return lastWord.endsWith('in')
-  if (s === 'it') return lastWord.endsWith('it')
-  return lastWord.endsWith(s)
-}
-
-// ── Pola rule helpers ─────────────────────────────────────
-function lineWords(line) {
-  return (line || '').toLowerCase().split(/\s+/).map(w => w.replace(/[^a-z0-9]/g, '')).filter(Boolean)
-}
-
-function lineHasAny(line, words) {
-  const clean = (line || '').toLowerCase()
-  return words.some(w => clean.includes(w))
-}
-
-function hasRepeatedWord(line) {
-  const words = lineWords(line)
-  return words.length > 1 && new Set(words).size < words.length
-}
+// lineMatchesSuffix / lineWords / lineHasAny / hasRepeatedWord live in
+// composables/usePantunRules.js — imported above.
 
 function containsNumber(line) {
   if (/\d/.test(line)) return true
@@ -561,103 +659,10 @@ const validationErrors = computed(() => {
     return errors
   }
 
-  // 1. Suku kata 8-12
-  lines.forEach((line, idx) => {
-    const syl = countLineSyllables(line)
-    if (syl < 8) {
-      errors.push({
-        rule: 'SUKU_KATA_MIN',
-        title: `Baris ${idx + 1} Terlalu Pendek`,
-        message: `Baris ${idx + 1} hanya memiliki ${syl} suku kata. Pantun yang baik memiliki 8–12 suku kata per baris.`,
-        action: `Tambahkan beberapa kata pada Baris ${idx + 1} agar menjadi 8–12 suku kata.`
-      })
-    } else if (syl > 12) {
-      errors.push({
-        rule: 'SUKU_KATA_MAX',
-        title: `Baris ${idx + 1} Terlalu Panjang`,
-        message: `Baris ${idx + 1} memiliki ${syl} suku kata. Pantun yang baik memiliki 8–12 suku kata per baris.`,
-        action: `Persingkat baris ${idx + 1} agar berada di kisaran 8–12 suku kata.`
-      })
-    }
-  })
-
-  // 2. Rima AB-AB
-  const rimaA = store.rima?.rimaA
-  const rimaB = store.rima?.rimaB
-  const sufA = rimaA?.suffix || ''
-  const sufB = rimaB?.suffix || ''
-
-  if (sufA && !lineMatchesSuffix(lines[0], sufA)) {
-    const lastWord = lines[0].trim().split(/\s+/).pop() || ''
-    errors.push({
-      rule: 'RIMA_A_BARIS_1',
-      title: 'Rima Akhir Baris 1 Belum Sesuai',
-      message: `Baris 1 harus berakhiran rima A ('${sufA}'). Kata terakhir saat ini adalah '${lastWord}'.`,
-      action: `Ganti kata terakhir Baris 1 dengan kata yang berakhiran rima '${sufA}'.`
-    })
-  }
-
-  if (sufA && !lineMatchesSuffix(lines[2], sufA)) {
-    const lastWord = lines[2].trim().split(/\s+/).pop() || ''
-    errors.push({
-      rule: 'RIMA_A_BARIS_3',
-      title: 'Rima Akhir Baris 3 (Isi) Belum Sesuai',
-      message: `Baris 3 (Isi) harus berakhiran rima A ('${sufA}'). Kata terakhir saat ini adalah '${lastWord}'.`,
-      action: `Ganti kata terakhir Baris 3 dengan kata yang berakhiran rima '${sufA}'.`
-    })
-  }
-
-  if (sufB && !lineMatchesSuffix(lines[1], sufB)) {
-    const lastWord = lines[1].trim().split(/\s+/).pop() || ''
-    errors.push({
-      rule: 'RIMA_B_BARIS_2',
-      title: 'Rima Akhir Baris 2 Belum Sesuai',
-      message: `Baris 2 harus berakhiran rima B ('${sufB}'). Kata terakhir saat ini adalah '${lastWord}'.`,
-      action: `Ganti kata terakhir Baris 2 dengan kata yang berakhiran rima '${sufB}'.`
-    })
-  }
-
-  if (sufB && !lineMatchesSuffix(lines[3], sufB)) {
-    const lastWord = lines[3].trim().split(/\s+/).pop() || ''
-    errors.push({
-      rule: 'RIMA_B_BARIS_4',
-      title: 'Rima Akhir Baris 4 (Isi) Belum Sesuai',
-      message: `Baris 4 (Isi) harus berakhiran rima B ('${sufB}'). Kata terakhir saat ini adalah '${lastWord}'.`,
-      action: `Ganti kata terakhir Baris 4 dengan kata yang berakhiran rima '${sufB}'.`
-    })
-  }
-
-  // 3. Kata rima pilihan
-  const wordsA = (rimaA?.words || []).map(w => w.toLowerCase())
-  const wordsB = (rimaB?.words || []).map(w => w.toLowerCase())
-
-  if (wordsA.length) {
-    const b1Low = lines[0].toLowerCase()
-    const b3Low = lines[2].toLowerCase()
-    const usedA = wordsA.some(w => b1Low.includes(w) || b3Low.includes(w))
-    if (!usedA) {
-      errors.push({
-        rule: 'KATA_RIMA_A_MISSING',
-        title: 'Kata Rima A Belum Digunakan',
-        message: `Belum ada kata dari Rima A (${wordsA.join(', ')}) yang dipakai pada Baris 1 atau Baris 3.`,
-        action: `Gunakan kata pilihan Rima A (${wordsA.join(', ')}) ke dalam Baris 1 atau Baris 3.`
-      })
-    }
-  }
-
-  if (wordsB.length) {
-    const b2Low = lines[1].toLowerCase()
-    const b4Low = lines[3].toLowerCase()
-    const usedB = wordsB.some(w => b2Low.includes(w) || b4Low.includes(w))
-    if (!usedB) {
-      errors.push({
-        rule: 'KATA_RIMA_B_MISSING',
-        title: 'Kata Rima B Belum Digunakan',
-        message: `Belum ada kata dari Rima B (${wordsB.join(', ')}) yang dipakai pada Baris 2 atau Baris 4.`,
-        action: `Gunakan kata pilihan Rima B (${wordsB.join(', ')}) ke dalam Baris 2 atau Baris 4.`
-      })
-    }
-  }
+  // 1–3. Suku kata, rima akhir, dan kata rima pilihan. The same rules live in
+  // composables/usePantunRules.js and power the "Petunjuk Perbaikan Pantun" panel
+  // on /nilai, so the two screens can never report different findings.
+  errors.push(...collectPantunIssues(lines, store.rima?.rimaA, store.rima?.rimaB))
 
   // 4. Pola rules
   const pola = store.pola

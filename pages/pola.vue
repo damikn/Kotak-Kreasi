@@ -169,7 +169,7 @@
       <div class="mt-8 flex items-center justify-between gap-4">
         <!-- Tombol kembali -->
         <button
-          @click="navigateTo('/gagasan')"
+          @click="goBack('/gagasan')"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400
                  hover:text-bark transition-colors duration-200"
         >
@@ -204,12 +204,16 @@ definePageMeta({
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
-// Guard
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
-  if (!store.phenomena) navigateTo('/fenomena')
-  if (!store.gagasan?.gagasan) navigateTo('/gagasan')
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.phenomena, '/fenomena'],
+    [store.gagasan?.gagasan, '/gagasan'],
+  ])
 })
 
 // Fetch pola data

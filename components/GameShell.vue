@@ -25,7 +25,7 @@
           @click="handleBack"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
         >
-          <span>←</span><span>Kembali ke Eksplorasi Pantun</span>
+          <span>←</span><span>{{ backLabel }}</span>
         </button>
 
         <div class="flex items-center gap-2">
@@ -136,7 +136,8 @@ defineEmits(['check', 'retry'])
 
 const store = useKotakStore()
 const audio = useAudio()
-const { pageForRoute, nextPageOf } = useStages()
+const { pageForRoute } = useStages()
+const { goBack } = useBackNav()
 
 const showKey = ref(false)
 
@@ -148,24 +149,22 @@ watch(isFinished, (done) => {
 })
 
 const found = computed(() => pageForRoute(props.route))
-const nextPage = computed(() => (found.value ? nextPageOf(found.value.stage) : null))
-const nextLabel = computed(() => {
-  if (!nextPage.value || nextPage.value.route === props.route) return 'Selesai'
-  return 'Latihan berikutnya'
-})
+const stage = computed(() => found.value?.stage ?? null)
+const stageHub = computed(() => (stage.value ? `/tahap/${stage.value.id}` : '/menu'))
+
+// After a check pass the learner goes back to the practice menu instead of
+// chaining straight into the next game.
+const nextLabel = computed(() => 'Kembali ke Menu')
+const backLabel = computed(() => (stage.value ? `Kembali ke ${stage.value.label}` : 'Kembali ke Menu'))
 
 function handleNext() {
   audio.play('next')
-  if (!nextPage.value || nextPage.value.route === props.route) {
-    navigateTo('/tahap/eksplorasi-pantun')
-    return
-  }
-  navigateTo(nextPage.value.route)
+  navigateTo(stageHub.value)
 }
 
 function handleBack() {
   audio.play('back')
-  navigateTo('/tahap/eksplorasi-pantun')
+  goBack(stageHub.value)
 }
 </script>
 

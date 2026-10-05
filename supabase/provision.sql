@@ -29,11 +29,18 @@ create table if not exists public.works (
   grade         integer check (grade is null or (grade between 0 and 100)),
   comment       text not null default '',
   status        text not null default 'BELUM DINILAI',
-  gallery       boolean not null default false
+  gallery       boolean not null default false,
+  class_name    text not null default '',
+  absen_no      integer
 );
 
 create index if not exists works_created_at_idx on public.works (created_at desc);
 create index if not exists works_gallery_idx on public.works (created_at desc) where gallery;
+
+-- Idempotent upgrades for databases created before these columns existed
+alter table public.works add column if not exists class_name text not null default '';
+alter table public.works add column if not exists absen_no integer;
+create index if not exists works_class_idx on public.works (class_name, absen_no);
 
 -- RLS with no policies: anon/authenticated keys are denied outright. The Nuxt
 -- server talks to Postgres with the service_role key, which bypasses RLS.

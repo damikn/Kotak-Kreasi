@@ -20,7 +20,7 @@
       </div>
 
       <!-- Karya siswa -->
-      <p class="font-fredoka font-bold text-sm text-bark mb-1">{{ store.studentName || 'Siswa' }}</p>
+      <p class="font-fredoka font-bold text-sm text-bark mb-1">{{ store.displayName || 'Siswa' }}</p>
 
       <!-- Kosong -->
       <div v-if="!entries.length" class="rounded-2xl border-2 border-dashed border-gray-200 bg-white/70 p-6 text-center no-print">
@@ -112,7 +112,7 @@
       <!-- Aksi -->
       <div class="mt-5 flex flex-wrap items-center justify-between gap-3 no-print">
         <button
-          @click="navigateTo('/refleksi')"
+          @click="goBack('/refleksi')"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
         >
           <span>←</span><span>Kembali ke Refleksi</span>
@@ -159,13 +159,15 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
 const audio = useAudio()
 const { entries, clearBook } = useKaryaBook()
+const { goBack } = useBackNav()
 
 const CHECKLIST_LABELS = {
   baris: 'Empat baris (sampiran & isi)',
-  rima: 'Rima A-B-A-B',
   sukuKata: '8–12 suku kata',
+  rima: 'Rima A-B-A-B sesuai',
+  kataRima: 'Memakai kata rima pilihan',
   pesan: 'Isi sesuai fenomena & pesan',
-  ejaan: 'Ejaan dan tanda baca rapi',
+  sopan: 'Nada dan bahasa sopan',
 }
 
 const REFLEKSI_LABELS = [

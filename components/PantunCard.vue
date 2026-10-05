@@ -60,7 +60,7 @@
       <dl class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs font-nunito">
         <div v-if="studentName">
           <dt class="text-gray-400 text-[11px]">Nama Siswa</dt>
-          <dd class="font-semibold text-bark break-words">{{ studentName }}</dd>
+          <dd class="font-semibold text-bark break-words">{{ studentName }}<span v-if="studentId" class="font-normal text-gray-400"> · {{ studentId }}</span></dd>
         </div>
         <div v-if="phenomena">
           <dt class="text-gray-400 text-[11px]">Fenomena</dt>
@@ -91,6 +91,7 @@
 const props = defineProps({
   lines:       { type: Array,  default: () => ['', '', '', ''] },
   studentName: { type: String, default: '' },
+  studentId:   { type: String, default: '' },
   phenomena:   { type: String, default: '' },
   pola:        { type: String, default: '' },
   rimaWords:   { type: Array,  default: () => [] },

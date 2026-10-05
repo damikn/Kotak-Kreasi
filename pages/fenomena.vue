@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-sky-50 to-green-50">
     <AppHeader />
     <StageBadge route="/fenomena" />
-    <StepBreadcrumb :current-step="1" />
+    <StepBreadcrumb :current-step="2" />
 
     <main class="flex-1 px-3 sm:px-4 py-4 sm:py-6 max-w-4xl mx-auto w-full">
 
@@ -10,9 +10,9 @@
       <div class="flex items-start gap-2 sm:gap-3 mb-2">
         <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky/20 flex items-center justify-center text-base sm:text-lg shrink-0 mt-0.5">🔍</div>
         <div class="min-w-0">
-          <h1 class="font-fredoka font-bold text-xl sm:text-3xl text-sky leading-tight">Eksplorasi Fenomena</h1>
+          <h1 class="font-fredoka font-bold text-xl sm:text-3xl text-sky leading-tight">Pilih Fenomena yang Menarik!</h1>
           <p class="font-nunito text-xs sm:text-sm text-gray-500 leading-relaxed">
-            Pilih salah satu fenomena yang menarik perhatianmu! Fenomena ini akan menjadi tema isi pantunmu.
+            Pilih satu fenomena yang ingin kamu angkat menjadi pantun. Fenomena ini akan menjadi tema isi pantunmu.
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@
       <!-- Navigasi -->
       <div class="flex items-center justify-between gap-3">
         <button
-          @click="navigateTo('/menu')"
+          @click="goBack('/tahap/ekspresikan-gagasan-pesan')"
           class="text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors flex items-center gap-1"
         >
           <span>←</span><span>Kembali ke Menu</span>
@@ -105,8 +105,16 @@ import { useAudio }      from '~/composables/useAudio'
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
-onMounted(() => { if (!store.studentName) navigateTo('/') })
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one
+onMounted(() => {
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.isStepDone(1), '/cocokkan'],
+  ])
+})
 
 const { data: phenomenaData, pending, error } = await useAsyncData('phenomena', () => queryContent('/phenomena').findOne())
 
@@ -130,7 +138,7 @@ function handleNext() {
   if (!selectedFenomena.value) return
   audio.play('next')
   store.setPhenomena(selectedFenomena.value)
-  navigateTo('/cocokkan')
+  navigateTo('/gagasan')
 }
 </script>
 

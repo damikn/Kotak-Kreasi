@@ -170,7 +170,8 @@
           <div id="pantun-preview-hasil">
             <PantunCard
               :lines="store.pantunLines"
-              :student-name="store.studentName"
+              :student-name="store.displayName"
+              :student-id="store.identityLine"
               :phenomena="store.phenomena?.name ?? ''"
               :pola="`Pola ${store.pola?.id} — ${store.pola?.nama}`"
               :rima-a="store.rima?.rimaA"
@@ -226,11 +227,18 @@ definePageMeta({
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
 // ── Guard ─────────────────────────────────────────────────
+// Redirects replace the entry, so a blocked page never leaves a bounce in the
+// browser history (that is what made the back button loop until the tab closed).
 onMounted(async () => {
-  if (!store.studentName) { navigateTo('/'); return }
-  if (!store.pantunLines.some((b) => b.trim())) { navigateTo('/susun'); return }
+  const allowed = requireAll([
+    [store.hasIdentity, '/'],
+    [store.pantunLines.some((b) => b.trim()), '/susun'],
+  ])
+  if (!allowed) return
 
   // Fanfare konfetti langsung saat halaman terbuka
   setTimeout(() => audio.play('fanfare'), 200)
@@ -320,14 +328,17 @@ async function downloadJpg() {
 
 // ── Navigasi ──────────────────────────────────────────────
 function handleKembaliMenu() {
-  store.resetPantun()
-  navigateTo('/menu')
+  audio.play('back')
+  // Back to the menu keeps the finished pantun: only "Buat Pantun Baru" clears it.
+  goBack('/menu')
 }
 
 function handleBuatBaru() {
-  const nama = store.studentName
+  // A new pantun must not cost the student their identity — every page guard needs
+  // name + kelas + nomor absen, so without this they get thrown back to the entry form.
+  const { studentName, studentClass, studentAbsen } = store
   store.resetAll()
-  store.setName(nama)
+  store.setIdentity({ name: studentName, kelas: studentClass, absen: studentAbsen })
   navigateTo('/fenomena')
 }
 </script>

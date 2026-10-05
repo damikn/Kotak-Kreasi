@@ -245,7 +245,7 @@
 
       <!-- Navigasi Bawah -->
       <div class="mt-6 pt-3 border-t border-emerald-100 flex items-center justify-between gap-3">
-        <button @click="navigateTo('/pola')"
+        <button @click="goBack('/pola')"
           class="text-sm font-semibold text-gray-500 hover:text-bark transition-colors flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-white/60">
           <span>←</span>
           <span>Kembali ke Pola</span>
@@ -284,11 +284,15 @@ const audio = useAudio()
 
 const minWords = 2
 const maxWords = 6
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
-  if (!store.phenomena) navigateTo('/fenomena')
-  if (!store.pola) navigateTo('/pola')
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.phenomena, '/fenomena'],
+    [store.pola, '/pola'],
+  ])
 })
 
 const { data: rhymeData, pending: pendingRhymes } = await useAsyncData(

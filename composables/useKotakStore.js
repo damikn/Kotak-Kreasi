@@ -1,21 +1,26 @@
 // composables/useKotakStore.js
 // Pinia store utama — menyimpan semua state alur pembuatan pantun
 import { defineStore } from 'pinia'
+import { initialsOf, identityLabel } from '~/utils/name'
 
 export const useKotakStore = defineStore('kotak', {
   state: () => ({
-    // Identitas siswa
+    // Student identity — full name plus the class/roll number that identifies
+    // the student to the teacher. Every screen shows a derived short form
+    // (see getters below), never the raw full name.
     studentName: '',
+    studentClass: '',
+    studentAbsen: '',
 
-    // Step saat ini: 0=welcome, 1=fenomena, 2=cocokkan, 3=gagasan, 4=pola, 5=rima, 6=susun
+    // Step saat ini: 0=welcome, 1=cocokkan, 2=fenomena, 3=gagasan, 4=pola, 5=rima, 6=susun
     step: 0,
 
-    // Step 1: Fenomena yang dipilih
+    // Step 2: Fenomena yang dipilih
     // Struktur: { id, slug, name, icon, color, description, contoh, gagasan, pesan, pantun[] }
     phenomena: null,
 
-    // Step 2: Hasil latihan mencocokkan (cocokkan.vue / CrosswordMatch)
-    // answers = { gambar, gagasan, pesan, pantun } berisi jawaban siswa
+    // Step 1: Hasil latihan mencocokkan (cocokkan.vue / FenomenaMatch)
+    // answers = { '<group>-<slot>': jawaban } berisi jawaban siswa
     cocokkan: {
       done: false,
       answers: {},
@@ -71,6 +76,16 @@ export const useKotakStore = defineStore('kotak', {
   }),
 
   getters: {
+    // Short form shown inside the app: "Budi Jaya Harsono" -> "Budi J. H."
+    displayName: (state) => initialsOf(state.studentName),
+
+    // Class + roll number line: "7A • No. 12"
+    identityLine: (state) => identityLabel({ kelas: state.studentClass, absen: state.studentAbsen }),
+
+    // Identity captured at the entry page (name + class + roll number)
+    hasIdentity: (state) =>
+      !!state.studentName && !!String(state.studentClass || '').trim() && !!String(state.studentAbsen || '').trim(),
+
     // Getter gabungan rima (untuk backward compatibility)
     allRimaWords: (state) => [
       ...(state.rima.rimaA?.words || []),
@@ -129,10 +144,10 @@ export const useKotakStore = defineStore('kotak', {
     },
 
     // Check apakah step tertentu sudah selesai
-    // 1=fenomena, 2=cocokkan, 3=gagasan, 4=pola, 5=rima, 6=susun
+    // 1=cocokkan, 2=fenomena, 3=gagasan, 4=pola, 5=rima, 6=susun
     isStepDone: (state) => (step) => {
-      if (step === 1) return !!state.phenomena
-      if (step === 2) return !!state.cocokkan?.done
+      if (step === 1) return !!state.cocokkan?.done
+      if (step === 2) return !!state.phenomena
       if (step === 3) return !!(state.gagasan?.gagasan && state.gagasan?.pesan)
       if (step === 4) return !!state.pola
       if (step === 5) {
@@ -159,25 +174,32 @@ export const useKotakStore = defineStore('kotak', {
       this.studentName = name.trim()
     },
 
-    setPhenomena(phenomena) {
-      // Memilih fenomena lain membatalkan latihan mencocokkan & gagasan/pesan
-      // dari fenomena sebelumnya (keduanya terikat ke fenomena ini).
-      if (phenomena?.slug && this.phenomena?.slug && this.phenomena.slug !== phenomena.slug) {
-        this.cocokkan = { done: false, answers: {} }
-        this.gagasan = { gagasan: '', pesan: '' }
-        if (this.step > 3) this.step = 1
-      }
-      this.phenomena = phenomena
-      this.step = Math.max(this.step, 1)
+    // Entry page: full name + class + roll number
+    setIdentity({ name, kelas, absen } = {}) {
+      if (name !== undefined) this.studentName = (name || '').toString().trim().replace(/\s+/g, ' ')
+      if (kelas !== undefined) this.studentClass = (kelas || '').toString().trim().toUpperCase()
+      if (absen !== undefined) this.studentAbsen = (absen || '').toString().trim()
     },
 
-    // Step 2: hasil latihan mencocokkan gambar + keterangan
+    setPhenomena(phenomena) {
+      // Memilih fenomena lain membatalkan gagasan/pesan yang ditulis untuk
+      // fenomena sebelumnya (keduanya terikat ke fenomena ini). Latihan
+      // mencocokkan di tahap 1 tidak bergantung pada pilihan ini.
+      if (phenomena?.slug && this.phenomena?.slug && this.phenomena.slug !== phenomena.slug) {
+        this.gagasan = { gagasan: '', pesan: '' }
+        if (this.step > 3) this.step = 2
+      }
+      this.phenomena = phenomena
+      this.step = Math.max(this.step, 2)
+    },
+
+    // Step 1: hasil latihan mencocokkan gambar + keterangan
     setCocokkan(answers) {
       this.cocokkan = {
         done: true,
         answers: { ...(answers || {}) },
       }
-      this.step = Math.max(this.step, 2)
+      this.step = Math.max(this.step, 1)
     },
 
     // Step 3: gagasan & pesan yang ditulis siswa

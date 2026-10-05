@@ -148,6 +148,9 @@
                 <div class="min-w-0">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span class="font-fredoka font-bold text-lg text-bark">{{ w.nama }}</span>
+                    <span v-if="w.kelas || w.absen" class="text-xs font-nunito font-bold px-2 py-0.5 rounded-full bg-sky/10 text-sky">
+                      {{ w.kelas }}<span v-if="w.absen"> • No. {{ w.absen }}</span>
+                    </span>
                     <span class="text-xs font-nunito font-bold px-2 py-0.5 rounded-full"
                       :class="w.status === 'SUDAH DINILAI'
                         ? 'bg-jungle/15 text-jungle'
@@ -227,7 +230,7 @@
       <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <!-- Modal header -->
         <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-          <h2 class="font-fredoka font-bold text-xl text-bark">Karya {{ selected.nama }}</h2>
+          <h2 class="font-fredoka font-bold text-xl text-bark">Karya {{ selected.nama }}<span v-if="selected.kelas" class="text-sm text-gray-400 font-normal"> · {{ selected.kelas }}<span v-if="selected.absen"> • No. {{ selected.absen }}</span></span></h2>
           <button @click="selected = null" class="text-gray-400 hover:text-coral text-2xl leading-none px-2" aria-label="Tutup">×</button>
         </div>
 
@@ -420,7 +423,12 @@ const filteredWorks = computed(() => {
   if (filter.value === 'belum') list = list.filter(w => w.status !== 'SUDAH DINILAI')
   if (filter.value === 'sudah') list = list.filter(w => w.status === 'SUDAH DINILAI')
   const q = searchQuery.value.trim().toLowerCase()
-  if (q) list = list.filter(w => (w.nama || '').toLowerCase().includes(q))
+  if (q) list = list.filter(w =>
+    (w.nama || '').toLowerCase().includes(q) ||
+    (w.kelas || '').toLowerCase().includes(q) ||
+    (w.kode || '').toLowerCase().includes(q) ||
+    String(w.absen ?? '') === q
+  )
   return list
 })
 

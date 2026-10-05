@@ -9,9 +9,17 @@ export function generateKodeKarya() {
   return `KK-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 5).toUpperCase()}`
 }
 
+// Roll number is stored only when it is a sane 1..100 integer; the UI enforces
+// it, the server just refuses to persist junk.
+function validAbsen(value) {
+  if (value === null || value === undefined || value === '') return null
+  const n = Number(value)
+  return Number.isInteger(n) && n >= 1 && n <= 100 ? n : null
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { studentName, phenomena, gagasan, pesan, pola, rima, pantunLines, imageBase64 } = body
+  const { studentName, className, absenNo, phenomena, gagasan, pesan, pola, rima, pantunLines, imageBase64 } = body
 
   if (!studentName || !pantunLines?.length) {
     throw createError({
@@ -68,7 +76,9 @@ export default defineEventHandler(async (event) => {
 
   const work = await insertWork(config, {
     kode: kodeKarya,
-    student_name: (studentName ?? '').toString().slice(0, 200),
+    student_name: (studentName ?? '').toString().trim().replace(/\s+/g, ' ').slice(0, 200),
+    class_name: (className ?? '').toString().trim().toUpperCase().slice(0, 20),
+    absen_no: validAbsen(absenNo),
     fenomena: phenomenaCell,
     pola: polaCell,
     rima_suffix: rimaSuffixCell,

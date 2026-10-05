@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-sky-50 to-green-50">
     <AppHeader />
     <StageBadge route="/cocokkan" />
-    <StepBreadcrumb :current-step="2" />
+    <StepBreadcrumb :current-step="1" />
 
     <main class="flex-1 px-3 sm:px-4 py-4 sm:py-6 max-w-4xl mx-auto w-full">
 
@@ -16,36 +16,25 @@
             Cocokkan Gambar dan Keterangannya!
           </h1>
           <p class="font-nunito text-xs sm:text-sm text-gray-500 leading-relaxed">
-            Isi setiap kotak bernomor dengan jawaban yang sesuai. Tarik atau ketuk jawaban dari bank di bawah, ya!
+            Tarik gagasan, pesan, dan pantun dari bank jawaban ke gambar fenomena yang sesuai.
           </p>
         </div>
       </div>
 
-      <!-- Fenomena terpilih -->
-      <div class="flex items-center gap-2 mb-4 ml-1">
-        <span class="font-nunito text-xs text-bark/60">Fenomena yang dipilih:</span>
-        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/80 border border-sky/30 px-3 py-1 font-nunito text-xs font-bold text-sky">
-          <span aria-hidden="true">{{ selected?.icon }}</span>
-          {{ selected?.name }}
-        </span>
-      </div>
-
       <!-- Loading -->
-      <div v-if="pending" class="space-y-3">
-        <div class="grid gap-3 grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
-          <div v-for="i in 4" :key="i" class="min-h-[96px] rounded-2xl bg-gray-100 animate-pulse" />
-        </div>
+      <div v-if="pending" class="space-y-3 mt-4">
+        <div v-for="i in 2" :key="i" class="min-h-[130px] rounded-2xl bg-gray-100 animate-pulse" />
       </div>
 
       <!-- Error -->
-      <div v-else-if="error || !crosswordItems.length" class="text-center py-10">
+      <div v-else-if="error || !groups.length" class="text-center py-10">
         <p class="text-coral font-nunito text-sm">Data latihan tidak ditemukan. Coba muat ulang halaman.</p>
       </div>
 
       <template v-else>
-        <CrosswordMatch
+        <FenomenaMatch
           ref="boardRef"
-          :items="crosswordItems"
+          :groups="groups"
           :checked="checked"
           :results="results"
           @change="handleChange"
@@ -58,7 +47,7 @@
             @click="handleBack"
             class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
           >
-            <span>←</span><span>Kembali ke Fenomena</span>
+            <span>←</span><span>Kembali ke Kenali Fenomena 1</span>
           </button>
 
           <div class="flex items-center gap-2">
@@ -74,15 +63,23 @@
               Periksa Jawaban
             </button>
 
-            <button
-              v-else
-              @click="handleNext"
-              class="flex items-center gap-2 font-fredoka font-bold text-base rounded-2xl px-6 py-3
-                     bg-jungle text-white hover:bg-jungle/90 shadow-lg shadow-jungle/30 hover:-translate-y-0.5
-                     transition-all duration-200"
-            >
-              <span>Lanjutkan</span><span aria-hidden="true">→</span>
-            </button>
+            <template v-else>
+              <button
+                @click="handleUlangi"
+                class="font-fredoka font-bold text-base rounded-2xl px-5 py-3 border-2
+                       border-sky/40 text-sky bg-white hover:bg-sky/10 transition-all duration-200"
+              >
+                Ulangi
+              </button>
+              <button
+                @click="handleNext"
+                class="flex items-center gap-2 font-fredoka font-bold text-base rounded-2xl px-6 py-3
+                       bg-jungle text-white hover:bg-jungle/90 shadow-lg shadow-jungle/30 hover:-translate-y-0.5
+                       transition-all duration-200"
+              >
+                <span>Lanjutkan</span><span aria-hidden="true">→</span>
+              </button>
+            </template>
           </div>
         </div>
 
@@ -91,24 +88,16 @@
           <div v-if="checked" class="mt-4 space-y-3">
             <div
               class="rounded-2xl border-2 p-3 sm:p-4"
-              :class="correctCount === crosswordItems.length - 1
-                ? 'bg-jungle/10 border-jungle/40'
-                : 'bg-sunshine/10 border-sunshine/40'"
+              :class="isAllCorrect ? 'bg-jungle/10 border-jungle/40' : 'bg-sunshine/10 border-sunshine/40'"
             >
               <p class="font-fredoka font-bold text-sm text-bark">
-                Benar {{ correctCount }} dari {{ crosswordItems.length - 1 }} jawaban.
+                Benar {{ correctCount }} dari {{ totalCount }} jawaban.
               </p>
               <p class="font-nunito text-xs text-gray-500 mt-1">
-                {{ correctCount === crosswordItems.length - 1
+                {{ isAllCorrect
                   ? 'Hebat! Semua jawabanmu sudah tepat.'
-                  : 'Masih ada yang belum tepat. Baca lagi keterangannya, lalu coba ulangi.' }}
+                  : 'Masih ada yang belum tepat. Baca lagi keterangannya, lalu klik Ulangi.' }}
               </p>
-              <button
-                @click="handleUlangi"
-                class="mt-2 font-nunito text-xs font-bold text-sky underline decoration-dotted"
-              >
-                Ulangi
-              </button>
             </div>
 
             <!-- Kunci jawaban & pembahasan -->
@@ -123,12 +112,10 @@
               <div v-if="showKey" class="px-3 sm:px-4 pb-4 space-y-2">
                 <div
                   v-for="item in answerKey"
-                  :key="item.id"
+                  :key="item.label"
                   class="rounded-xl bg-cream/70 border border-jungle/10 p-2.5"
                 >
-                  <p class="font-nunito text-xs font-bold text-bark">
-                    {{ item.number }}. {{ item.label }}
-                  </p>
+                  <p class="font-nunito text-xs font-bold text-bark">{{ item.label }}</p>
                   <p class="font-nunito text-xs text-gray-600 leading-relaxed whitespace-pre-line">{{ item.answer }}</p>
                 </div>
                 <p class="font-nunito text-xs text-gray-500 leading-relaxed pt-1">
@@ -146,102 +133,113 @@
 <script setup>
 import { useKotakStore } from '~/composables/useKotakStore'
 import { useAudio }      from '~/composables/useAudio'
-import CrosswordMatch    from '~/components/CrosswordMatch.vue'
+import FenomenaMatch     from '~/components/FenomenaMatch.vue'
 
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
-// Guard
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one.
+// This is step 1 of the wizard: nothing but the identity is required to start it.
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
-  if (!store.phenomena) navigateTo('/fenomena')
+  requireAll([
+    [store.hasIdentity, '/'],
+  ])
 })
 
-// ── Data fenomena terpilih (gagasan, pesan, contoh pantun) ─
-const { data: phenomenaData, pending, error } = await useAsyncData(
+// ── Data: which phenomena the exercise pairs up ───────────
+const { data: configData, pending: configPending, error: configError } = await useAsyncData(
+  'cocokkan-config',
+  () => queryContent('/cocokkan').findOne(),
+)
+
+const { data: phenomenaData, pending: phenomenaPending, error: phenomenaError } = await useAsyncData(
   'phenomena',
   () => queryContent('/phenomena').findOne(),
 )
 
-const phenomenaList = computed(() => {
-  const raw = phenomenaData.value
+const pending = computed(() => configPending.value || phenomenaPending.value)
+const error = computed(() => configError.value || phenomenaError.value)
+
+function bodyList(raw) {
   if (!raw) return []
   if (Array.isArray(raw)) return raw
   for (const key of Object.keys(raw)) { if (Array.isArray(raw[key])) return raw[key] }
   return []
+}
+
+const phenomenaList = computed(() => bodyList(phenomenaData.value))
+
+const pairSlugs = computed(() => {
+  const raw = configData.value
+  const pair = raw?.body?.pair ?? raw?.pair ?? []
+  return Array.isArray(pair) ? pair : []
 })
 
-const selected = computed(() =>
-  phenomenaList.value.find((p) => p.slug === store.phenomena?.slug) ?? store.phenomena ?? null,
+const selectedPhenomena = computed(() =>
+  pairSlugs.value
+    .map((slug) => phenomenaList.value.find((p) => p.slug === slug))
+    .filter(Boolean),
 )
 
-// ── 4 kotak: gambar (terkunci) + gagasan + pesan + pantun ──
-const crosswordItems = computed(() => {
-  const p = selected.value
-  if (!p?.gagasan) return []
-  return [
-    {
-      id: 'gambar',
-      number: 1,
-      clue: 'Gambar yang menunjukkan fenomena yang kamu pilih',
-      answer: p.name,
-      locked: true,
-      lockedValue: p.icon,
-    },
-    {
-      id: 'gagasan',
-      number: 2,
-      clue: 'Gagasan utama — kejadian atau hal yang dibahas',
-      answer: p.gagasan,
-    },
-    {
-      id: 'pesan',
-      number: 3,
-      clue: 'Pesan atau amanat — ajakan untuk pembaca',
-      answer: p.pesan,
-    },
-    {
-      id: 'pantun',
-      number: 4,
-      clue: 'Baris pantun yang sesuai dengan fenomena dan pesannya',
-      answer: (p.pantun ?? []).join('\n'),
-    },
-  ]
-})
+// ── Groups: an image anchor plus gagasan / pesan / pantun slots ──
+const groups = computed(() =>
+  selectedPhenomena.value.map((p) => ({
+    id: p.slug,
+    icon: p.icon,
+    name: p.name,
+    slots: [
+      { id: 'gagasan', label: 'Gagasan', answer: p.gagasan ?? '' },
+      { id: 'pesan',   label: 'Pesan',   answer: p.pesan ?? '' },
+      { id: 'pantun',  label: 'Pantun',  answer: (p.pantun ?? []).join('\n') },
+    ],
+  })),
+)
 
-const answerKey = computed(() => [
-  { id: 'gambar', number: 1, label: 'Gambar fenomena', answer: `${selected.value?.icon ?? ''} ${selected.value?.name ?? ''}`.trim() },
-  { id: 'gagasan', number: 2, label: 'Gagasan', answer: selected.value?.gagasan ?? '' },
-  { id: 'pesan', number: 3, label: 'Pesan', answer: selected.value?.pesan ?? '' },
-  { id: 'pantun', number: 4, label: 'Pantun', answer: (selected.value?.pantun ?? []).join('\n') },
-])
+const allSlots = computed(() =>
+  groups.value.flatMap((group) => group.slots.map((slot) => ({ key: `${group.id}:${slot.id}`, group, slot }))),
+)
 
-const explanation = 'Gambar menunjukkan fenomena yang diamati, gagasan menjelaskan isi yang ingin dibahas, pesan berisi amanat pantun, dan baris pantun menyampaikan gagasan serta pesan itu dengan rima yang teratur.'
+const totalCount = computed(() => allSlots.value.length)
+
+const answerKey = computed(() =>
+  selectedPhenomena.value.map((p, index) => ({
+    label: `Gambar ${index + 1} — ${p.icon ?? ''} ${p.name ?? ''}`.trim(),
+    answer: [
+      `Gagasan: ${p.gagasan ?? ''}`,
+      `Pesan: ${p.pesan ?? ''}`,
+      `Pantun:\n${(p.pantun ?? []).join('\n')}`,
+    ].join('\n'),
+  })),
+)
+
+const explanation = 'Setiap gambar menunjukkan satu fenomena. Gagasan menjelaskan isi yang ingin dibahas, pesan berisi amanatnya, dan baris pantun menyampaikan gagasan serta pesan itu dengan rima yang teratur.'
 
 // ── State interaksi ───────────────────────────────────────
-const boardRef    = ref(null)
-const answers     = ref({})
-const checked     = ref(false)
-const showKey     = ref(false)
+const boardRef = ref(null)
+const answers  = ref({})
+const checked  = ref(false)
+const showKey  = ref(false)
 
-const openItems = computed(() => crosswordItems.value.filter((i) => !i.locked))
-const allFilled = computed(() => openItems.value.every((i) => !!answers.value[i.id]))
+const allFilled = computed(() => allSlots.value.every(({ key }) => !!answers.value[key]))
 
 const results = computed(() => {
   if (!checked.value) return null
   const out = {}
-  for (const item of openItems.value) {
-    out[item.id] = answers.value[item.id] === item.answer
+  for (const { key, slot } of allSlots.value) {
+    out[key] = answers.value[key] === slot.answer
   }
   return out
 })
 
 const correctCount = computed(() => Object.values(results.value ?? {}).filter(Boolean).length)
+const isAllCorrect = computed(() => totalCount.value > 0 && correctCount.value === totalCount.value)
 
-function handleChange(id, value) {
-  answers.value = { ...answers.value, [id]: value }
+function handleChange(key, value) {
+  answers.value = { ...answers.value, [key]: value }
   checked.value = false
   showKey.value = false
 }
@@ -255,7 +253,7 @@ function handlePeriksa() {
   if (!allFilled.value) return
   checked.value = true
   showKey.value = false
-  audio.play(correctCount.value === openItems.value.length ? 'card-select' : 'toast-warn')
+  audio.play(isAllCorrect.value ? 'card-select' : 'toast-warn')
 }
 
 function handleUlangi() {
@@ -268,12 +266,12 @@ function handleUlangi() {
 function handleNext() {
   audio.play('next')
   store.setCocokkan(answers.value)
-  navigateTo('/gagasan')
+  navigateTo('/fenomena')
 }
 
 function handleBack() {
   audio.play('back')
-  navigateTo('/fenomena')
+  goBack('/tahap/kenali-fenomena')
 }
 </script>
 

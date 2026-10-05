@@ -1,8 +1,8 @@
 <template>
   <GameShell
-    route="/game/orak-arik"
-    :title="game?.title ?? 'Orak-Arik Sampiran dan Isi'"
-    :icon="game?.icon ?? '🧺'"
+    route="/game/tarik-garis"
+    :title="game?.title ?? 'Tarik Garis Sampiran dan Isi'"
+    :icon="game?.icon ?? '🧵'"
     :instruction="game?.instruction ?? ''"
     :can-check="allPlaced"
     :checked="checked"
@@ -100,7 +100,7 @@ const gameList = computed(() => {
   return []
 })
 
-const game = computed(() => gameList.value.find((g) => g.id === 'orak-arik') ?? null)
+const game = computed(() => gameList.value.find((g) => g.id === 'tarik-garis') ?? null)
 const lines = computed(() => game.value?.lines ?? [])
 
 const baskets = [

@@ -24,7 +24,7 @@ Reconstructed page map (the numbering in the source document is out of order —
 | Explore | 6-7. Gagasan & pesan | Two textareas ("1. Fenomena ini tentang apa?", "2. Apa pesan yang ingin disampaikan?"), phenomenon image left | `/gagasan` — exists (labels already per revision) |
 | Explain | 8. TTS Pantun | Crossword grid + "Petunjuk Mendatar/Menurun", "Periksa Jawaban" | **NEW** |
 | Explain | 9. Bongkar Susun Pantun | Drag lines from "Larik Acak" into 4 ordered slots | **NEW** |
-| Explain | 12. Orak-Arik Sampiran dan Isi | Drag "Larik Pantun" into "Sampiran" / "Isi" baskets | **NEW** |
+| Explain | 12. Tarik Garis Sampiran dan Isi | Drag "Larik Pantun" into "Sampiran" / "Isi" baskets | **NEW** |
 | Explain | — Melengkapi Pantun | Fill blanks in a pantun from a word bank | **NEW** |
 | Explain | — Pohon Rima (game) | Find words ending like a reference word on a tree | `/rima` is close but built for picking the 2 rhyme suffixes of A-B-A-B |
 | Elaborate | 19. Menulis pantun | "Kamus Rima" side panel + 4 stacked line inputs; "Simpan Draf", "Kembali ke Peta Ide" | `/susun` — exists as one combined editor + preview |
@@ -77,13 +77,16 @@ with `Gagasan` (R) and `Pesan` (S) columns.
   ship as "Segera hadir" (`available: false`) until Phase B and D fill them.
 - **Phase B — game shell + Explain games. DONE (2026-09-26).** `components/GameShell.vue` (badge,
   title, instruction, "Periksa Jawaban" / "Ulangi" / "Lanjut", score line, collapsible "Kunci
-  Jawaban dan Pembahasan", "Kembali ke Eksplorasi Pantun") + `composables/useGameState.js` (verdicts
+  Jawaban dan Pembahasan", "Kembali ke <nama tahap>" — the label follows the stage from stages.json)
+  + `composables/useGameState.js` (verdicts
   and counts). Five games shipped under `pages/game/` with all content in `content/games.json`:
   `/game/tts-pantun` (4-entry mini crossword: SAMPIRAN, ISI, RIMA, PANTUN with Mendatar/Menurun
-  clues), `/game/bongkar-susun` (order 4 shuffled lines into slots 1–4), `/game/orak-arik`
-  (classify lines into Sampiran / Isi baskets), `/game/melengkapi-pantun` (fill two blanks from a
+  clues), `/game/bongkar-susun` (order 4 shuffled lines into slots 1–4), `/game/tarik-garis`
+  (classify lines into Sampiran / Isi baskets; renamed from `/game/orak-arik` in the 2026-09
+  revision), `/game/melengkapi-pantun` (fill two blanks from a
   word bank), `/game/pohon-rima` (two rounds of picking words that rhyme with a reference word).
-  The stage "Eksplorasi Pantun" is now `available: true` with `progressKind: "games"` — practice
+  The stage "Eksplorasi Pengetahuan" (renamed from "Eksplorasi Pantun") is now `available: true`
+  with `progressKind: "games"` — practice
   never gates the wizard, progress is tracked per game route in the store (`isGameDone`), and every
   game shows the teacher-style answer key + pembahasan after checking.
 - **Phase C — Elaborate. DONE (2026-09-26).** `/susun` is now the writing screen: it gained a

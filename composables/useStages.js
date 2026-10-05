@@ -41,6 +41,15 @@ export function useStages() {
     return stages.value.find((stage) => (stage.pages ?? []).some((p) => p.route === route)) ?? null
   }
 
+  // Resolve a hub slug to its stage. Renamed stages keep their old ids in
+  // `legacyIds` so a bookmarked /tahap/<old-id> URL still opens the right hub.
+  function stageById(slug) {
+    const key = String(slug ?? '')
+    return stages.value.find(
+      (stage) => stage.id === key || (stage.legacyIds ?? []).includes(key),
+    ) ?? null
+  }
+
   function pageForRoute(route) {
     for (const stage of stages.value) {
       const page = (stage.pages ?? []).find((p) => p.route === route)
@@ -95,6 +104,7 @@ export function useStages() {
     stages,
     steps,
     stageForRoute,
+    stageById,
     pageForRoute,
     progressOf,
     isPageUnlocked,

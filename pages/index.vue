@@ -193,39 +193,6 @@
 
           </h1>
 
-          <!-- ===============================================
-               ILLUSTRATION: KREASI CHEST (books + plant)
-               =============================================== -->
-          <svg
-            class="w-44 sm:w-56 mx-auto my-1 sm:my-2 animate-float"
-            viewBox="0 0 200 150"
-            role="img"
-            aria-label="Peti terbuka berisi buku dan tanaman"
-          >
-            <!-- lid opened behind -->
-            <rect x="34" y="18" width="132" height="22" rx="8" fill="#795548" />
-            <rect x="46" y="24" width="108" height="12" rx="5" fill="#8D6E63" />
-            <!-- books -->
-            <rect x="62" y="40" width="18" height="52" rx="3" fill="#2980B9" />
-            <rect x="82" y="34" width="20" height="58" rx="3" fill="#27AE60" />
-            <rect x="104" y="44" width="17" height="48" rx="3" fill="#F39C12" />
-            <rect x="63" y="46" width="16" height="3" rx="1.5" fill="#ECF0F1" />
-            <rect x="83" y="40" width="18" height="3" rx="1.5" fill="#ECF0F1" />
-            <rect x="105" y="50" width="15" height="3" rx="1.5" fill="#FFFDE7" />
-            <!-- plant -->
-            <path d="M134 92c0-16 8-26 16-30-2 14-6 24-16 30z" fill="#27AE60" />
-            <path d="M136 92c6-12 18-18 26-18-6 12-16 18-26 18z" fill="#2ECC71" />
-            <rect x="132" y="90" width="32" height="12" rx="4" fill="#E74C3C" />
-            <!-- chest body -->
-            <rect x="30" y="92" width="140" height="44" rx="10" fill="#8D6E63" />
-            <rect x="30" y="104" width="140" height="8" fill="#6D4C41" />
-            <rect x="92" y="100" width="16" height="22" rx="4" fill="#F39C12" />
-            <circle cx="100" cy="110" r="3" fill="#6D4C41" />
-            <!-- sparkles -->
-            <path d="M28 52l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#F39C12" />
-            <path d="M172 62l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#9B59B6" />
-          </svg>
-
 
           <!-- Tagline -->
 
@@ -264,7 +231,7 @@
                    font-nunito font-semibold
                    text-bark text-sm
                    mb-2 text-center">
-            👤 Masukkan nama kamu:
+            👤 Isi nama lengkapmu:
           </label>
 
 
@@ -305,8 +272,8 @@
                  ============================================= -->
 
             <div class="flex-1 relative">
-              <input id="nama-input" ref="namaInputElement" v-model="namaInput" type="text" placeholder="Nama Siswa"
-                autocomplete="given-name" maxlength="20" class="w-full
+              <input id="nama-input" ref="namaInputElement" v-model="namaInput" type="text" placeholder="Nama Lengkap"
+                autocomplete="name" maxlength="40" class="w-full
                        border-2 rounded-xl
                        px-4 py-3
                        font-fredoka text-lg
@@ -316,17 +283,17 @@
                        bg-white/80" :class="[
                         inputError
                           ? 'border-coral animate-shake focus:border-coral'
-                          : namaInput.length >= 18
+                          : namaInput.length >= 36
                             ? 'border-sunshine focus:border-sunshine focus:ring-2 focus:ring-sunshine/20'
                             : 'border-jungle/30 focus:border-jungle focus:ring-2 focus:ring-jungle/20'
                       ]" @input="handleNameInput" @keydown.enter.prevent="handleSubmit" aria-describedby="nama-error nama-counter" />
               <!-- Counter karakter -->
               <span
                 id="nama-counter"
-                class="absolute right-2 bottom-1 text-[10px] font-nunito font-semibold leading-none pointer-events-none select-none transition-colors"
-                :class="namaInput.length >= 20 ? 'text-coral' : namaInput.length >= 18 ? 'text-sunshine' : 'text-gray-300'"
+                class="absolute right-3 bottom-1.5 text-[10px] font-nunito font-semibold leading-none pointer-events-none select-none transition-colors"
+                :class="namaInput.length >= 40 ? 'text-coral' : namaInput.length >= 36 ? 'text-sunshine' : 'text-gray-300'"
                 aria-live="polite"
-              >{{ namaInput.length }}/20</span>
+              >{{ namaInput.length }}/40</span>
             </div>
 
 
@@ -359,6 +326,50 @@
             </button>
 
           </div>
+
+
+          <!-- =================================================
+               KELAS + NOMOR ABSEN
+               ================================================= -->
+
+          <div class="flex gap-2 justify-center mt-3">
+
+            <div class="w-28 text-left">
+              <label for="kelas-input" class="block font-nunito font-semibold text-bark text-[11px] mb-1.5 text-center">
+                Kelas
+              </label>
+              <input id="kelas-input" v-model="kelasInput" type="text" placeholder="7A" maxlength="6" autocomplete="off"
+                class="w-full border-2 rounded-xl px-3 py-2 font-fredoka text-base text-center
+                       bg-white/80 focus:outline-none transition-all duration-200"
+                :class="inputError && !kelasInput.trim()
+                  ? 'border-coral'
+                  : 'border-jungle/30 focus:border-jungle focus:ring-2 focus:ring-jungle/20'" />
+            </div>
+
+            <div class="w-28 text-left">
+              <label for="absen-input" class="block font-nunito font-semibold text-bark text-[11px] mb-1.5 text-center">
+                No.
+              </label>
+              <input id="absen-input" v-model="absenInput" type="number" min="1" max="100" placeholder="12"
+                inputmode="numeric" autocomplete="off"
+                class="w-full border-2 rounded-xl px-3 py-2 font-fredoka text-base text-center
+                       bg-white/80 focus:outline-none transition-all duration-200"
+                :class="inputError && !absenInput
+                  ? 'border-coral'
+                  : 'border-jungle/30 focus:border-jungle focus:ring-2 focus:ring-jungle/20'" />
+            </div>
+
+          </div>
+
+          <p class="mt-3 text-xs text-gray-500 font-nunito leading-relaxed">
+            Nama lengkap dipakai guru untuk menilai karyamu. Di dalam aplikasi kamu tampil sebagai
+            <span class="font-semibold text-bark">{{ previewName }}</span> — bukan nama lengkap.
+          </p>
+
+          <p v-if="needsCompletion" class="mt-2 text-xs font-nunito font-semibold text-sunshine leading-relaxed" role="status">
+            Nama kamu sudah tersimpan di perangkat ini. Isi kelas dan nomor absen dulu ya, baru bisa
+            lanjut ke halaman terakhirmu.
+          </p>
 
 
           <!-- =================================================
@@ -556,12 +567,32 @@ const namaInput = ref(
   store.studentName || ''
 )
 
+const kelasInput = ref(
+  store.studentClass || ''
+)
+
+const absenInput = ref(
+  store.studentAbsen || ''
+)
+
 const inputError = ref(false)
+
+// Short form shown to the student as they type: "Budi Jaya Harsono" -> "Budi J. H."
+// Falls back to a sample name so the rule is visible before anything is typed.
+const previewName = computed(() => initialsOf(namaInput.value?.trim() || store.studentName || 'Budi Jaya Harsono'))
+
+// Device that kept the old name-only state (saved before kelas + nomor absen existed)
+// or a half-filled form: say so, so the form showing up again does not look like a bug.
+const needsCompletion = computed(() => !!store.studentName && !store.hasIdentity)
 
 const errorMessage = computed(() => {
   const len = namaInput.value.trim().length
   if (len < 2) return 'Nama minimal 2 karakter ya!'
-  if (len > 20) return 'Nama maksimal 20 karakter ya!'
+  if (len > 40) return 'Nama maksimal 40 karakter ya!'
+  if (!kelasInput.value.trim()) return 'Kelas belum diisi ya!'
+  if (kelasInput.value.trim().length > 6) return 'Kelas maksimal 6 karakter (contoh: 7A).'
+  const absen = Number(absenInput.value)
+  if (!Number.isInteger(absen) || absen < 1 || absen > 100) return 'Nomor absen harus angka 1–100.'
   return ''
 })
 
@@ -632,9 +663,12 @@ function handleNameInput(event) {
 
 function handleSubmit() {
 
-  const nama = namaInput.value.trim()
+  const nama = namaInput.value.trim().replace(/\s+/g, ' ')
+  const kelas = kelasInput.value.trim().toUpperCase()
+  const absen = Number(absenInput.value)
 
-  if (nama.length < 2 || nama.length > 20) {
+  if (nama.length < 2 || nama.length > 40 || !kelas || kelas.length > 6
+      || !Number.isInteger(absen) || absen < 1 || absen > 100) {
 
     inputError.value = true
     audio.play('toast-warn')
@@ -645,7 +679,8 @@ function handleSubmit() {
   // Suara submit berhasil — "do mi sol do"
   audio.play('submit')
 
-  store.setName(nama)
+  // Full name + class + roll number go to the server; the app shows a short form.
+  store.setIdentity({ name: nama, kelas, absen })
 
   navigateTo('/menu')
 }
@@ -657,8 +692,27 @@ function handleSubmit() {
 
 onMounted(() => {
 
+  // A reload on the entry page puts the student back on the page they were on, instead
+  // of the form. Only on a reload: a fresh open must keep showing the identity form.
+  const navType = performance.getEntriesByType?.('navigation')?.[0]?.type
+    ?? (window.performance?.navigation?.type === 1 ? 'reload' : 'navigate')
+  const lastRoute = readLastRoute()
+
+  if (navType === 'reload' && store.hasIdentity && lastRoute) {
+    navigateTo(lastRoute, { replace: true })
+    return
+  }
+
   if (store.studentName) {
     namaInput.value = store.studentName
+  }
+
+  if (store.studentClass) {
+    kelasInput.value = store.studentClass
+  }
+
+  if (store.studentAbsen) {
+    absenInput.value = store.studentAbsen
   }
 
   /*

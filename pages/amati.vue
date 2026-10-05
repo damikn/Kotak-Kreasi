@@ -86,10 +86,10 @@
         <!-- Aksi -->
         <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
           <button
-            @click="navigateTo('/tahap/peta-ide-materi')"
+            @click="goBack('/tahap/kenali-fenomena')"
             class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
           >
-            <span>←</span><span>Kembali ke Tahap Peta Ide Materi</span>
+            <span>←</span><span>Kembali ke Tahap Kenali Fenomena</span>
           </button>
 
           <button
@@ -114,6 +114,7 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
+const { goBack } = useBackNav()
 
 const { data: phenomenaData, pending } = await useAsyncData('phenomena', () => queryContent('/phenomena').findOne())
 
@@ -143,6 +144,6 @@ function shortName(name) {
 function handleNext() {
   store.markGameDone('/amati')
   audio.play('next')
-  navigateTo('/fenomena')
+  navigateTo('/cocokkan')
 }
 </script>

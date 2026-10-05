@@ -40,7 +40,7 @@
 
       <div class="flex flex-wrap items-center justify-between gap-3">
         <button
-          @click="navigateTo('/nilai')"
+          @click="goBack('/nilai')"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
         >
           <span>←</span><span>Kembali ke Ceklist</span>
@@ -89,6 +89,7 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
 const audio = useAudio()
 const { updateEntry } = useKaryaBook()
+const { goBack } = useBackNav()
 
 const PROMPTS = [
   {

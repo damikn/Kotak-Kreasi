@@ -22,7 +22,7 @@
       >
         <span class="text-base shrink-0">👤</span>
         <span class="hidden sm:inline text-gray-500 shrink-0">Halo,</span>
-        <span class="text-jungle font-bold truncate max-w-[120px] sm:max-w-[160px]" :title="store.studentName">{{ store.studentName }}</span>
+        <span class="text-jungle font-bold truncate max-w-[120px] sm:max-w-[160px]" :title="store.identityLine ? `${store.displayName} · ${store.identityLine}` : store.displayName">{{ store.displayName }}</span>
         <span class="hidden sm:inline shrink-0">👋</span>
       </div>
 
@@ -99,6 +99,9 @@ function handleToggleMute() {
 }
 
 function handleKeluar() {
+  // Leaving drops the page memory so the next student on a shared device is not
+  // forwarded into the previous student's page on the next reload.
+  forgetLastRoute()
   navigateTo('/')
 }
 </script>

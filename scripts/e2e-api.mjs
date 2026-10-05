@@ -34,7 +34,9 @@ const saveRes = await fetch(`${BASE}/api/save-pantun`, {
   method: 'POST',
   headers: { 'content-type': 'application/json' },
   body: JSON.stringify({
-    studentName: 'E2E Waguri',
+    studentName: 'E2E Waguri Santoso',
+    className: '7A',
+    absenNo: 12,
     phenomena: 'Uji Otomatis',
     gagasan: 'gagasan uji',
     pesan: 'pesan uji',
@@ -68,6 +70,12 @@ else ok(`guru/works → ${list.works.length} rows, test row present (nama "${min
 if (mine?.baris?.join('|') !== lines.join('|')) bad(`lines mismatch: ${JSON.stringify(mine?.baris)}`)
 else ok('pantun lines round-trip intact')
 
+if (mine?.nama !== 'E2E Waguri Santoso' || mine?.kelas !== '7A' || mine?.absen !== 12) {
+  bad(`identity mismatch: nama="${mine?.nama}" kelas="${mine?.kelas}" absen=${mine?.absen}`)
+} else {
+  ok(`identity stored: "${mine.nama}" (${mine.kelas} • No. ${mine.absen}) — short form "${mine.displayName}"`)
+}
+
 // ── 3. detail ────────────────────────────────────────────────────────────────
 const detailRes = await fetch(`${BASE}/api/guru/works/${kode}?pin=${encodeURIComponent(PIN)}`)
 const detail = await j(detailRes)
@@ -96,8 +104,9 @@ const feedRes = await fetch(`${BASE}/api/karya/pilihan`)
 const feed = await j(feedRes)
 const inFeed = feed?.works?.find((w) => w.kode === kode)
 if (!inFeed) bad('gallery feed does not contain the approved work')
-else if (inFeed.nama !== 'E2E') bad(`gallery exposes full name: "${inFeed.nama}"`)
-else ok(`gallery feed → ${feed.works.length} work(s), name truncated to "${inFeed.nama}"`)
+else if (inFeed.nama !== 'E2E W. S.') bad(`gallery shows an unexpected name form: "${inFeed.nama}"`)
+else if (inFeed.kelas !== '7A') bad(`gallery row is missing the class label: "${inFeed.kelas}"`)
+else ok(`gallery feed → ${feed.works.length} work(s), name "${inFeed.nama}" · ${inFeed.kelas}`)
 
 // ── 6. image route → signed URL → bytes match ────────────────────────────────
 const imgRes = await fetch(`${BASE}/api/karya/gambar/${kode}`, { redirect: 'manual' })

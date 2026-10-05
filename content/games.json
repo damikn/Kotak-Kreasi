@@ -63,10 +63,10 @@
       "explanation": "Baris 1–2 adalah sampiran yang menggambarkan suasana, baris 3–4 adalah isi yang menyampaikan pesan. Rima akhirnya melati–hati (−ati) dan jamu–ilmu (−u)."
     },
     {
-      "id": "orak-arik",
-      "title": "Orak-Arik Sampiran dan Isi",
-      "icon": "🧺",
-      "instruction": "Masukkan setiap baris pantun ke dalam keranjang sampiran atau isi yang tepat.",
+      "id": "tarik-garis",
+      "title": "Tarik Garis Sampiran dan Isi",
+      "icon": "🧵",
+      "instruction": "Tarik garis dari setiap baris pantun ke kategori sampiran atau isi yang tepat.",
       "lines": [
         { "text": "Pergi ke taman memetik melati,", "category": "sampiran" },
         { "text": "Singgah sebentar membeli jamu,", "category": "sampiran" },

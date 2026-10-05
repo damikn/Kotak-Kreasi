@@ -25,7 +25,7 @@
         <div class="grid gap-2 sm:grid-cols-2">
           <div class="rounded-xl bg-cream/70 p-2.5">
             <p class="font-nunito text-[11px] font-bold text-gray-400 uppercase tracking-wider">Nama Siswa</p>
-            <p class="font-nunito text-sm font-semibold text-bark">{{ store.studentName || '—' }}</p>
+            <p class="font-nunito text-sm font-semibold text-bark">{{ store.displayName || '—' }}<span v-if="store.identityLine" class="text-bark/60 font-normal"> · {{ store.identityLine }}</span></p>
           </div>
           <div class="rounded-xl bg-cream/70 p-2.5">
             <p class="font-nunito text-[11px] font-bold text-gray-400 uppercase tracking-wider">Fenomena</p>
@@ -70,7 +70,7 @@
       <!-- Aksi -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
         <button
-          @click="navigateTo('/susun')"
+          @click="goBack('/susun')"
           class="flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
         >
           <span>←</span><span>Kembali ke Editor Pantun</span>
@@ -132,13 +132,17 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 const store = useKotakStore()
 const audio = useAudio()
 const { addEntry } = useKaryaBook()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
 // Guard — the review page only makes sense with a complete draft
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
-  if (!store.phenomena) navigateTo('/fenomena')
-  if (!store.isStepDone(5)) navigateTo('/rima')
-  if (!canSave.value) navigateTo('/susun')
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.phenomena, '/fenomena'],
+    [store.isStepDone(5), '/rima'],
+    [canSave.value, '/susun'],
+  ])
 })
 
 const lines = computed(() => [
@@ -172,6 +176,8 @@ async function handleSimpanKarya() {
       method: 'POST',
       body: {
         studentName: store.studentName,
+        className:   store.studentClass,
+        absenNo:     store.studentAbsen,
         phenomena:   store.phenomena?.name ?? '',
         gagasan:     store.gagasan?.gagasan ?? '',
         pesan:       store.gagasan?.pesan ?? '',

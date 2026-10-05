@@ -1,12 +1,13 @@
 {
   "body": [
     {
-      "id": "peta-ide-materi",
+      "id": "kenali-fenomena",
+      "legacyIds": ["peta-ide-materi"],
       "stage": 1,
-      "label": "Peta Ide Materi",
+      "label": "Kenali Fenomena",
       "icon": "🗺️",
       "desc": "Kenali fenomena, gagasan, pesan, dan contoh pantun",
-      "detail": "Di tahap ini kamu mengamati fenomena di sekitar, lalu mencocokkan gambar dengan gagasan, pesan, dan pantun yang sesuai.",
+      "detail": "Di tahap ini kamu mengamati contoh fenomena beserta gagasan, pesan, dan pantunnya, lalu mencocokkan gambar fenomena dengan keterangan yang sesuai.",
       "color": "#F39C12",
       "bgClass": "bg-sunshine/10 hover:bg-sunshine/20",
       "borderClass": "border-sunshine/30",
@@ -17,7 +18,7 @@
         {
           "step": null,
           "route": "/amati",
-          "label": "Amati Fenomenanya",
+          "label": "Kenali Fenomena 1",
           "shortLabel": "Amati",
           "icon": "👀",
           "intro": true,
@@ -25,29 +26,22 @@
         },
         {
           "step": 1,
-          "route": "/fenomena",
-          "label": "Pilih Fenomena",
-          "shortLabel": "Fenomena",
-          "icon": "🔍",
-          "desc": "Pilih satu fenomena sebagai tema pantunmu"
-        },
-        {
-          "step": 2,
           "route": "/cocokkan",
-          "label": "Cocokkan Gambar dan Keterangan",
+          "label": "Kenali Fenomena 2",
           "shortLabel": "Cocokkan",
           "icon": "🧩",
-          "desc": "Pasangkan gambar fenomena dengan gagasan, pesan, dan pantunnya"
+          "desc": "Cocokkan setiap gambar fenomena dengan gagasan, pesan, dan pantunnya"
         }
       ]
     },
     {
-      "id": "belajar-menulis-pantun",
+      "id": "ekspresikan-gagasan-pesan",
+      "legacyIds": ["belajar-menulis-pantun"],
       "stage": 2,
-      "label": "Belajar Menulis Pantun",
+      "label": "Ekspresikan Gagasan dan Pesan",
       "icon": "✍️",
-      "desc": "Tentukan gagasan, pola, dan rima sebelum menulis",
-      "detail": "Setelah fenomena dipilih, tentukan gagasan dan pesan, lalu dapatkan pola pantun dari roda dan pilih kata rimamu.",
+      "desc": "Pilih fenomena, lalu tentukan gagasan, pola, dan rima",
+      "detail": "Pilih satu fenomena yang menarik, tuliskan gagasan dan pesanmu, lalu dapatkan pola pantun dari roda dan pilih kata rimamu.",
       "color": "#27AE60",
       "bgClass": "bg-jungle/10 hover:bg-jungle/20",
       "borderClass": "border-jungle/30",
@@ -55,6 +49,14 @@
       "focusClass": "focus:ring-jungle/40",
       "available": true,
       "pages": [
+        {
+          "step": 2,
+          "route": "/fenomena",
+          "label": "Pilih Fenomena",
+          "shortLabel": "Fenomena",
+          "icon": "🔍",
+          "desc": "Pilih satu fenomena sebagai tema pantunmu"
+        },
         {
           "step": 3,
           "route": "/gagasan",
@@ -82,12 +84,13 @@
       ]
     },
     {
-      "id": "eksplorasi-pantun",
+      "id": "eksplorasi-pengetahuan",
+      "legacyIds": ["eksplorasi-pantun"],
       "stage": 3,
-      "label": "Eksplorasi Pantun",
+      "label": "Eksplorasi Pengetahuan",
       "icon": "🧠",
       "desc": "Mainkan permainan seru tentang unsur dan rima pantun",
-      "detail": "Lima permainan latihan: teka-teki silang pantun, bongkar susun, orak-arik sampiran dan isi, melengkapi pantun, dan pohon rima.",
+      "detail": "Lima permainan latihan: teka-teki silang pantun, bongkar susun, tarik garis sampiran dan isi, melengkapi pantun, dan pohon rima.",
       "color": "#2980B9",
       "bgClass": "bg-sky/10 hover:bg-sky/20",
       "borderClass": "border-sky/30",
@@ -114,11 +117,11 @@
         },
         {
           "step": null,
-          "route": "/game/orak-arik",
-          "label": "Orak-Arik Sampiran dan Isi",
-          "shortLabel": "Orak-Arik",
-          "icon": "🧺",
-          "desc": "Pisahkan baris sampiran dan baris isi ke keranjang yang tepat"
+          "route": "/game/tarik-garis",
+          "label": "Tarik Garis Sampiran dan Isi",
+          "shortLabel": "Tarik Garis",
+          "icon": "🧵",
+          "desc": "Hubungkan setiap baris pantun dengan kategori sampiran atau isi"
         },
         {
           "step": null,
@@ -139,12 +142,13 @@
       ]
     },
     {
-      "id": "karya-pantun",
+      "id": "asah-kreativitas",
+      "legacyIds": ["karya-pantun"],
       "stage": 4,
-      "label": "Karya Pantun",
+      "label": "Asah Kreativitas",
       "icon": "📝",
       "desc": "Tulis, periksa, dan simpan karya pantunmu",
-      "detail": "Gunakan gagasan, pola, dan rima yang sudah kamu pilih untuk menyusun empat baris pantun, lalu simpan karyamu.",
+      "detail": "Gunakan fenomena, pesan, pola, dan rima yang sudah kamu pilih untuk menyusun empat baris pantun, lalu simpan karyamu.",
       "color": "#E91E63",
       "bgClass": "bg-blossom/10 hover:bg-blossom/20",
       "borderClass": "border-blossom/30",
@@ -179,12 +183,13 @@
       ]
     },
     {
-      "id": "galeri-dan-refleksi",
+      "id": "evaluasi-karya",
+      "legacyIds": ["galeri-dan-refleksi"],
       "stage": 5,
-      "label": "Galeri dan Refleksi",
+      "label": "Evaluasi Karya",
       "icon": "🏆",
-      "desc": "Lihat karya teman, nilai karyamu, dan tulis refleksi",
-      "detail": "Bandingkan karyamu dengan ceklist penilaian, lihat karya pilihan teman-teman, lalu tulis refleksi belajar dan simpan buku karyamu.",
+      "desc": "Nilai karyamu, lihat karya teman, dan tulis refleksi",
+      "detail": "Periksa karyamu dengan ceklist penilaian, lihat karya pilihan teman-teman, lalu tulis refleksi belajar dan simpan buku karyamu.",
       "color": "#9B59B6",
       "bgClass": "bg-plum/10 hover:bg-plum/20",
       "borderClass": "border-plum/30",
@@ -195,19 +200,19 @@
       "pages": [
         {
           "step": null,
-          "route": "/galeri",
-          "label": "Galeri Pantun",
-          "shortLabel": "Galeri",
-          "icon": "🖼️",
-          "desc": "Baca karya pilihan teman-teman yang dipilih guru"
-        },
-        {
-          "step": null,
           "route": "/nilai",
           "label": "Ceklist Penilaian",
           "shortLabel": "Ceklist",
           "icon": "📋",
           "desc": "Periksa sendiri pantunmu dengan ceklist penilaian"
+        },
+        {
+          "step": null,
+          "route": "/galeri",
+          "label": "Galeri Pantun",
+          "shortLabel": "Galeri",
+          "icon": "🖼️",
+          "desc": "Baca karya pilihan teman-teman yang dipilih guru"
         },
         {
           "step": null,

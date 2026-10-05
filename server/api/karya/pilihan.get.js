@@ -5,12 +5,9 @@
 //   * only the author's first name is exposed — never the full name,
 //   * no image links/paths, no grades, no comments.
 import { listGalleryWorks } from '../../utils/works-repo'
+import { initialsOf } from '../../utils/name'
 
 const MAX_WORKS = 12
-
-function firstNameOf(fullName) {
-  return (fullName || '').trim().split(/\s+/)[0] || 'Siswa'
-}
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -20,7 +17,11 @@ export default defineEventHandler(async (event) => {
     return {
       works: works.map((work) => ({
         kode: work.kode,
-        nama: firstNameOf(work.nama),
+        // Privacy: the gallery is visible to every student, so only the short
+        // form of the name plus the class label is exposed.
+        nama: initialsOf(work.nama),
+        kelas: work.kelas,
+        absen: work.absen,
         fenomena: work.fenomena,
         pola: work.pola,
         tanggal: work.tanggal,

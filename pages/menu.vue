@@ -51,7 +51,7 @@
             <!-- Greeting singkat -->
             <div class="text-center">
               <p class="font-fredoka font-bold text-2xl sm:text-3xl text-bark">
-                Halo, <span class="text-jungle">{{ store.studentName }}</span>! 👋
+                Halo, <span class="text-jungle">{{ store.displayName }}</span>! 👋
               </p>
               <p class="font-nunito text-sm text-bark/60 mt-1">
                 Klik kotak ajaib untuk membuka menu!
@@ -168,12 +168,12 @@
               <div class="flex items-center justify-center gap-2 mb-0.5">
                 <span class="text-xl">👋</span>
                 <h2 class="font-fredoka font-bold text-xl sm:text-2xl text-jungle">
-                  Halo, {{ store.studentName }}!
+                  Halo, {{ store.displayName }}!<span v-if="store.identityLine" class="text-xs text-bark/60 font-normal"> · {{ store.identityLine }}</span>
                 </h2>
               </div>
               <p class="font-nunito text-sm text-bark/70">Pilih menu untuk mulai berkreasi secara berurutan!</p>
               <p class="font-nunito text-xs text-bark/50 italic mt-0.5">
-                "Dari fenomena, lahir makna. Dari kata, tercipta karya."
+                "Dari fenomena, lahir pesan. Dari kata, tercipta karya."
               </p>
             </div>
 
@@ -239,7 +239,7 @@
             </button>
 
             <p class="text-center font-nunito text-xs text-bark/50 mt-3 italic">
-              Lima tahap berurutan: Peta Ide Materi → Belajar Menulis Pantun → Eksplorasi Pantun → Karya Pantun → Galeri dan Refleksi
+              Lima tahap berurutan: Kenali Fenomena → Ekspresikan Gagasan dan Pesan → Eksplorasi Pengetahuan → Asah Kreativitas → Evaluasi Karya
             </p>
           </div>
         </Transition>
@@ -271,10 +271,13 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
 
-// Guard
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
+  requireAll([
+    [store.hasIdentity, '/'],
+  ])
 })
 
 // ── Struktur tahap dari content/stages.json ───────────────

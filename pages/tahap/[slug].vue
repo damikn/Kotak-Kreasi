@@ -136,18 +136,22 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
-const { stages, isPageUnlocked, isPageDone, nextPageOf } = useStages()
+const { stages, stageById, isPageUnlocked, isPageDone, nextPageOf } = useStages()
 
 const route = useRoute()
 const slug = computed(() => String(route.params.slug || ''))
-const stage = computed(() => stages.value.find((s) => s.id === slug.value) ?? null)
+const stage = computed(() => stageById(slug.value))
 
 const nextPage = computed(() => (stage.value ? nextPageOf(stage.value) : null))
 const nextLabel = computed(() => (isPageDone(nextPage.value) ? 'Selesai, cek hasil' : 'Lanjutkan'))
 
-// Guard
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
+  requireAll([
+    [store.hasIdentity, '/'],
+  ])
 })
 
 const toastMsg = ref('')
@@ -177,7 +181,7 @@ function handleNext() {
 
 function handleBack() {
   audio.play('back')
-  navigateTo('/menu')
+  goBack('/menu')
 }
 
 onUnmounted(() => clearTimeout(toastTimer))

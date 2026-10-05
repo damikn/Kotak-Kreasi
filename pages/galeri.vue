@@ -54,7 +54,7 @@
           <div class="flex items-center gap-2 mb-2">
             <span class="text-xl leading-none" aria-hidden="true">🍃</span>
             <div class="min-w-0">
-              <p class="font-fredoka font-bold text-sm text-bark truncate">Karya {{ work.nama }}</p>
+              <p class="font-fredoka font-bold text-sm text-bark truncate">Karya {{ work.nama }}<span v-if="work.kelas" class="text-gray-400 font-normal"> · {{ work.kelas }}</span></p>
               <p class="font-nunito text-[11px] text-gray-400 truncate">{{ work.fenomena }}</p>
             </div>
           </div>
@@ -80,10 +80,10 @@
       </div>
 
       <button
-        @click="navigateTo('/tahap/galeri-dan-refleksi')"
+        @click="goBack('/tahap/evaluasi-karya')"
         class="mt-5 flex items-center gap-2 text-sm font-nunito font-semibold text-gray-400 hover:text-bark transition-colors"
       >
-        <span>←</span><span>Kembali ke Tahap Galeri dan Refleksi</span>
+        <span>←</span><span>Kembali ke Tahap Evaluasi Karya</span>
       </button>
     </main>
 
@@ -97,7 +97,7 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5">
           <div class="flex items-start justify-between gap-3 mb-3">
             <div>
-              <p class="font-fredoka font-bold text-lg text-bark">Karya {{ selected.nama }}</p>
+              <p class="font-fredoka font-bold text-lg text-bark">Karya {{ selected.nama }}<span v-if="selected.kelas" class="text-xs text-gray-400 font-normal"> · {{ selected.kelas }}</span></p>
               <p class="font-nunito text-xs text-gray-400">{{ selected.fenomena }} · {{ selected.tanggal }}</p>
             </div>
             <button class="text-gray-400 hover:text-coral text-2xl leading-none px-1" aria-label="Tutup" @click="selected = null">×</button>
@@ -127,6 +127,7 @@ import { useAudio } from '~/composables/useAudio'
 definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const audio = useAudio()
+const { goBack } = useBackNav()
 const selected = ref(null)
 
 const { data, pending, error } = await useAsyncData('karya-pilihan', () =>

@@ -77,7 +77,7 @@ Lima permainan, semuanya punya pola sama: **Periksa Jawaban** → skor → **Ula
 |---|---|
 | TTS Pantun | Mengisi teka-teki silang 4 kata silang: SAMPIRAN, ISI, RIMA, PANTUN, dengan petunjuk Mendatar dan Menurun |
 | Bongkar Susun Pantun | Menyusun ulang 4 baris acak menjadi pantun utuh di slot 1–4 |
-| Orak-Arik Sampiran dan Isi | Memasukkan setiap baris ke keranjang **Sampiran** atau **Isi** |
+| Tarik Garis Sampiran dan Isi | Menarik setiap baris ke keranjang **Sampiran** atau **Isi** |
 | Melengkapi Pantun | Mengisi 2 kata rumpang dari pilihan kata yang tersedia |
 | Pohon Rima | 2 ronde: memilih semua daun yang bunyi akhirnya sama dengan kata acuan |
 

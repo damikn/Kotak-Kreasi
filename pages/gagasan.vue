@@ -13,7 +13,7 @@
         </div>
         <div class="min-w-0">
           <h1 class="font-fredoka font-bold text-xl sm:text-3xl text-jungle leading-tight">
-            Ayo Tentukan Gagasan dan Pesannya!
+            Kembangkan Peta Idemu!
           </h1>
           <p class="font-nunito text-xs sm:text-sm text-gray-500 leading-relaxed">
             Tuliskan gagasan dan pesan dari fenomena yang kamu pilih. Keduanya akan menjadi isi pantunmu.
@@ -148,11 +148,15 @@ definePageMeta({ pageTransition: { name: 'page', mode: 'out-in' } })
 
 const store = useKotakStore()
 const audio = useAudio()
+const { requireAll } = usePageGuard()
+const { goBack }     = useBackNav()
 
-// Guard
+// Guard — a single redirect, and it replaces the entry instead of pushing a new one
 onMounted(() => {
-  if (!store.studentName) navigateTo('/')
-  if (!store.phenomena) navigateTo('/fenomena')
+  requireAll([
+    [store.hasIdentity, '/'],
+    [store.phenomena, '/fenomena'],
+  ])
 })
 
 const { data: phenomenaData } = await useAsyncData(
@@ -226,7 +230,7 @@ function handleLanjut() {
 
 function handleBack() {
   audio.play('back')
-  navigateTo('/cocokkan')
+  goBack('/cocokkan')
 }
 </script>
 
